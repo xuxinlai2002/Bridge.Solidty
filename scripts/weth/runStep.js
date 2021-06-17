@@ -318,11 +318,9 @@ const step7 = async (sleepTime) => {
                 }
            } 
         ]
-
     }
     
-    
-    let tofullPath = "/Users/xuxinlai/my/work/uptickService/chainbridge/config.json"
+    let tofullPath = "/Users/xuxinlai/my/work/chainbridge/config.json"
     fs.writeFileSync(tofullPath, JSON.stringify(toData, null, 4), { encoding: 'utf8' }, err => {})
 
     await sleep(sleepTime)
