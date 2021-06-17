@@ -1,0 +1,9 @@
+/db/
+node_modules/
+yarn-error.log
+.env
+test/temp/
+build/
+deploy_solidity/node_modules/
+deploy_solidity/artifacts/
+artifacts/

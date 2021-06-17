@@ -1,0 +1,39 @@
+{
+  "name": "optimism-tutorial",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+
+    "compile": "npx hardhat compile",
+
+    "wethAllSrc": "npx hardhat run scripts/weth/allSrc.js",
+    "wethAllDst": "npx hardhat run scripts/weth/allDst.js",
+    
+    "weth0": "npx hardhat run scripts/weth/0initAccounts.js --network my",
+    "weth1": "npx hardhat run scripts/weth/1deploySrc.js --network my",
+    "weth2": "npx hardhat run scripts/weth/2registerSrc.js --network my",
+    "weth3": "npx hardhat run scripts/weth/3deployDst.js --network kovan",
+    "weth4": "npx hardhat run scripts/weth/4registerDst.js --network kovan",
+    "weth5": "npx hardhat run scripts/weth/5setBurnDst.js --network kovan",
+    "weth6": "npx hardhat run scripts/weth/6addMinterDst.js --network kovan",
+    "weth7": "npx hardhat run scripts/weth/7writeRelayerConfig.js ",
+    "weth8": "npx hardhat run scripts/weth/8approve12.js --network my",
+    "weth9": "npx hardhat run scripts/weth/9deposit12.js --network my",
+    
+    "clean": "rimraf ./cache-ovm ./cache ./artifacts-ovm ./artifacts ./deployments"
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.1",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "chai-as-promised": "^7.1.1",
+    "ethereum-waffle": "^3.2.1",
+    "ethers": "^5.0.24",
+    "hardhat": "^2.0.9",
+    "hardhat-deploy": "^0.7.0-beta.49",
+    "mocha": "^8.2.1"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "3.1.0-solc-0.7"
+  }
+}
