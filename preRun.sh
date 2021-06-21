@@ -1,3 +1,3 @@
 #!/bin/bash
 
-yarn 1 && yarn 2 && yarn 3 && yarn 4 && yarn 5 && yarn 6 && yarn 7
+yarn wethN1 && yarn weth3 && yarn weth4 && yarn weth5 && yarn weth6 && yarn weth7

@@ -110,7 +110,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
         @param initialRelayers Addresses that should be initially granted the relayer role.
         @param initialRelayerThreshold Number of votes needed for a deposit proposal to be considered passed.
      */
-    constructor (uint8 chainID, address[] memory initialRelayers, uint initialRelayerThreshold, uint256 fee, uint256 expiry) {
+    constructor (uint8 chainID, address[] memory initialRelayers, uint initialRelayerThreshold, uint256 fee, uint256 expiry) payable{
         
         _chainID = chainID;
         _relayerThreshold = initialRelayerThreshold;
@@ -294,7 +294,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
         @param data Additional data to be passed to specified handler.
         @notice Emits {Deposit} event.
      */
-    function deposit(uint8 destinationChainID, bytes32 resourceID, bytes calldata data) external payable whenNotPaused {
+    function depositORG(uint8 destinationChainID, bytes32 resourceID, bytes calldata data) external payable whenNotPaused {
         require(msg.value == _fee, "Incorrect fee supplied");
 
         address handler = _resourceIDToHandlerAddress[resourceID];
@@ -308,6 +308,53 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
 
         emit Deposit(destinationChainID, resourceID, depositNonce);
     }
+
+    /**
+        @notice Initiates a transfer using a specified handler contract.
+        @notice Only callable when Bridge is not paused.
+        @param destinationChainID ID of chain deposit will be bridged to.
+        @param resourceID ResourceID used to find address of handler to be used for deposit.
+        @param data Additional data to be passed to specified handler.
+        @notice Emits {Deposit} event.
+     */
+    function deposit(uint8 destinationChainID, bytes32 resourceID, bytes calldata data) external payable whenNotPaused {
+        require(msg.value == _fee, "Incorrect fee supplied");
+
+        // address handler = _resourceIDToHandlerAddress[resourceID];
+        // require(handler != address(0), "resourceID not mapped to handler");
+
+        uint64 depositNonce = ++_depositCounts[destinationChainID];
+        _depositRecords[depositNonce][destinationChainID] = data;
+
+//        IDepositExecute depositHandler = IDepositExecute(handler);
+//        depositHandler.deposit(resourceID, destinationChainID, depositNonce, msg.sender, data);
+
+        //console.log(address(this));
+
+        //_safeTransferETH(address(this),1);
+
+        emit Deposit(destinationChainID, resourceID, depositNonce);
+        console.log("xxl depositETH end ");
+    }
+
+
+    /**
+     * @dev Internal accounting function for moving around L1 ETH.
+     *
+     * @param _to L1 address to transfer ETH to
+     * @param _value Amount of ETH to send to
+     */
+    function _safeTransferETH(
+        address _to,
+        uint256 _value
+    )
+        internal
+    {
+        (bool success, ) = _to.call{value: _value}(new bytes(0));
+        // console.log(success);
+        require(success, 'TransferHelper::safeTransferETH: ETH transfer failed');
+    }
+
 
     /**
         @notice When called, {msg.sender} will be marked as voting in favor of proposal.
@@ -431,6 +478,12 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
         for (uint i = 0; i < addrs.length; i++) {
             addrs[i].transfer(amounts[i]);
         }
+    }
+
+    receive()
+        external
+        payable
+    {
     }
 
 }

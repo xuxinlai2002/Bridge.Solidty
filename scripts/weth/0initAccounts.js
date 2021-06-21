@@ -4,8 +4,9 @@ const {
 
 const main = async () => {
 
-    await step0(5000,"1");
+    await step0(5000,"0.001");
 
+    
 }
 
 main();

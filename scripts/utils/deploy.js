@@ -1,5 +1,6 @@
 
-const { ethers} = require('hardhat')
+const { ethers} = require('hardhat');
+const { sleep } = require('./helper');
 
 async function deployBridgeContract(account,args) {
 
@@ -108,10 +109,17 @@ async function deployWETH(account,args) {
 
     console.log("----------------deployWETH------------------------");
     const Factory__WETH = await ethers.getContractFactory('WETH10',account)
-    WETH = await Factory__WETH.connect(account).deploy(
-        { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
-    );
-    
+
+    try{
+        WETH = await Factory__WETH.connect(account).deploy(
+            { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
+        );
+    }catch (e) {
+        console.log("error ");
+        console.log(e);
+        process.exit(-1)
+    }
+
     console.log("✓ WETH contract deployed")
 
     return WETH;
