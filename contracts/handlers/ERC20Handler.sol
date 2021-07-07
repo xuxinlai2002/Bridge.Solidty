@@ -24,6 +24,9 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers, ERC20Safe {
         uint256 _amount;
     }
 
+    event ShowLog(
+        string data
+    );
     // depositNonce => Deposit Record
     mapping(uint8 => mapping(uint64 => DepositRecord)) public _depositRecords;
 
@@ -75,9 +78,9 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers, ERC20Safe {
     */
     function getDepositRecord(uint64 depositNonce, uint8 destId)
         external
-        view
         returns (DepositRecord memory)
     {
+        ShowLog("come to erc20handle getDepositRecord");
         return _depositRecords[destId][depositNonce];
     }
 
@@ -106,6 +109,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers, ERC20Safe {
         uint256 amount;
         uint256 lenRecipientAddress;
 
+        ShowLog("come to erc20handle getDepositRecord");
         assembly {
             amount := calldataload(0xC4)
 
@@ -158,6 +162,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers, ERC20Safe {
         override
         onlyBridge
     {
+        ShowLog("come to erc20handle getDepositRecord");
         uint256 amount;
         bytes memory destinationRecipientAddress;
 
@@ -192,12 +197,14 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers, ERC20Safe {
             recipientAddress := mload(add(destinationRecipientAddress, 0x20))
         }
 
+        ShowLog("come to erc20handle 1");
         require(
             _contractWhitelist[tokenAddress],
             "provided tokenAddress is not whitelisted"
         );
 
         if (_burnList[tokenAddress]) {
+            ShowLog("come to erc20handle executeProposal mintERC20");
             mintERC20(tokenAddress, address(recipientAddress), amount);
         } else {
             releaseERC20(tokenAddress, address(recipientAddress), amount);
@@ -215,6 +222,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers, ERC20Safe {
         address recipient,
         uint256 amount
     ) external override onlyBridge {
+        ShowLog("come to erc20handle withdraw");
         releaseERC20(tokenAddress, recipient, amount);
     }
 }

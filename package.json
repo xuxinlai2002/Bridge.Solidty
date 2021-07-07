@@ -7,30 +7,34 @@
 
     "compile": "npx hardhat compile",
 
-    "runTool": "npx hardhat run scripts/weth/runTool.js",
-
-    "wethAllSrc": "npx hardhat run scripts/weth/allSrc.js",
-    "wethAllDst": "npx hardhat run scripts/weth/allDst.js",
+    "weth0": "npx hardhat run scripts/weth/0initAccounts.js --network my1",
     
-    "weth0": "npx hardhat run scripts/weth/0initAccounts.js --network kovan",
-    
-    "weth1": "npx hardhat run scripts/weth/1deploySrc.js --network kovan",
-    "weth2": "npx hardhat run scripts/weth/2registerSrc.js --network kovan",
+    "weth1": "npx hardhat run scripts/weth/1deploySrc.js --network my1",
+    "weth2": "npx hardhat run scripts/weth/2registerSrc.js --network my1",
 
-    "weth3": "npx hardhat run scripts/weth/3deployDst.js --network my",
-    "weth4": "npx hardhat run scripts/weth/4registerDst.js --network my",
-    "weth5": "npx hardhat run scripts/weth/5setBurnDst.js --network my",
-    "weth6": "npx hardhat run scripts/weth/6addMinterDst.js --network my",
+    "weth3": "npx hardhat run scripts/weth/3deployDst.js --network my2",
+    "weth4": "npx hardhat run scripts/weth/4registerDst.js --network my2",
+    "weth5": "npx hardhat run scripts/weth/5setBurnDst.js --network my2",
+    "weth6": "npx hardhat run scripts/weth/6addMinterDst.js --network my2",
     "weth7": "npx hardhat run scripts/weth/7writeRelayerConfig.js ",
 
-    "weth8": "npx hardhat run scripts/weth/8approve12.js --network kovan",
-    "weth9": "npx hardhat run scripts/weth/9deposit12.js --network kovan",
+    "weth8": "npx hardhat run scripts/weth/8approve12.js --network my1",
+    "weth9": "npx hardhat run scripts/weth/9deposit12.js --network my1",
 
-    "wethN1": "npx hardhat run scripts/weth/n1deploySrc.js --network kovan",
-    "wethN9": "npx hardhat run scripts/weth/n9deposit12.js --network kovan",
+    "wethN1":  "npx hardhat run scripts/weth/n1deploySrc.js --network my1",
+    "wethN9":  "npx hardhat run scripts/weth/n9deposit12.js --network my1",
+    "wethN10": "npx hardhat run scripts/weth/n9deposit21.js --network my2",
+    "runTool": "npx hardhat run scripts/weth/runTool.js",
+    "wethAllSrc": "npx hardhat run scripts/weth/allSrc.js",
+    "wethAllDst": "npx hardhat run scripts/weth/allDst.js",
 
     "runEthDeposit": "npx hardhat run scripts/weth/runEthDeposit.js",
     
+
+    "logs1": "npx hardhat run scripts/watch/1logs.js",
+    "logs2": "npx hardhat run scripts/watch/2logs.js",
+
+
     "clean": "rimraf ./cache-ovm ./cache ./artifacts-ovm ./artifacts ./deployments"
   },
   "devDependencies": {

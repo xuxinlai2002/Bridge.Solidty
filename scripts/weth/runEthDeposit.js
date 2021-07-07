@@ -24,7 +24,7 @@ const main = async () => {
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
         "resourceId":"0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
-        "dest":42,
+        "dest":82,
         "amount":1000,
     }
 
@@ -33,7 +33,6 @@ const main = async () => {
     args["recipient"] = bridge.address
     console.log(bridge.address);
     sleep(3000);
-
 
     console.log("\n*************************check balance before****************************");
     let beforeEthBalace = await utils.formatEther(await accounts[0].getBalance());

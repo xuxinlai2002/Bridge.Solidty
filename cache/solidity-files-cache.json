@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/xuxinlai/work/deploy-solidity/contracts/Bridge.sol": {
-      "lastModificationDate": 1624243879839,
-      "contentHash": "46bf3398bdb5aa814b4613e243bd722c",
+      "lastModificationDate": 1624937517043,
+      "contentHash": "207ade065de13ffa40b7491b553fc37e",
       "sourceName": "contracts/Bridge.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -607,8 +607,8 @@
       ]
     },
     "/Users/xuxinlai/work/deploy-solidity/contracts/handlers/WETHHandler.sol": {
-      "lastModificationDate": 1623985806482,
-      "contentHash": "85e336b92b5f549ffcba498a495d79fb",
+      "lastModificationDate": 1624936173364,
+      "contentHash": "df33b9bbe8ec153598c71a38996826cf",
       "sourceName": "contracts/handlers/WETHHandler.sol",
       "solcConfig": {
         "version": "0.7.6",
@@ -1992,8 +1992,8 @@
       ]
     },
     "/Users/xuxinlai/work/deploy-solidity/contracts/handlers/ERC20Handler.sol": {
-      "lastModificationDate": 1623931194848,
-      "contentHash": "048a0666a91bec357a6e8550414a1a76",
+      "lastModificationDate": 1624948377976,
+      "contentHash": "04f8435ecebf49c5d9dfb59f8509bcde",
       "sourceName": "contracts/handlers/ERC20Handler.sol",
       "solcConfig": {
         "version": "0.7.6",

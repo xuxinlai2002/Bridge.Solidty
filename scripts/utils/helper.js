@@ -59,8 +59,8 @@ const waitForTx = async (chainID,hash) => {
 function getProvider(chainID){
 
     let url = "http://localhost:20636";
-    if(chainID == 42){
-        url = "https://kovan.infura.io/v3/7e31d49d7c8a48f4a4539aff9da768e7";
+    if(chainID == 83){
+        url = "http://localhost:21636";
     }
     provider = new ethers.providers.JsonRpcProvider(url);
 

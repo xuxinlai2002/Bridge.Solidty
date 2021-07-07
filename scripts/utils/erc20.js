@@ -19,7 +19,34 @@ async function addMinter(account,args) {
 }
 
 
+async function approve(account,args) {
+
+    console.log("xxl ......approve ......");
+    const Factory__ERC20 = await ethers.getContractFactory('ERC20',account)
+
+
+    console.log(args.erc20);
+    
+    let erc20Instance = await Factory__ERC20.connect(account).attach(args.erc20);
+
+    log(`Approving ${args.recipient} to spend token ${args.id} from ${account.address} on contract ${args.wethAddress}!`);
+
+    console.log("----------------------approve---------------------");
+    console.log("args.recipient    : "     + args.recipient);
+    console.log("args.amount11       : "   + args.amount);
+    console.log("--------------------------------------------------");
+    const tx = await erc20Instance.approve(args.recipient, args.amount, {
+        gasPrice: args.gasPrice,
+        gasLimit: args.gasLimit
+    });
+   
+    return tx.hash;
+
+}
+
+
 module.exports = {
+    approve,
     addMinter
 }
 

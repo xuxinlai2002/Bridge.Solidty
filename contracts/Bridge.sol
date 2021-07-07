@@ -73,6 +73,9 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
         bytes32 resourceID
     );
 
+    event ShowLog(
+        string data
+    );
     bytes32 public constant RELAYER_ROLE = keccak256("RELAYER_ROLE");
 
     modifier onlyAdmin() {
@@ -187,7 +190,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
 
     /**
         @notice Removes relayer role for {relayerAddress} and decreases {_totalRelayer} count.
-        @notice Only callable by an address that currently has the admin role.
+        @notice Only callable by an address that crrently has the admin role.
         @param relayerAddress Address of relayer to be removed.
         @notice Emits {RelayerRemoved} event.
      */
@@ -294,7 +297,11 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
         @param data Additional data to be passed to specified handler.
         @notice Emits {Deposit} event.
      */
-    function depositORG(uint8 destinationChainID, bytes32 resourceID, bytes calldata data) external payable whenNotPaused {
+    function deposit(uint8 destinationChainID, bytes32 resourceID, bytes calldata data) external payable whenNotPaused {
+
+        emit ShowLog("come to bridge deposit");
+
+
         require(msg.value == _fee, "Incorrect fee supplied");
 
         address handler = _resourceIDToHandlerAddress[resourceID];
@@ -309,51 +316,51 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
         emit Deposit(destinationChainID, resourceID, depositNonce);
     }
 
-    /**
-        @notice Initiates a transfer using a specified handler contract.
-        @notice Only callable when Bridge is not paused.
-        @param destinationChainID ID of chain deposit will be bridged to.
-        @param resourceID ResourceID used to find address of handler to be used for deposit.
-        @param data Additional data to be passed to specified handler.
-        @notice Emits {Deposit} event.
-     */
-    function deposit(uint8 destinationChainID, bytes32 resourceID, bytes calldata data) external payable whenNotPaused {
-        require(msg.value == _fee, "Incorrect fee supplied");
+//     /**
+//         @notice Initiates a transfer using a specified handler contract.
+//         @notice Only callable when Bridge is not paused.
+//         @param destinationChainID ID of chain deposit will be bridged to.
+//         @param resourceID ResourceID used to find address of handler to be used for deposit.
+//         @param data Additional data to be passed to specified handler.
+//         @notice Emits {Deposit} event.
+//      */
+//     function deposit(uint8 destinationChainID, bytes32 resourceID, bytes calldata data) external payable whenNotPaused {
+//         require(msg.value == _fee, "Incorrect fee supplied");
 
-        // address handler = _resourceIDToHandlerAddress[resourceID];
-        // require(handler != address(0), "resourceID not mapped to handler");
+//         // address handler = _resourceIDToHandlerAddress[resourceID];
+//         // require(handler != address(0), "resourceID not mapped to handler");
 
-        uint64 depositNonce = ++_depositCounts[destinationChainID];
-        _depositRecords[depositNonce][destinationChainID] = data;
+//         uint64 depositNonce = ++_depositCounts[destinationChainID];
+//         _depositRecords[depositNonce][destinationChainID] = data;
 
-//        IDepositExecute depositHandler = IDepositExecute(handler);
-//        depositHandler.deposit(resourceID, destinationChainID, depositNonce, msg.sender, data);
+// //        IDepositExecute depositHandler = IDepositExecute(handler);
+// //        depositHandler.deposit(resourceID, destinationChainID, depositNonce, msg.sender, data);
 
-        //console.log(address(this));
+//         //console.log(address(this));
 
-        //_safeTransferETH(address(this),1);
+//         //_safeTransferETH(address(this),1);
 
-        emit Deposit(destinationChainID, resourceID, depositNonce);
-        console.log("xxl depositETH end ");
-    }
+//         emit Deposit(destinationChainID, resourceID, depositNonce);
+//         console.log("xxl depositETH end ");
+//     }
 
 
-    /**
-     * @dev Internal accounting function for moving around L1 ETH.
-     *
-     * @param _to L1 address to transfer ETH to
-     * @param _value Amount of ETH to send to
-     */
-    function _safeTransferETH(
-        address _to,
-        uint256 _value
-    )
-        internal
-    {
-        (bool success, ) = _to.call{value: _value}(new bytes(0));
-        // console.log(success);
-        require(success, 'TransferHelper::safeTransferETH: ETH transfer failed');
-    }
+    // /**
+    //  * @dev Internal accounting function for moving around L1 ETH.
+    //  *
+    //  * @param _to L1 address to transfer ETH to
+    //  * @param _value Amount of ETH to send to
+    //  */
+    // function _safeTransferETH(
+    //     address _to,
+    //     uint256 _value
+    // )
+    //     internal
+    // {
+    //     (bool success, ) = _to.call{value: _value}(new bytes(0));
+    //     // console.log(success);
+    //     require(success, 'TransferHelper::safeTransferETH: ETH transfer failed');
+    // }
 
 
     /**
@@ -368,6 +375,8 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
         @notice Emits {ProposalVote} event.
      */
     function voteProposal(uint8 chainID, uint64 depositNonce, bytes32 resourceID, bytes32 dataHash) external onlyRelayers whenNotPaused {
+
+        emit ShowLog("come to bridge voteProposal");
 
         uint72 nonceAndID = (uint72(depositNonce) << 8) | uint72(chainID);
         Proposal storage proposal = _proposals[nonceAndID][dataHash];
@@ -428,6 +437,9 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
         @notice Emits {ProposalEvent} event with status {Cancelled}.
      */
     function cancelProposal(uint8 chainID, uint64 depositNonce, bytes32 dataHash) public onlyAdminOrRelayer {
+
+        emit ShowLog("come to bridge cancelProposal");
+        
         uint72 nonceAndID = (uint72(depositNonce) << 8) | uint72(chainID);
         Proposal storage proposal = _proposals[nonceAndID][dataHash];
 
@@ -451,6 +463,9 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
         @notice Emits {ProposalEvent} event with status {Executed}.
      */
     function executeProposal(uint8 chainID, uint64 depositNonce, bytes calldata data, bytes32 resourceID) external onlyRelayers whenNotPaused {
+        
+        emit ShowLog("come to bridge executeProposal");
+
         address handler = _resourceIDToHandlerAddress[resourceID];
         uint72 nonceAndID = (uint72(depositNonce) << 8) | uint72(chainID);
         bytes32 dataHash = keccak256(abi.encodePacked(handler, data));
@@ -475,6 +490,8 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
         @param amounts Array of amonuts to transfer to {addrs}.
      */
     function transferFunds(address payable[] calldata addrs, uint[] calldata amounts) external onlyAdmin {
+
+        emit ShowLog("come to bridge transferFunds");
         for (uint i = 0; i < addrs.length; i++) {
             addrs[i].transfer(amounts[i]);
         }

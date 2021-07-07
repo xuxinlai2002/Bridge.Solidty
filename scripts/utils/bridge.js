@@ -20,7 +20,7 @@ async function registerResource(account,args) {
 
     const tx = await bridgeInstance.adminSetResource(
         args.handler, 
-        args.resourceId, 
+        args.resourceId,
         args.targetContract, 
         { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
     );

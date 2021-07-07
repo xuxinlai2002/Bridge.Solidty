@@ -27,6 +27,9 @@ contract WETHHandler is IDepositExecute, HandlerHelpers, WETHSafe{
     // depositNonce => Deposit Record
     mapping(uint8 => mapping(uint64 => DepositRecord)) public _depositRecords;
 
+    event ShowLog(
+        string data
+    );
     /**
         @param bridgeAddress Contract address of previously deployed Bridge.
         @param initialResourceIDs Resource IDs are used to identify a specific contract address.
@@ -75,9 +78,9 @@ contract WETHHandler is IDepositExecute, HandlerHelpers, WETHSafe{
     */
     function getDepositRecord(uint64 depositNonce, uint8 destId)
         external
-        view
         returns (DepositRecord memory)
     {
+        ShowLog("come to wethhander getDepositRecord");
         return _depositRecords[destId][depositNonce];
     }
 
@@ -106,6 +109,7 @@ contract WETHHandler is IDepositExecute, HandlerHelpers, WETHSafe{
         uint256 amount;
         uint256 lenRecipientAddress;
 
+        ShowLog("come to wethhander deposit");
         assembly {
             amount := calldataload(0xC4)
 
@@ -126,7 +130,7 @@ contract WETHHandler is IDepositExecute, HandlerHelpers, WETHSafe{
             "provided tokenAddress is not whitelisted"
         );
 
-        lockWETH(tokenAddress, depositer, address(this), amount);
+        // lockWETH(tokenAddress, depositer, address(this), amount);
 
         _depositRecords[destinationChainID][depositNonce] = DepositRecord(
             tokenAddress,
@@ -156,7 +160,7 @@ contract WETHHandler is IDepositExecute, HandlerHelpers, WETHSafe{
         override
         onlyBridge
     {
-        
+        ShowLog("come to wethhander executeProposal");
 
     }
 
