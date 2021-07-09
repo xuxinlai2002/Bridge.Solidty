@@ -22,7 +22,7 @@ const subscribeLogEvent = (contract, eventName) => {
         result.data,
         result.topics.slice(1)
       )
-      console.log(`New ${eventName}!`, eventObj.data)
+      console.log(`${eventName}!`, eventObj.data)
       console.log("--------------------------------\n");
     }
   })
@@ -37,9 +37,10 @@ const main = async () => {
   
   console.log("****************xxl my1 log watch****************");
   let srcBridge = await readConfig("3weth_config","SRC_BRIDGE");
-  const bridgeInterface = require('../../artifacts/contracts/Bridge.sol/Bridge.json')
+  const bridgeInterface = require('../../artifacts/contracts/utils/Log.sol/Log.json')
   bridgeInstance = new web3.eth.Contract(bridgeInterface.abi,srcBridge)
-  subscribeLogEvent(bridgeInstance,"ShowLog");
+  subscribeLogEvent(bridgeInstance,"OutputString");
+
   console.log("------subscribe src bridge OK------");
 
   let srcHandlerWeth = await readConfig("3weth_config","SRC_HANDLER_WETH");
@@ -48,7 +49,7 @@ const main = async () => {
   wethHandlerInstance = new web3.eth.Contract(wethHandlerInterface.abi,srcHandlerWeth)
   //console.log(wethHandlerInstance);
 
-  subscribeLogEvent(wethHandlerInstance,"ShowLog");
+  subscribeLogEvent(wethHandlerInstance,"LogString");
   console.log("------subscribe src handler weth OK------");
 
 

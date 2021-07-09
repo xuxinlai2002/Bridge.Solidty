@@ -29,7 +29,7 @@ async function deployBridgeContract(account,args) {
 }
 
 
-async function deployERC20Handler(account,args) {
+async function deployERC20Handler(account,args,isWeth) {
 
     console.log("----------------deployERC20Handler-----------------");
     console.log("args.bridgeAddress    : " + args.bridgeAddress);
@@ -38,6 +38,7 @@ async function deployERC20Handler(account,args) {
     const Factory__Erc20Handler = await ethers.getContractFactory('ERC20Handler',account)
     Erc20Handler = await Factory__Erc20Handler.connect(account).deploy(
         args.bridgeAddress,
+        isWeth,
         [], 
         [], 
         [],

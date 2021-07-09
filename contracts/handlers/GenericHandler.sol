@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.7.6;
+pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
 import "../interfaces/IGenericHandler.sol";
@@ -70,7 +70,7 @@ contract GenericHandler is IGenericHandler {
         address[] memory initialContractAddresses,
         bytes4[]  memory initialDepositFunctionSignatures,
         bytes4[]  memory initialExecuteFunctionSignatures
-    ) {
+    )public {
         require(initialResourceIDs.length == initialContractAddresses.length,
             "initialResourceIDs and initialContractAddresses len mismatch");
 

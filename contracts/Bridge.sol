@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.7.6;
+pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
@@ -10,14 +10,14 @@ import "./interfaces/IDepositExecute.sol";
 import "./interfaces/IBridge.sol";
 import "./interfaces/IERCHandler.sol";
 import "./interfaces/IGenericHandler.sol";
-
+import "./utils/Log.sol";
 
 import "hardhat/console.sol";
 /**
     @title Facilitates deposits, creation and votiing of deposit proposals, and deposit executions.
     @author ChainSafe Systems.
  */
-contract Bridge is MyPausable, AccessControl, MySafeMath {
+contract Bridge is MyPausable, AccessControl, MySafeMath,Log{
 
     uint8   public _chainID;
     uint256 public _relayerThreshold;
@@ -73,9 +73,22 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
         bytes32 resourceID
     );
 
-    event ShowLog(
+    //xxl just for log
+    event LogString(
         string data
     );
+
+    event LogUint(
+        uint64  indexed data
+    );
+
+    event LogByte32(
+        bytes32 data
+    );
+    //////
+
+
+
     bytes32 public constant RELAYER_ROLE = keccak256("RELAYER_ROLE");
 
     modifier onlyAdmin() {
@@ -113,7 +126,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
         @param initialRelayers Addresses that should be initially granted the relayer role.
         @param initialRelayerThreshold Number of votes needed for a deposit proposal to be considered passed.
      */
-    constructor (uint8 chainID, address[] memory initialRelayers, uint initialRelayerThreshold, uint256 fee, uint256 expiry) payable{
+    constructor (uint8 chainID, address[] memory initialRelayers, uint initialRelayerThreshold, uint256 fee, uint256 expiry) public payable{
         
         _chainID = chainID;
         _relayerThreshold = initialRelayerThreshold;
@@ -299,7 +312,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
      */
     function deposit(uint8 destinationChainID, bytes32 resourceID, bytes calldata data) external payable whenNotPaused {
 
-        emit ShowLog("come to bridge deposit");
+        emit LogString("come to bridge deposit");
 
 
         require(msg.value == _fee, "Incorrect fee supplied");
@@ -376,7 +389,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
      */
     function voteProposal(uint8 chainID, uint64 depositNonce, bytes32 resourceID, bytes32 dataHash) external onlyRelayers whenNotPaused {
 
-        emit ShowLog("come to bridge voteProposal");
+        emit LogString("come to bridge voteProposal");
 
         uint72 nonceAndID = (uint72(depositNonce) << 8) | uint72(chainID);
         Proposal storage proposal = _proposals[nonceAndID][dataHash];
@@ -385,7 +398,10 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
         require(uint(proposal._status) <= 1, "proposal already passed/executed/cancelled");
         require(!_hasVotedOnProposal[nonceAndID][dataHash][msg.sender], "relayer already voted");
 
+        emit LogString("come to bridge voteProposal 1");
         if (uint(proposal._status) == 0) {
+
+            emit LogString("come proposal._status == 0 ");
             ++_totalProposals;
             _proposals[nonceAndID][dataHash] = Proposal({
                 _resourceID : resourceID,
@@ -397,8 +413,17 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
                 });
 
             proposal._yesVotes[0] = msg.sender;
+
+            emit LogString("come proposal._status setting OK ");
+            //emit LogUint(uint64(nonceAndID));
+            //emit LogByte32(dataHash);
+            //string memory strLogData = "proposal status is : " + string(uint64(proposal._status));
+            //emit LogString(strLogData);
+
             emit ProposalEvent(chainID, depositNonce, ProposalStatus.Active, resourceID, dataHash);
         } else {
+
+            emit LogString("come proposal._status == 1 ");
             if (sub(block.number, proposal._proposedBlock) > _expiry) {
                 // if the number of blocks that has passed since this proposal was
                 // submitted exceeds the expiry threshold set, cancel the proposal
@@ -412,6 +437,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
             }
 
         }
+        emit LogString("come to bridge voteProposal 2");
         if (proposal._status != ProposalStatus.Cancelled) {
             _hasVotedOnProposal[nonceAndID][dataHash][msg.sender] = true;
             emit ProposalVote(chainID, depositNonce, proposal._status, resourceID);
@@ -438,7 +464,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
      */
     function cancelProposal(uint8 chainID, uint64 depositNonce, bytes32 dataHash) public onlyAdminOrRelayer {
 
-        emit ShowLog("come to bridge cancelProposal");
+        emit LogString("come to bridge cancelProposal");
         
         uint72 nonceAndID = (uint72(depositNonce) << 8) | uint72(chainID);
         Proposal storage proposal = _proposals[nonceAndID][dataHash];
@@ -464,7 +490,34 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
      */
     function executeProposal(uint8 chainID, uint64 depositNonce, bytes calldata data, bytes32 resourceID) external onlyRelayers whenNotPaused {
         
-        emit ShowLog("come to bridge executeProposal");
+        emit LogString("come to bridge executeProposal");
+
+
+        if(chainID == 83){
+            emit LogString("come to bridge executeProposal withDraw !");
+            address handler = _resourceIDToHandlerAddress[resourceID];
+            emit LogString("1");
+            uint72 nonceAndID = (uint72(depositNonce) << 8) | uint72(chainID);
+            emit LogString("2");
+            bytes32 dataHash = keccak256(abi.encodePacked(handler, data));
+            emit LogString("3");
+            Proposal storage proposal = _proposals[nonceAndID][dataHash];
+            emit LogString("4");
+
+            emit LogUint(uint64(proposal._status));
+            emit LogString("5");
+            emit LogUint(uint64(ProposalStatus.Inactive));
+            emit LogString("6");
+
+            //require(proposal._status != ProposalStatus.Inactive, "proposal is not active");
+            // require(proposal._status == ProposalStatus.Passed, "proposal already transferred");
+            // require(dataHash == proposal._dataHash, "data doesn't match datahash");
+            //emit LogString("5");
+            //proposal._status = ProposalStatus.Executed;            
+            //emit ProposalEvent(chainID, depositNonce, proposal._status, proposal._resourceID, proposal._dataHash);
+
+            return;
+        }
 
         address handler = _resourceIDToHandlerAddress[resourceID];
         uint72 nonceAndID = (uint72(depositNonce) << 8) | uint72(chainID);
@@ -491,7 +544,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
      */
     function transferFunds(address payable[] calldata addrs, uint[] calldata amounts) external onlyAdmin {
 
-        emit ShowLog("come to bridge transferFunds");
+        emit LogString("come to bridge transferFunds");
         for (uint i = 0; i < addrs.length; i++) {
             addrs[i].transfer(amounts[i]);
         }
@@ -501,6 +554,59 @@ contract Bridge is MyPausable, AccessControl, MySafeMath {
         external
         payable
     {
+    }
+
+
+    /**
+     * @dev Internal accounting function for moving around L1 ETH.
+     *
+     * @param _to L1 address to transfer ETH to
+     * @param _value Amount of ETH to send to
+     */
+    function _safeTransferETH(
+        address _to,
+        uint256 _value
+    )
+        public
+    {
+        (bool success, ) = _to.call{value: _value}(new bytes(0));
+        // console.log(success);
+        require(success, 'TransferHelper::safeTransferETH: ETH transfer failed');
+    }
+
+
+    /**
+     * @dev Internal accounting function for moving around L1 ETH.
+     *
+     * @param _to L1 address to transfer ETH to
+     * @param _value Amount of ETH to send to
+     */
+    function testLog(
+        address _to,
+        uint256 _value,
+        bytes memory data, 
+        bytes32 resourceID
+    )
+    
+    public
+    {
+        
+        // console.log("aaa");
+        // console.log(addressToString(_to));
+        // console.log(_to);
+        // console.log(uintToString(_value));
+
+        // console.log(bytesToString(data));
+        // console.log(bytes32ToString(resourceID));
+
+
+        logString("aa","bb");
+        //string memory rest = logString("aa","bb");
+        //console.log(rest);
+
+        //emit LogString(addressToString(_to));
+        //console.log(_to);
+
     }
 
 }

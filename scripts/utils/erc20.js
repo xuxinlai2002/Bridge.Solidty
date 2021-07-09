@@ -24,12 +24,10 @@ async function approve(account,args) {
     console.log("xxl ......approve ......");
     const Factory__ERC20 = await ethers.getContractFactory('ERC20',account)
 
-
     console.log(args.erc20);
-    
     let erc20Instance = await Factory__ERC20.connect(account).attach(args.erc20);
 
-    log(`Approving ${args.recipient} to spend token ${args.id} from ${account.address} on contract ${args.wethAddress}!`);
+    log(`Approving ${args.recipient} to spend token ${args.id} from ${account.address} on contract ${args.erc20}!`);
 
     console.log("----------------------approve---------------------");
     console.log("args.recipient    : "     + args.recipient);

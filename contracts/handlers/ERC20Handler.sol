@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.7.6;
+pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
 import "../interfaces/IDepositExecute.sol";
 import "./HandlerHelpers.sol";
 import "../ERC20Safe.sol";
+import "../WETHSafe.sol";
+
 import "@openzeppelin/contracts/presets/ERC20PresetMinterPauser.sol";
 
 /**
@@ -13,7 +15,8 @@ import "@openzeppelin/contracts/presets/ERC20PresetMinterPauser.sol";
     @author ChainSafe Systems.
     @notice This contract is intended to be used with the Bridge contract.
  */
-contract ERC20Handler is IDepositExecute, HandlerHelpers, ERC20Safe {
+contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
+
     struct DepositRecord {
         address _tokenAddress;
         uint8 _lenDestinationRecipientAddress;
@@ -24,11 +27,13 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers, ERC20Safe {
         uint256 _amount;
     }
 
-    event ShowLog(
+    event LogString(
         string data
     );
+
     // depositNonce => Deposit Record
     mapping(uint8 => mapping(uint64 => DepositRecord)) public _depositRecords;
+    bool _isWethToken;
 
     /**
         @param bridgeAddress Contract address of previously deployed Bridge.
@@ -44,16 +49,18 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers, ERC20Safe {
      */
     constructor(
         address bridgeAddress,
+        bool isWethToken,
         bytes32[] memory initialResourceIDs,
         address[] memory initialContractAddresses,
         address[] memory burnableContractAddresses
-    ) {
+    ) public{
         require(
             initialResourceIDs.length == initialContractAddresses.length,
             "initialResourceIDs and initialContractAddresses len mismatch"
         );
 
         _bridgeAddress = bridgeAddress;
+        _isWethToken = isWethToken;
 
         for (uint256 i = 0; i < initialResourceIDs.length; i++) {
             _setResource(initialResourceIDs[i], initialContractAddresses[i]);
@@ -80,7 +87,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers, ERC20Safe {
         external
         returns (DepositRecord memory)
     {
-        ShowLog("come to erc20handle getDepositRecord");
+        LogString("come to erc20handle getDepositRecord");
         return _depositRecords[destId][depositNonce];
     }
 
@@ -109,7 +116,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers, ERC20Safe {
         uint256 amount;
         uint256 lenRecipientAddress;
 
-        ShowLog("come to erc20handle getDepositRecord");
+        LogString("come to erc20handle getDepositRecord");
         assembly {
             amount := calldataload(0xC4)
 
@@ -162,10 +169,12 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers, ERC20Safe {
         override
         onlyBridge
     {
-        ShowLog("come to erc20handle getDepositRecord");
+        LogString("come to executeProposal erc20handle getDepositRecord");
         uint256 amount;
         bytes memory destinationRecipientAddress;
 
+
+        LogString("come to 1");
         assembly {
             amount := calldataload(0x64)
 
@@ -190,26 +199,41 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers, ERC20Safe {
             )
         }
 
+        LogString("come to 2");
         bytes20 recipientAddress;
         address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
 
+        LogString("come to 3");
         assembly {
             recipientAddress := mload(add(destinationRecipientAddress, 0x20))
         }
 
-        ShowLog("come to erc20handle 1");
+        LogString("come to erc20handle 1");
         require(
             _contractWhitelist[tokenAddress],
             "provided tokenAddress is not whitelisted"
         );
 
-        if (_burnList[tokenAddress]) {
-            ShowLog("come to erc20handle executeProposal mintERC20");
-            mintERC20(tokenAddress, address(recipientAddress), amount);
-        } else {
-            releaseERC20(tokenAddress, address(recipientAddress), amount);
+        if(_isWethToken){
+
+             LogString("come to ...");
+            // LogString(addressToString(tokenAddress));
+            //  LogString(address(recipientAddress));
+            //  LogString(amount);
+            _safeTransferETH(address(recipientAddress), amount);
+             //transferWETH();
+             LogString("come to transferWETH");
+        }else{
+            if (_burnList[tokenAddress]) {
+                LogString("come to erc20handle executeProposal mintERC20");
+                mintERC20(tokenAddress, address(recipientAddress), amount);
+            } else {
+                releaseERC20(tokenAddress, address(recipientAddress), amount);
+            }
         }
+
     }
+
 
     /**
         @notice Used to manually release ERC20 tokens from ERC20Safe.
@@ -222,7 +246,33 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers, ERC20Safe {
         address recipient,
         uint256 amount
     ) external override onlyBridge {
-        ShowLog("come to erc20handle withdraw");
+        LogString("come to erc20handle withdraw");
         releaseERC20(tokenAddress, recipient, amount);
     }
+
+        /**
+     * @dev Internal accounting function for moving around L1 ETH.
+     *
+     * @param _to L1 address to transfer ETH to
+     * @param _value Amount of ETH to send to
+     */
+    function _safeTransferETH(
+        address _to,
+        uint256 _value
+    )
+        public
+    {
+        //(bool success, ) = _to.call{value: _value}(new bytes(0));
+        // console.log(success);
+        //require(success, 'TransferHelper::safeTransferETH: ETH transfer failed');
+    }
+
+    receive()
+        external
+        payable
+    {
+
+    }
+
+
 }

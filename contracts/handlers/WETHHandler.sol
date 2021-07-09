@@ -1,18 +1,17 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.7.6;
+pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
 import "../interfaces/IDepositExecute.sol";
 import "./HandlerHelpers.sol";
-import "../WETHSafe.sol";
 
 /**
     @title Handles ERC20 deposits and deposit executions.
     @author ChainSafe Systems.
     @notice This contract is intended to be used with the Bridge contract.
  */
-contract WETHHandler is IDepositExecute, HandlerHelpers, WETHSafe{
+contract WETHHandler is IDepositExecute, HandlerHelpers{
 
     struct DepositRecord {
         address _tokenAddress;
@@ -27,7 +26,7 @@ contract WETHHandler is IDepositExecute, HandlerHelpers, WETHSafe{
     // depositNonce => Deposit Record
     mapping(uint8 => mapping(uint64 => DepositRecord)) public _depositRecords;
 
-    event ShowLog(
+    event LogString(
         string data
     );
     /**
@@ -47,7 +46,7 @@ contract WETHHandler is IDepositExecute, HandlerHelpers, WETHSafe{
         bytes32[] memory initialResourceIDs,
         address[] memory initialContractAddresses,
         address[] memory burnableContractAddresses
-    ) {
+    ) public{
         require(
             initialResourceIDs.length == initialContractAddresses.length,
             "initialResourceIDs and initialContractAddresses len mismatch"
@@ -80,7 +79,7 @@ contract WETHHandler is IDepositExecute, HandlerHelpers, WETHSafe{
         external
         returns (DepositRecord memory)
     {
-        ShowLog("come to wethhander getDepositRecord");
+        emit LogString("come to wethhander getDepositRecord");
         return _depositRecords[destId][depositNonce];
     }
 
@@ -109,7 +108,7 @@ contract WETHHandler is IDepositExecute, HandlerHelpers, WETHSafe{
         uint256 amount;
         uint256 lenRecipientAddress;
 
-        ShowLog("come to wethhander deposit");
+        LogString("come to wethhander deposit");
         assembly {
             amount := calldataload(0xC4)
 
@@ -160,7 +159,7 @@ contract WETHHandler is IDepositExecute, HandlerHelpers, WETHSafe{
         override
         onlyBridge
     {
-        ShowLog("come to wethhander executeProposal");
+        emit LogString("come to wethhander executeProposal");
 
     }
 

@@ -151,7 +151,7 @@ const step2 = async (sleepTime) => {
 }
 
 //
-const step3 = async (sleepTime) => {
+const step3 = async (sleepTime,isWeth) => {
 
     let chainID = await getChainId();
     console.log("chainID is :" + chainID);
@@ -181,7 +181,7 @@ const step3 = async (sleepTime) => {
     args["bridgeAddress"] = dstBridge
     
     //DST_HANDLER_ERC20
-    let ERC20Handler = await deployERC20Handler(workAccount,args);
+    let ERC20Handler = await deployERC20Handler(workAccount,args,isWeth);
     await writeConfig("3weth_config","3weth_config","DST_HANDLER_ERC20",ERC20Handler.address);
     console.log("ERC20Handler.address :" + ERC20Handler.address);
     console.log("");
@@ -556,7 +556,11 @@ const stepN9 = async(sleepTime,amount,recipient) => {
         tx = await bridgeInstance.deposit(
             args.dest, // destination chain id
             args.resourceId,
-            data
+            data,
+            {
+                gasPrice: args.gasPrice,
+                gasLimit: args.gasLimit
+            }
         );
     } catch (e) {
         console.log("error ");
@@ -608,25 +612,23 @@ const stepN10 = async(sleepTime,amount,recipient) => {
         "bridgeAddress":dstBridge
     }
 
-
-
     console.log("\n*************************check balance before****************************");
     let beforeEthBalace = await utils.formatEther(await accounts[2].getBalance());
     console.log("acount[2] eth  : " + beforeEthBalace);
    
-    // prov = ethers.getDefaultProvider();
-    // beforeEthBalace = await utils.formatEther(await prov.getBalance(dstBridge));
-    // console.log("srcHandler eth : " + beforeEthBalace);
+    prov = ethers.getDefaultProvider();
+    beforeEthBalace = await utils.formatEther(await prov.getBalance(dstBridge));
+    console.log("srcHandler eth : " + beforeEthBalace);
 
     console.log("**************************************************************************\n");
     
     //stop here
     const Factory__Bridge = await ethers.getContractFactory('Bridge',accounts[2])
     let bridgeInstance = await Factory__Bridge.connect(accounts[2]).attach(dstBridge);    
+
+    console.log("bridge is : " + dstBridge );
     console.log(bridgeInstance.address);
 
-
-    
     try{
         // args = {
         //     "gasPrice":0x02540be400,
@@ -674,11 +676,11 @@ const stepN10 = async(sleepTime,amount,recipient) => {
     }
 
     //sleep(sleepTime);
-    sleep(sleepTime);
+    await sleep(sleepTime);
 
     console.log("\n*************************check balance after****************************");
     let afterEthBalace = await utils.formatEther(await accounts[2].getBalance());
-    console.log("acount[0] eth  : " + afterEthBalace);
+    console.log("acount[2] eth  : " + afterEthBalace);
    
     //afterEthBalace =await ethers.provider.getBalance(srcBridge);
     afterEthBalace = await utils.formatEther(await ethers.provider.getBalance(dstBridge));
@@ -691,7 +693,113 @@ const stepN10 = async(sleepTime,amount,recipient) => {
 
 }
 
+//deposit
+const tool = async(sleepTime,amount,recipient) => {
 
+    let chainID = await getChainId();
+    console.log("chainID is :" + chainID);
+    let accounts = await ethers.getSigners()
+   
+    
+    console.log(accounts[0].address);
+
+    args = {
+        "chainId": chainID,
+        "relayers":[accounts[0].address],
+        "relayerThreshold":1,
+        "fee":0,
+        "expiry":100,
+        "gasPrice":0x02540be400,
+        "gasLimit":0x7a1200,
+
+        "resourceId":"0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00"
+    }
+
+    //SRC_BRIDGE
+    let bridge = await deployBridgeContract(accounts[0],args);
+
+    await writeConfig("0weth_config","1weth_config","SRC_BRIDGE",bridge.address);
+    console.log("Bridge.address :" + bridge.address);
+    console.log("");
+
+    let srcBridge = await readConfig("1weth_config","SRC_BRIDGE");
+    args["bridgeAddress"] = srcBridge
+
+    //SRC_HANDLER-ER20
+    let ERC20Handler = await deployERC20Handler(accounts[0],args);
+    await writeConfig("1weth_config","1weth_config","SRC_HANDLE_ER20",ERC20Handler.address);
+    console.log("ERC20Handler.address :" + ERC20Handler.address);
+    console.log("");
+
+    //SRC_HANDLER-WETH
+    let WethHandler = await deployWETHHandler(accounts[0],args);
+    await writeConfig("1weth_config","1weth_config","SRC_HANDLER_WETH",WethHandler.address);
+    console.log("WETHHandler.address :" + WethHandler.address);
+    console.log("");
+
+    
+
+    // args.amount = 10000000000000;
+    let sendValue = utils.parseEther("1");
+    try{
+        await accounts[0].sendTransaction({
+            to: srcBridge, 
+            value: sendValue,
+         })
+
+
+        //stop here
+        const Factory__Bridge = await ethers.getContractFactory('Bridge',accounts[0])
+        let bridgeInstance = await Factory__Bridge.connect(accounts[0]).attach(srcBridge);
+
+        let sendValue2 = utils.parseEther("0.03");
+        // tx = await bridgeInstance._safeTransferETH(
+        //     "0x4f2C793DB2163A7A081b984E6E8e2c504825668b",
+        //     sendValue2,
+        //     {
+        //         gasPrice: args.gasPrice,
+        //         gasLimit: args.gasLimit
+        //     }
+        // );
+
+        await bridgeInstance.testLog(
+            "0x4f2C793DB2163A7A081b984E6E8e2c504825668b",
+            sendValue2,
+            "0x1234",
+            "0x5678905678905678905678905678901256789056789056789056789056789012",
+            {
+                gasPrice: args.gasPrice,
+                gasLimit: args.gasLimit
+            }
+        );
+
+
+
+
+
+        //console.log(tx);
+
+        await sleep(sleepTime);
+
+        let afterEthBalace = await utils.formatEther(await accounts[1].getBalance());
+        console.log("acount[0] eth  : " + afterEthBalace);
+        // Perform deposit
+        // tx = await bridgeInstance.deposit(
+        //     args.dest, // destination chain id
+        //     args.resourceId,
+        //     data,
+        //     {
+        //         gasPrice: args.gasPrice,
+        //         gasLimit: args.gasLimit
+        //     }
+        // );
+    } catch (e) {
+        console.log("error ");
+        console.log(e);
+        //process.exit(0)
+    }
+
+}
 
 
 module.exports = {
@@ -708,5 +816,6 @@ module.exports = {
     stepN1,
     stepN2,
     stepN9,
-    stepN10
+    stepN10,
+    tool
 }

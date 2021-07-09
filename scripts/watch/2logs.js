@@ -40,7 +40,7 @@ const main = async () => {
   let dstBridge = await readConfig("3weth_config","DST_BRIDGE");
   const bridgeInterface = require('../../artifacts/contracts/Bridge.sol/Bridge.json')
   bridgeInstance = new web3.eth.Contract(bridgeInterface.abi,dstBridge)
-  subscribeLogEvent(bridgeInstance,"ShowLog");
+  subscribeLogEvent(bridgeInstance,"LogString");
   console.log("------subscribe dst bridge OK------");
 
   let dstHandlerERC20 = await readConfig("3weth_config","DST_HANDLER_ERC20");
@@ -48,7 +48,7 @@ const main = async () => {
   wethHandlerInstance = new web3.eth.Contract(erc20HandlerInterface.abi,dstHandlerERC20)
   //console.log(wethHandlerInstance);
 
-  subscribeLogEvent(wethHandlerInstance,"ShowLog");
+  subscribeLogEvent(wethHandlerInstance,"LogString");
   console.log("------subscribe src handler erc20 OK------");
 
 

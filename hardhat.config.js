@@ -48,8 +48,8 @@ module.exports = {
     }
 
   },
-  solidity: '0.7.6',
-  //solidity: '0.6.0',
+  //solidity: '0.7.6',
+  solidity: '0.6.12',
   namedAccounts: {
     deployer: 0
   },

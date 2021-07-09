@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.7.6;
+pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
 import "../interfaces/IDepositExecute.sol";
@@ -52,7 +52,7 @@ contract ERC721Handler is IDepositExecute, HandlerHelpers, ERC721Safe {
         bytes32[] memory initialResourceIDs,
         address[] memory initialContractAddresses,
         address[] memory burnableContractAddresses
-    ) {
+    ) public{
         require(initialResourceIDs.length == initialContractAddresses.length,
             "initialResourceIDs and initialContractAddresses len mismatch");
 
