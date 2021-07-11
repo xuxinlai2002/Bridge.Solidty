@@ -22,7 +22,7 @@ const subscribeLogEvent = (contract, eventName) => {
         result.data,
         result.topics.slice(1)
       )
-      console.log(`New ${eventName}!`, eventObj.data)
+      console.log(``, eventObj.data)
       console.log("--------------------------------\n");
       
     }

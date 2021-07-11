@@ -44,8 +44,8 @@
       "artifacts": []
     },
     "/Users/xuxinlai/work/deploy-solidity/contracts/Bridge.sol": {
-      "lastModificationDate": 1625792122586,
-      "contentHash": "aed8934bf41e4035e98a716d732d024e",
+      "lastModificationDate": 1625969628227,
+      "contentHash": "7dcfef2022bb14608c5777a820cffb79",
       "sourceName": "contracts/Bridge.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -85,7 +85,7 @@
         "./interfaces/IBridge.sol",
         "./interfaces/IERCHandler.sol",
         "./interfaces/IGenericHandler.sol",
-        "./utils/Log.sol",
+        "./utils/ToString.sol",
         "hardhat/console.sol"
       ],
       "versionPragmas": [
@@ -226,8 +226,8 @@
       ]
     },
     "/Users/xuxinlai/work/deploy-solidity/contracts/interfaces/IDepositExecute.sol": {
-      "lastModificationDate": 1625788700408,
-      "contentHash": "b9b321d895eb51b7508b48e634c0b1a7",
+      "lastModificationDate": 1625901484799,
+      "contentHash": "a672083174da6ebb3ddd32511dd53cc7",
       "sourceName": "contracts/interfaces/IDepositExecute.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -393,10 +393,10 @@
         "IGenericHandler"
       ]
     },
-    "/Users/xuxinlai/work/deploy-solidity/contracts/utils/Log.sol": {
-      "lastModificationDate": 1625792210952,
-      "contentHash": "258e5147942b05bd75e1f0b6ee7ef7ef",
-      "sourceName": "contracts/utils/Log.sol",
+    "/Users/xuxinlai/work/deploy-solidity/contracts/utils/ToString.sol": {
+      "lastModificationDate": 1625820377375,
+      "contentHash": "3391fb8db304306db09e441575b73941",
+      "sourceName": "contracts/utils/ToString.sol",
       "solcConfig": {
         "version": "0.6.12",
         "settings": {
@@ -435,7 +435,7 @@
         "0.6.12"
       ],
       "artifacts": [
-        "Log"
+        "ToString"
       ]
     },
     "/Users/xuxinlai/work/deploy-solidity/node_modules/hardhat/console.sol": {
@@ -648,10 +648,10 @@
         "StringUtils"
       ]
     },
-    "/Users/xuxinlai/work/deploy-solidity/contracts/handlers/GenericHandler.sol": {
-      "lastModificationDate": 1625789138226,
-      "contentHash": "33e26f8e5c3cdf6f2e680fd4b2d35d36",
-      "sourceName": "contracts/handlers/GenericHandler.sol",
+    "/Users/xuxinlai/work/deploy-solidity/contracts/handlers/WETHHandler.sol": {
+      "lastModificationDate": 1625902362694,
+      "contentHash": "35c12cad4287059f4451e34d4a0fa9ef",
+      "sourceName": "contracts/handlers/WETHHandler.sol",
       "solcConfig": {
         "version": "0.6.12",
         "settings": {
@@ -683,13 +683,15 @@
         }
       },
       "imports": [
-        "../interfaces/IGenericHandler.sol"
+        "../interfaces/IDepositExecute.sol",
+        "./HandlerHelpers.sol",
+        "../utils/ToString.sol"
       ],
       "versionPragmas": [
         "0.6.12"
       ],
       "artifacts": [
-        "GenericHandler"
+        "WETHHandler"
       ]
     },
     "/Users/xuxinlai/work/deploy-solidity/contracts/handlers/HandlerHelpers.sol": {
@@ -736,54 +738,9 @@
         "HandlerHelpers"
       ]
     },
-    "/Users/xuxinlai/work/deploy-solidity/contracts/handlers/WETHHandler.sol": {
-      "lastModificationDate": 1625789166236,
-      "contentHash": "3cee70fe9a4dc44e8dae1637646fcbc6",
-      "sourceName": "contracts/handlers/WETHHandler.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "../interfaces/IDepositExecute.sol",
-        "./HandlerHelpers.sol"
-      ],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "WETHHandler"
-      ]
-    },
     "/Users/xuxinlai/work/deploy-solidity/contracts/handlers/ERC721Handler.sol": {
-      "lastModificationDate": 1625789127806,
-      "contentHash": "b0d8fc378708a588a4ca450667f65936",
+      "lastModificationDate": 1625901665673,
+      "contentHash": "eb9f9edaa62bd1ca8bc9cba0a8b3a051",
       "sourceName": "contracts/handlers/ERC721Handler.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1812,8 +1769,8 @@
       ]
     },
     "/Users/xuxinlai/work/deploy-solidity/contracts/handlers/ERC20Handler.sol": {
-      "lastModificationDate": 1625789122991,
-      "contentHash": "eac72e709b11371a20001c87762dcb6c",
+      "lastModificationDate": 1625974007860,
+      "contentHash": "f34c637dac70794ba9c92e33f6684608",
       "sourceName": "contracts/handlers/ERC20Handler.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1948,6 +1905,50 @@
       ],
       "artifacts": [
         "WETHSafe"
+      ]
+    },
+    "/Users/xuxinlai/work/deploy-solidity/contracts/handlers/GenericHandler.sol": {
+      "lastModificationDate": 1625901622613,
+      "contentHash": "47addef5ddc82d5f85a88b84fd28fb86",
+      "sourceName": "contracts/handlers/GenericHandler.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/IGenericHandler.sol"
+      ],
+      "versionPragmas": [
+        "0.6.12"
+      ],
+      "artifacts": [
+        "GenericHandler"
       ]
     },
     "/Users/xuxinlai/work/deploy-solidity/contracts/CentrifugeAsset.sol": {

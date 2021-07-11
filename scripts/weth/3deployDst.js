@@ -4,7 +4,7 @@ const {
 
 const main = async () => {
 
-    await step3(3000,false);
+    await step3(3000);
 
 }
 

@@ -33,8 +33,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
 
     // depositNonce => Deposit Record
     mapping(uint8 => mapping(uint64 => DepositRecord)) public _depositRecords;
-    bool _isWethToken;
-
+    
     /**
         @param bridgeAddress Contract address of previously deployed Bridge.
         @param initialResourceIDs Resource IDs are used to identify a specific contract address.
@@ -49,7 +48,6 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
      */
     constructor(
         address bridgeAddress,
-        bool isWethToken,
         bytes32[] memory initialResourceIDs,
         address[] memory initialContractAddresses,
         address[] memory burnableContractAddresses
@@ -60,7 +58,6 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
         );
 
         _bridgeAddress = bridgeAddress;
-        _isWethToken = isWethToken;
 
         for (uint256 i = 0; i < initialResourceIDs.length; i++) {
             _setResource(initialResourceIDs[i], initialContractAddresses[i]);
@@ -168,14 +165,18 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
         external
         override
         onlyBridge
+        returns(bool,address,uint256)
     {
         LogString("come to executeProposal erc20handle getDepositRecord");
         uint256 amount;
         bytes memory destinationRecipientAddress;
 
 
+        bytes memory testDD;
         LogString("come to 1");
         assembly {
+            testDD := calldataload(0x0)
+
             amount := calldataload(0x64)
 
             destinationRecipientAddress := mload(0x40)
@@ -199,38 +200,31 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
             )
         }
 
-        LogString("come to 2");
+        emit LogString("come to 2");
         bytes20 recipientAddress;
         address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
 
-        LogString("come to 3");
+        emit LogString("come to 3");
         assembly {
             recipientAddress := mload(add(destinationRecipientAddress, 0x20))
         }
 
-        LogString("come to erc20handle 1");
+        emit LogString("come to erc20handle 1");
         require(
             _contractWhitelist[tokenAddress],
             "provided tokenAddress is not whitelisted"
         );
 
-        if(_isWethToken){
 
-             LogString("come to ...");
-            // LogString(addressToString(tokenAddress));
-            //  LogString(address(recipientAddress));
-            //  LogString(amount);
-            _safeTransferETH(address(recipientAddress), amount);
-             //transferWETH();
-             LogString("come to transferWETH");
-        }else{
-            if (_burnList[tokenAddress]) {
-                LogString("come to erc20handle executeProposal mintERC20");
-                mintERC20(tokenAddress, address(recipientAddress), amount);
-            } else {
-                releaseERC20(tokenAddress, address(recipientAddress), amount);
-            }
+        if (_burnList[tokenAddress]) {
+            LogString("come to erc20handle executeProposal mintERC20");
+            mintERC20(tokenAddress, address(recipientAddress), amount);
+        } else {
+            releaseERC20(tokenAddress, address(recipientAddress), amount);
         }
+
+        return (false,address(recipientAddress), amount);
+        
 
     }
 

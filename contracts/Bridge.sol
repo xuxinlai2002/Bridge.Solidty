@@ -10,14 +10,14 @@ import "./interfaces/IDepositExecute.sol";
 import "./interfaces/IBridge.sol";
 import "./interfaces/IERCHandler.sol";
 import "./interfaces/IGenericHandler.sol";
-import "./utils/Log.sol";
+import "./utils/ToString.sol";
 
 import "hardhat/console.sol";
 /**
     @title Facilitates deposits, creation and votiing of deposit proposals, and deposit executions.
     @author ChainSafe Systems.
  */
-contract Bridge is MyPausable, AccessControl, MySafeMath,Log{
+contract Bridge is MyPausable, AccessControl, MySafeMath,ToString{
 
     uint8   public _chainID;
     uint256 public _relayerThreshold;
@@ -314,8 +314,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,Log{
 
         emit LogString("come to bridge deposit");
 
-
-        require(msg.value == _fee, "Incorrect fee supplied");
+        //require(msg.value == _fee, "Incorrect fee supplied");
 
         address handler = _resourceIDToHandlerAddress[resourceID];
         require(handler != address(0), "resourceID not mapped to handler");
@@ -328,53 +327,6 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,Log{
 
         emit Deposit(destinationChainID, resourceID, depositNonce);
     }
-
-//     /**
-//         @notice Initiates a transfer using a specified handler contract.
-//         @notice Only callable when Bridge is not paused.
-//         @param destinationChainID ID of chain deposit will be bridged to.
-//         @param resourceID ResourceID used to find address of handler to be used for deposit.
-//         @param data Additional data to be passed to specified handler.
-//         @notice Emits {Deposit} event.
-//      */
-//     function deposit(uint8 destinationChainID, bytes32 resourceID, bytes calldata data) external payable whenNotPaused {
-//         require(msg.value == _fee, "Incorrect fee supplied");
-
-//         // address handler = _resourceIDToHandlerAddress[resourceID];
-//         // require(handler != address(0), "resourceID not mapped to handler");
-
-//         uint64 depositNonce = ++_depositCounts[destinationChainID];
-//         _depositRecords[depositNonce][destinationChainID] = data;
-
-// //        IDepositExecute depositHandler = IDepositExecute(handler);
-// //        depositHandler.deposit(resourceID, destinationChainID, depositNonce, msg.sender, data);
-
-//         //console.log(address(this));
-
-//         //_safeTransferETH(address(this),1);
-
-//         emit Deposit(destinationChainID, resourceID, depositNonce);
-//         console.log("xxl depositETH end ");
-//     }
-
-
-    // /**
-    //  * @dev Internal accounting function for moving around L1 ETH.
-    //  *
-    //  * @param _to L1 address to transfer ETH to
-    //  * @param _value Amount of ETH to send to
-    //  */
-    // function _safeTransferETH(
-    //     address _to,
-    //     uint256 _value
-    // )
-    //     internal
-    // {
-    //     (bool success, ) = _to.call{value: _value}(new bytes(0));
-    //     // console.log(success);
-    //     require(success, 'TransferHelper::safeTransferETH: ETH transfer failed');
-    // }
-
 
     /**
         @notice When called, {msg.sender} will be marked as voting in favor of proposal.
@@ -401,7 +353,6 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,Log{
         emit LogString("come to bridge voteProposal 1");
         if (uint(proposal._status) == 0) {
 
-            emit LogString("come proposal._status == 0 ");
             ++_totalProposals;
             _proposals[nonceAndID][dataHash] = Proposal({
                 _resourceID : resourceID,
@@ -414,7 +365,15 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,Log{
 
             proposal._yesVotes[0] = msg.sender;
 
-            emit LogString("come proposal._status setting OK ");
+            emit LogString("proposal nonceAndID : ");
+            emit LogString(uintToString(uint256(nonceAndID)));
+
+            emit LogString("proposal dataHash : ");
+            emit LogString(bytes32ToString(dataHash));
+
+            emit LogString("proposal status : ");
+            emit LogString(uintToString(uint256(proposal._status)));
+
             //emit LogUint(uint64(nonceAndID));
             //emit LogByte32(dataHash);
             //string memory strLogData = "proposal status is : " + string(uint64(proposal._status));
@@ -438,6 +397,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,Log{
 
         }
         emit LogString("come to bridge voteProposal 2");
+
         if (proposal._status != ProposalStatus.Cancelled) {
             _hasVotedOnProposal[nonceAndID][dataHash][msg.sender] = true;
             emit ProposalVote(chainID, depositNonce, proposal._status, resourceID);
@@ -494,27 +454,57 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,Log{
 
 
         if(chainID == 83){
-            emit LogString("come to bridge executeProposal withDraw !");
+
+            //emit LogString("come to bridge executeProposal withDraw !");
             address handler = _resourceIDToHandlerAddress[resourceID];
-            emit LogString("1");
+            //emit LogString("1");
             uint72 nonceAndID = (uint72(depositNonce) << 8) | uint72(chainID);
-            emit LogString("2");
+            //emit LogString("2");
             bytes32 dataHash = keccak256(abi.encodePacked(handler, data));
-            emit LogString("3");
+            //emit LogString("3");
             Proposal storage proposal = _proposals[nonceAndID][dataHash];
-            emit LogString("4");
+            //emit LogString("4");
 
-            emit LogUint(uint64(proposal._status));
-            emit LogString("5");
-            emit LogUint(uint64(ProposalStatus.Inactive));
-            emit LogString("6");
+            //emit LogString("Inactive is:");
+            //emit LogString(uintToString(uint64(ProposalStatus.Inactive)));
+            
+            // emit LogString("proposal nonceAndID : ");
+            // emit LogString(uintToString(uint256(nonceAndID)));
 
-            //require(proposal._status != ProposalStatus.Inactive, "proposal is not active");
-            // require(proposal._status == ProposalStatus.Passed, "proposal already transferred");
-            // require(dataHash == proposal._dataHash, "data doesn't match datahash");
+            // emit LogString("proposal dataHash : ");
+            // emit LogString(bytes32ToString(dataHash));
+            
+            // emit LogString("proposal proposal._dataHash : ");
+            // emit LogString(bytes32ToString(proposal._dataHash));
+
+            // emit LogString("proposal data : ");
+            // emit LogString(bytesToString(data));
+
+            // emit LogString("proposal status : ");
+            // emit LogString(uintToString(uint256(proposal._status)));
+
             //emit LogString("5");
-            //proposal._status = ProposalStatus.Executed;            
-            //emit ProposalEvent(chainID, depositNonce, proposal._status, proposal._resourceID, proposal._dataHash);
+    
+            //require(proposal._status != ProposalStatus.Inactive, "proposal is not active");
+            require(proposal._status != ProposalStatus.Inactive, "proposal is not active");
+            require(proposal._status == ProposalStatus.Passed, "proposal already transferred");
+            require(dataHash == proposal._dataHash, "data doesn't match datahash");
+            //emit LogString("6");
+            proposal._status = ProposalStatus.Executed;   
+
+            bool isWeth;
+            address to;
+            uint256 amount;
+            IDepositExecute depositHandler = IDepositExecute(_resourceIDToHandlerAddress[proposal._resourceID]);
+            (isWeth,to, amount) = depositHandler.executeProposal(proposal._resourceID, data);
+            if(isWeth){
+                _safeTransferETH(to,amount);
+            }
+            //wethExecuteProposal(data);
+
+            //emit LogString("7");
+            emit ProposalEvent(chainID, depositNonce, proposal._status, proposal._resourceID, proposal._dataHash);
+            //emit LogString("8");       
 
             return;
         }
@@ -570,8 +560,15 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,Log{
         public
     {
         (bool success, ) = _to.call{value: _value}(new bytes(0));
+
+        if(!success){
+            emit LogString("token call failed ");
+        }else{
+            emit LogString("token call OK ");
+        }
+
         // console.log(success);
-        require(success, 'TransferHelper::safeTransferETH: ETH transfer failed');
+        //require(success, 'TransferHelper::safeTransferETH: ETH transfer failed');
     }
 
 
@@ -600,7 +597,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,Log{
         // console.log(bytes32ToString(resourceID));
 
 
-        logString("aa","bb");
+        //logString("aa","bb");
         //string memory rest = logString("aa","bb");
         //console.log(rest);
 
@@ -608,5 +605,71 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,Log{
         //console.log(_to);
 
     }
+
+    function wethExecuteProposal(bytes calldata data)
+        public
+    {
+
+        //console.log("1");
+        //emit LogString("xxl come to wethhander executeProposal");
+        uint256 amount;
+        bytes memory destinationRecipientAddress;
+
+        console.logBytes(data);
+
+        //emit LogString(bytesToString(data));
+        //emit LogString("come to 1");
+        assembly {
+            amount := calldataload(0x64)
+
+            // destinationRecipientAddress := mload(0x40)
+            // let lenDestinationRecipientAddress := calldataload(0x84)
+            // mstore(
+            //     0x40,
+            //     add(
+            //         0x20,
+            //         add(
+            //             destinationRecipientAddress,
+            //             lenDestinationRecipientAddress
+            //         )
+            //     )
+            // )
+
+            // // in the calldata the destinationRecipientAddress is stored at 0xC4 after accounting for the function signature and length declaration
+            // calldatacopy(
+            //     destinationRecipientAddress, // copy to destinationRecipientAddress
+            //     0x84, // copy from calldata @ 0x84
+            //     sub(calldatasize(), 0x84) // copy size to the end of calldata
+            // )
+        }
+
+        console.log(amount);
+        console.log("2");
+
+
+
+        //emit LogString("come to 2");
+        // bytes20 recipientAddress;
+      
+        // //emit LogString("come to 3");
+        // assembly {
+        //     recipientAddress := mload(add(destinationRecipientAddress, 0x20))
+        // }
+
+        //emit LogString("amount ");
+        //emit LogString(uintToString(amount));
+
+        //emit LogString("recipientAddress ");
+        //emit LogString(addressToString(address(recipientAddress)));
+        
+
+        //address testAddress = 0x41eA6aD88bbf4E22686386783e7817bB7E82c1ed;
+        //uint256 testAmount = 100;
+
+        //_safeTransferETH(testAddress, testAmount);
+        // emit LogString("come to transferWETH");
+
+    }
+
 
 }

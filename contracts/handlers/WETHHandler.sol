@@ -6,12 +6,14 @@ pragma experimental ABIEncoderV2;
 import "../interfaces/IDepositExecute.sol";
 import "./HandlerHelpers.sol";
 
+import "../utils/ToString.sol";
+
 /**
     @title Handles ERC20 deposits and deposit executions.
     @author ChainSafe Systems.
     @notice This contract is intended to be used with the Bridge contract.
  */
-contract WETHHandler is IDepositExecute, HandlerHelpers{
+contract WETHHandler is IDepositExecute, HandlerHelpers,ToString{
 
     struct DepositRecord {
         address _tokenAddress;
@@ -158,8 +160,90 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
         external
         override
         onlyBridge
+        returns(bool,address,uint256)
     {
-        emit LogString("come to wethhander executeProposal");
+        emit LogString("xxl come to wethhander executeProposal");
+        uint256 amount;
+        bytes memory destinationRecipientAddress;
+
+        emit LogString("come to 1");
+        assembly {
+            amount := calldataload(0x64)
+
+            destinationRecipientAddress := mload(0x40)
+            let lenDestinationRecipientAddress := calldataload(0x84)
+            mstore(
+                0x40,
+                add(
+                    0x20,
+                    add(
+                        destinationRecipientAddress,
+                        lenDestinationRecipientAddress
+                    )
+                )
+            )
+
+            // in the calldata the destinationRecipientAddress is stored at 0xC4 after accounting for the function signature and length declaration
+            calldatacopy(
+                destinationRecipientAddress, // copy to destinationRecipientAddress
+                0x84, // copy from calldata @ 0x84
+                sub(calldatasize(), 0x84) // copy size to the end of calldata
+            )
+        }
+
+        emit LogString("come to 2");
+        bytes20 recipientAddress;
+        address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
+
+        emit LogString("come to 3");
+        assembly {
+            recipientAddress := mload(add(destinationRecipientAddress, 0x20))
+        }
+
+        emit LogString("come to erc20handle 1");
+        require(
+            _contractWhitelist[tokenAddress],
+            "provided tokenAddress is not whitelisted"
+        );
+
+        emit LogString("amount ");
+        emit LogString(uintToString(amount));
+
+        emit LogString("recipientAddress ");
+        emit LogString(addressToString(address(recipientAddress)));
+        
+        //_safeTransferETH(address(recipientAddress), amount);
+        // emit LogString("come to transferWETH");
+
+        return (true,address(recipientAddress),amount);
+
+    }
+
+    /**
+     * @dev Internal accounting function for moving around L1 ETH.
+     *
+     * @param _to L1 address to transfer ETH to
+     * @param _value Amount of ETH to send to
+     */
+    function _safeTransferETH(
+        address _to,
+        uint256 _value
+    )
+        public
+    {
+        (bool success, ) = _to.call{value: _value}(new bytes(0));
+        //console.log(success);
+
+        if(!success){
+            emit LogString("token call failed ");
+        }
+        //require(success, 'TransferHelper::safeTransferETH: ETH transfer failed');
+    }
+
+    receive()
+        external
+        payable
+    {
 
     }
 
