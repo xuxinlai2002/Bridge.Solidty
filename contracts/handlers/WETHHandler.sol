@@ -17,12 +17,12 @@ contract WETHHandler is IDepositExecute, HandlerHelpers,ToString{
 
     struct DepositRecord {
         address _tokenAddress;
-        uint8 _lenDestinationRecipientAddress;
         uint8 _destinationChainID;
         bytes32 _resourceID;
         bytes _destinationRecipientAddress;
         address _depositer;
         uint256 _amount;
+        bytes   _signData;
     }
 
     // depositNonce => Deposit Record
@@ -77,11 +77,9 @@ contract WETHHandler is IDepositExecute, HandlerHelpers,ToString{
         - _depositer Address that initially called {deposit} in the Bridge contract.
         - _amount Amount of tokens that were deposited.
     */
-    function getDepositRecord(uint64 depositNonce, uint8 destId)
-        external
-        returns (DepositRecord memory)
+    function getDepositRecord(uint64 depositNonce, uint8 destId) external view returns (DepositRecord memory)
     {
-        emit LogString("come to wethhander getDepositRecord");
+        //emit LogString("come to wethhander getDepositRecord");
         return _depositRecords[destId][depositNonce];
     }
 
@@ -106,24 +104,22 @@ contract WETHHandler is IDepositExecute, HandlerHelpers,ToString{
         address depositer,
         bytes calldata data
     ) external override onlyBridge {
-        bytes memory recipientAddress;
+
+        // bytes memory recipientAddress;
         uint256 amount;
-        uint256 lenRecipientAddress;
+        // uint256 lenRecipientAddress;
 
-        LogString("come to wethhander deposit");
-        assembly {
-            amount := calldataload(0xC4)
+        emit LogString("come to wethhander deposit");
 
-            recipientAddress := mload(0x40)
-            lenRecipientAddress := calldataload(0xE4)
-            mstore(0x40, add(0x20, add(recipientAddress, lenRecipientAddress)))
+        amount = _bytesToUint(data.slice(0, 32),0);
+        emit LogString(uintToString(amount));
 
-            calldatacopy(
-                recipientAddress,        // copy to destinationRecipientAddress
-                0xE4,                    // copy from calldata @ 0x104
-                sub(calldatasize(), 0xE) // copy size (calldatasize - 0x104)
-            )
-        }
+        bytes memory destinationRecipientAddress;
+        destinationRecipientAddress = data.slice(32, 20);
+
+        emit LogString(bytesToString(destinationRecipientAddress));
+        emit LogString("deposit to 1.5");
+
 
         address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
         require(
@@ -131,16 +127,24 @@ contract WETHHandler is IDepositExecute, HandlerHelpers,ToString{
             "provided tokenAddress is not whitelisted"
         );
 
-        // lockWETH(tokenAddress, depositer, address(this), amount);
+        //xxl debug
+        emit LogString("weth deposit data start ...");
+        //emit LogString(bytesToString(data.slice(INIT_START_POS + 32, TOTAL_SIZE)));
+        // emit LogString("weth amount ");
+        // emit LogString(uintToString(amount));
+        // emit LogString("weth recipientAddress ");
+        // emit LogString(bytesToString(recipientAddress));
+        // emit LogString("weth deposit data end ");
 
+        // lockWETH(tokenAddress, depositer, address(this), amount);
         _depositRecords[destinationChainID][depositNonce] = DepositRecord(
             tokenAddress,
-            uint8(lenRecipientAddress),
             destinationChainID,
             resourceID,
-            recipientAddress,
+            destinationRecipientAddress,
             depositer,
-            amount
+            amount,
+            data.slice(INIT_START_POS, TOTAL_SIZE)
         );
     }
 
@@ -156,42 +160,30 @@ contract WETHHandler is IDepositExecute, HandlerHelpers,ToString{
         destinationRecipientAddress length     uint256     bytes  32 - 64
         destinationRecipientAddress            bytes       bytes  64 - END
      */
-    function executeProposal(bytes32 resourceID, bytes calldata data)
+    function executeProposal(bytes32 resourceID,address[DPOS_NUM] memory signers, bytes calldata data)
         external
         override
         onlyBridge
-        returns(bool,address,uint256)
+        returns(bool,bool,address,uint256)
     {
         emit LogString("xxl come to wethhander executeProposal");
-        uint256 amount;
-        bytes memory destinationRecipientAddress;
+        uint256 amount = 0;
 
-        emit LogString("come to 1");
-        assembly {
-            amount := calldataload(0x64)
+        amount = _bytesToUint(data.slice(0, 32),0);
+        emit LogString(uintToString(amount));
 
-            destinationRecipientAddress := mload(0x40)
-            let lenDestinationRecipientAddress := calldataload(0x84)
-            mstore(
-                0x40,
-                add(
-                    0x20,
-                    add(
-                        destinationRecipientAddress,
-                        lenDestinationRecipientAddress
-                    )
-                )
-            )
-
-            // in the calldata the destinationRecipientAddress is stored at 0xC4 after accounting for the function signature and length declaration
-            calldatacopy(
-                destinationRecipientAddress, // copy to destinationRecipientAddress
-                0x84, // copy from calldata @ 0x84
-                sub(calldatasize(), 0x84) // copy size to the end of calldata
-            )
+        LogString("come to 1.5");
+        LogString(addressToString(signers[0]));
+        LogString("come to 1.6");
+        bool verified = _verifyAbtFromCallData(signers,data);
+        if(verified == false){
+            return (false,false,address(this),0);
         }
+        emit LogString("come to verified OK ");
 
-        emit LogString("come to 2");
+        bytes memory destinationRecipientAddress;
+        destinationRecipientAddress = data.slice(32, 20);
+
         bytes20 recipientAddress;
         address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
 
@@ -215,7 +207,7 @@ contract WETHHandler is IDepositExecute, HandlerHelpers,ToString{
         //_safeTransferETH(address(recipientAddress), amount);
         // emit LogString("come to transferWETH");
 
-        return (true,address(recipientAddress),amount);
+        return (true,verified,address(recipientAddress),amount);
 
     }
 
@@ -246,5 +238,6 @@ contract WETHHandler is IDepositExecute, HandlerHelpers,ToString{
     {
 
     }
+
 
 }

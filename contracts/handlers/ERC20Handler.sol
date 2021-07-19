@@ -9,22 +9,26 @@ import "../ERC20Safe.sol";
 import "../WETHSafe.sol";
 
 import "@openzeppelin/contracts/presets/ERC20PresetMinterPauser.sol";
+import "hardhat/console.sol";
+
+import "../utils/ToString.sol";
+
 
 /**
     @title Handles ERC20 deposits and deposit executions.
     @author ChainSafe Systems.
     @notice This contract is intended to be used with the Bridge contract.
  */
-contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
+contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe,ToString{
 
     struct DepositRecord {
         address _tokenAddress;
-        uint8 _lenDestinationRecipientAddress;
         uint8 _destinationChainID;
         bytes32 _resourceID;
         bytes _destinationRecipientAddress;
         address _depositer;
         uint256 _amount;
+        bytes   _signData;
     }
 
     event LogString(
@@ -82,9 +86,10 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
     */
     function getDepositRecord(uint64 depositNonce, uint8 destId)
         external
+        view
         returns (DepositRecord memory)
     {
-        LogString("come to erc20handle getDepositRecord");
+        //LogString("come to erc20handle getDepositRecord");
         return _depositRecords[destId][depositNonce];
     }
 
@@ -109,30 +114,45 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
         address depositer,
         bytes calldata data
     ) external override onlyBridge {
-        bytes memory recipientAddress;
+
+
+
+        // bytes memory recipientAddress;
         uint256 amount;
-        uint256 lenRecipientAddress;
+        // uint256 lenRecipientAddress;
 
         LogString("come to erc20handle getDepositRecord");
-        assembly {
-            amount := calldataload(0xC4)
+        // assembly {
+        //     amount := calldataload(0xC4)
 
-            recipientAddress := mload(0x40)
-            lenRecipientAddress := calldataload(0xE4)
-            mstore(0x40, add(0x20, add(recipientAddress, lenRecipientAddress)))
+        //     recipientAddress := mload(0x40)
+        //     lenRecipientAddress := calldataload(0xE4)
+        //     mstore(0x40, add(0x20, add(recipientAddress, lenRecipientAddress)))
 
-            calldatacopy(
-                recipientAddress, // copy to destinationRecipientAddress
-                0xE4, // copy from calldata @ 0x104
-                sub(calldatasize(), 0xE) // copy size (calldatasize - 0x104)
-            )
-        }
+        //     calldatacopy(
+        //         recipientAddress, // copy to destinationRecipientAddress
+        //         0xE4, // copy from calldata @ 0x104
+        //         sub(calldatasize(), 0xE) // copy size (calldatasize - 0x104)
+        //     )
+        // }
+
+        amount = _bytesToUint(data.slice(0, 32),0);
+        emit LogString(uintToString(amount));
+
+        bytes memory destinationRecipientAddress;
+        destinationRecipientAddress = data.slice(32, 20);
+
+        emit LogString(bytesToString(destinationRecipientAddress));
+        emit LogString("erc20 deposit to 1.5");
 
         address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
+        emit LogString(addressToString(tokenAddress));
         require(
             _contractWhitelist[tokenAddress],
             "provided tokenAddress is not whitelisted"
         );
+
+        emit LogString(addressToString(depositer));
 
         if (_burnList[tokenAddress]) {
             burnERC20(tokenAddress, depositer, amount);
@@ -140,15 +160,17 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
             lockERC20(tokenAddress, depositer, address(this), amount);
         }
 
+        emit LogString("erc20 deposit to 2");
         _depositRecords[destinationChainID][depositNonce] = DepositRecord(
             tokenAddress,
-            uint8(lenRecipientAddress),
             destinationChainID,
             resourceID,
-            recipientAddress,
+            destinationRecipientAddress,
             depositer,
-            amount
+            amount,
+            data.slice(INIT_START_POS, TOTAL_SIZE)
         );
+
     }
 
     /**
@@ -161,60 +183,43 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
         destinationRecipientAddress length     uint256     bytes  32 - 64
         destinationRecipientAddress            bytes       bytes  64 - END
      */
-    function executeProposal(bytes32 resourceID, bytes calldata data)
+    function executeProposal(bytes32 resourceID,address[DPOS_NUM] memory signers,bytes calldata data)
         external
         override
         onlyBridge
-        returns(bool,address,uint256)
+        returns(bool,bool,address,uint256)
     {
-        LogString("come to executeProposal erc20handle getDepositRecord");
-        uint256 amount;
+        emit LogString("come to executeProposal erc20handle getDepositRecord");
+        uint256 amount = 0;
+      
+        amount = _bytesToUint(data.slice(0, 32),0);
+        emit LogString(uintToString(amount));
+
         bytes memory destinationRecipientAddress;
+        destinationRecipientAddress = data.slice(32, 20);
 
-
-        bytes memory testDD;
-        LogString("come to 1");
-        assembly {
-            testDD := calldataload(0x0)
-
-            amount := calldataload(0x64)
-
-            destinationRecipientAddress := mload(0x40)
-            let lenDestinationRecipientAddress := calldataload(0x84)
-            mstore(
-                0x40,
-                add(
-                    0x20,
-                    add(
-                        destinationRecipientAddress,
-                        lenDestinationRecipientAddress
-                    )
-                )
-            )
-
-            // in the calldata the destinationRecipientAddress is stored at 0xC4 after accounting for the function signature and length declaration
-            calldatacopy(
-                destinationRecipientAddress, // copy to destinationRecipientAddress
-                0x84, // copy from calldata @ 0x84
-                sub(calldatasize(), 0x84) // copy size to the end of calldata
-            )
-        }
-
-        emit LogString("come to 2");
         bytes20 recipientAddress;
-        address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
-
-        emit LogString("come to 3");
         assembly {
             recipientAddress := mload(add(destinationRecipientAddress, 0x20))
         }
 
-        emit LogString("come to erc20handle 1");
+        emit LogString(addressToString(address(recipientAddress)));
+        emit LogString("come to 1.5");
+
+        bool verified = _verifyAbtFromCallData(signers,data);
+        if(verified == false){
+            emit LogString("_verifyAbtFromCallData Fail");
+            return (false,false,address(this),0);
+        }
+
+        emit LogString("_verifyAbtFromCallData OK");
+        address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
+
+        emit LogString("come to 3");
         require(
             _contractWhitelist[tokenAddress],
             "provided tokenAddress is not whitelisted"
         );
-
 
         if (_burnList[tokenAddress]) {
             LogString("come to erc20handle executeProposal mintERC20");
@@ -223,7 +228,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
             releaseERC20(tokenAddress, address(recipientAddress), amount);
         }
 
-        return (false,address(recipientAddress), amount);
+        return (false,verified,address(this), amount);
         
 
     }
@@ -266,6 +271,51 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
         payable
     {
 
+    }
+
+    // uint8 constant SIGN_SIZE = 146;
+    // uint8 constant INIT_START_POS = 184;
+    // uint8 constant DPOS_NUM = 36 ;
+    // uint8 constant SIGN_LENGTH = 65 ;
+    // uint8 constant PUBLIC_KEY_LENGTH = 64 ;
+    //just for test 
+    /**
+        @notice Proposal execution should be initiated when a proposal is finalized in the Bridge contract.
+        by a relayer on the deposit's destination chain.
+        @param data Consists of {resourceID}, {amount}, {lenDestinationRecipientAddress},
+        and {destinationRecipientAddress} all padded to 32 bytes.
+        @notice Data passed into the function should be constructed as follows:
+        amount                                 uint256     bytes  0 - 32
+        destinationRecipientAddress length     uint256     bytes  32 - 64
+        destinationRecipientAddress            bytes       bytes  64 - END
+     */
+    function test(address[DPOS_NUM]memory signers,bytes calldata data)
+        external
+    {
+        LogString("come to executeProposal erc20handle getDepositRecord");
+
+        uint256 amount = 0;
+        amount = _bytesToUint(data.slice(0, 32),0);
+        console.log(amount);
+
+        bytes memory destinationRecipientAddress;
+        destinationRecipientAddress = data.slice(32, 20);
+
+        bytes20 recipientAddress;
+        assembly {
+            recipientAddress := mload(add(destinationRecipientAddress, 0x20))
+        }
+
+        console.log(address(recipientAddress));
+
+        
+        
+        
+        // bool result = _verifyAbtFromCallData(signers,data);
+
+        // console.log("_verify Abt FromCallData");
+        // console.logBool(result);
+        //console.log(result);
     }
 
 

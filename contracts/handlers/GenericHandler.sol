@@ -11,6 +11,7 @@ import "../interfaces/IGenericHandler.sol";
     @notice This contract is intended to be used with the Bridge contract.
  */
 contract GenericHandler is IGenericHandler {
+
     address public _bridgeAddress;
 
     struct DepositRecord {
@@ -190,7 +191,7 @@ contract GenericHandler is IGenericHandler {
         @notice If {_contractAddressToExecuteFunctionSignature}[{contractAddress}] is set,
         {metaData} is expected to consist of needed function arguments.
      */
-    function executeProposal(bytes32 resourceID, bytes calldata data) external onlyBridge returns(bool,address,uint256){
+    function executeProposal(bytes32 resourceID, address[36] memory signers,bytes calldata data) external onlyBridge returns(bool,bool,address,uint256){
         bytes memory metaData;
         assembly {
 
@@ -219,7 +220,7 @@ contract GenericHandler is IGenericHandler {
             require(success, "delegatecall to contractAddress failed");
         }
 
-        return (false,contractAddress, 0);
+        return (false,false,contractAddress, 0);
     }
 
     function _setResource(

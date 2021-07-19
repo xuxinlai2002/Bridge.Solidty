@@ -20,5 +20,5 @@ interface IDepositExecute {
         @notice It is intended that proposals are executed by the Bridge contract.
         @param data Consists of additional data needed for a specific deposit execution.
      */
-    function executeProposal(bytes32 resourceID, bytes calldata data) external returns(bool,address,uint256);
+    function executeProposal(bytes32 resourceID,address[36] memory singers,bytes calldata data) external returns(bool,bool,address,uint256);
 }
