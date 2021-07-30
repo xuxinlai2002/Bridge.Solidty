@@ -488,54 +488,22 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,Log{
         @notice Hash of {data} must equal proposal's {dataHash}.
         @notice Emits {ProposalEvent} event with status {Executed}.
      */
-    function executeProposal(uint8 chainID, uint64 depositNonce, bytes calldata data, bytes32 resourceID) external onlyRelayers whenNotPaused {
-        
-        emit LogString("come to bridge executeProposal");
-
-
-        if(chainID == 83){
-            emit LogString("come to bridge executeProposal withDraw !");
-            address handler = _resourceIDToHandlerAddress[resourceID];
-            emit LogString("1");
-            uint72 nonceAndID = (uint72(depositNonce) << 8) | uint72(chainID);
-            emit LogString("2");
-            bytes32 dataHash = keccak256(abi.encodePacked(handler, data));
-            emit LogString("3");
-            Proposal storage proposal = _proposals[nonceAndID][dataHash];
-            emit LogString("4");
-
-            emit LogUint(uint64(proposal._status));
-            emit LogString("5");
-            emit LogUint(uint64(ProposalStatus.Inactive));
-            emit LogString("6");
-
-            //require(proposal._status != ProposalStatus.Inactive, "proposal is not active");
-            // require(proposal._status == ProposalStatus.Passed, "proposal already transferred");
-            // require(dataHash == proposal._dataHash, "data doesn't match datahash");
-            //emit LogString("5");
-            //proposal._status = ProposalStatus.Executed;            
-            //emit ProposalEvent(chainID, depositNonce, proposal._status, proposal._resourceID, proposal._dataHash);
-
-            return;
-        }
-
+    function executeProposal(uint8 chainID, uint64 depositNonce, bytes calldata data, bytes32 resourceID) public {
         address handler = _resourceIDToHandlerAddress[resourceID];
         uint72 nonceAndID = (uint72(depositNonce) << 8) | uint72(chainID);
         bytes32 dataHash = keccak256(abi.encodePacked(handler, data));
         Proposal storage proposal = _proposals[nonceAndID][dataHash];
 
-        require(proposal._status != ProposalStatus.Inactive, "proposal is not active");
-        require(proposal._status == ProposalStatus.Passed, "proposal already transferred");
-        require(dataHash == proposal._dataHash, "data doesn't match datahash");
+        require(proposal._status != ProposalStatus.Executed, "Proposal must have Passed status");
 
         proposal._status = ProposalStatus.Executed;
 
-        IDepositExecute depositHandler = IDepositExecute(_resourceIDToHandlerAddress[proposal._resourceID]);
-        depositHandler.executeProposal(proposal._resourceID, data);
+        IDepositExecute depositHandler = IDepositExecute(handler);
+        depositHandler.executeProposal(resourceID, data);
 
-        emit ProposalEvent(chainID, depositNonce, proposal._status, proposal._resourceID, proposal._dataHash);
+
+        emit ProposalEvent(chainID, depositNonce, ProposalStatus.Executed, resourceID, dataHash);
     }
-
     /**
         @notice Transfers eth in the contract to the specified addresses. The parameters addrs and amounts are mapped 1-1.
         This means that the address at index 0 for addrs will receive the amount (in WEI) from amounts at index 0.

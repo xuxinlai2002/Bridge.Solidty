@@ -329,7 +329,7 @@ const step7 = async (sleepTime) => {
         ]
     }
     
-    let tofullPath = "/Users/xuxinlai/work/chainbridge/config.json"
+    let tofullPath = "./config.json"
     fs.writeFileSync(tofullPath, JSON.stringify(toData, null, 4), { encoding: 'utf8' }, err => {})
 
     await sleep(sleepTime)
@@ -590,6 +590,7 @@ const stepN10 = async(sleepTime,amount,recipient) => {
     let chainID = await getChainId();
     console.log("chainID is :" + chainID);
     let accounts = await ethers.getSigners()
+    console.log(accounts[2].address);
 
     //------------------
     let dstBridge = await readConfig("3weth_config","DST_BRIDGE");
@@ -603,7 +604,7 @@ const stepN10 = async(sleepTime,amount,recipient) => {
         "resourceId":"0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
 
         "bridge":dstBridge,
-        "dest":82,
+        "dest":1,
         "amount":amount,
         "recipient":dstHandlerERC20,
 

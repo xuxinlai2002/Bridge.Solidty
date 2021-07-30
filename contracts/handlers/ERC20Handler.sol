@@ -164,76 +164,29 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
         destinationRecipientAddress length     uint256     bytes  32 - 64
         destinationRecipientAddress            bytes       bytes  64 - END
      */
-    function executeProposal(bytes32 resourceID, bytes calldata data)
-        external
-        override
-        onlyBridge
-    {
-        LogString("come to executeProposal erc20handle getDepositRecord");
-        uint256 amount;
-        bytes memory destinationRecipientAddress;
+   function executeProposal(bytes32 resourceID, bytes calldata data) external override onlyBridge {
+        uint256       amount;
+        uint256       lenDestinationRecipientAddress;
+        bytes  memory destinationRecipientAddress;
 
+        (amount, lenDestinationRecipientAddress) = abi.decode(data, (uint, uint));
+        destinationRecipientAddress = bytes(data[64:64 + lenDestinationRecipientAddress]);
 
-        LogString("come to 1");
-        assembly {
-            amount := calldataload(0x64)
-
-            destinationRecipientAddress := mload(0x40)
-            let lenDestinationRecipientAddress := calldataload(0x84)
-            mstore(
-                0x40,
-                add(
-                    0x20,
-                    add(
-                        destinationRecipientAddress,
-                        lenDestinationRecipientAddress
-                    )
-                )
-            )
-
-            // in the calldata the destinationRecipientAddress is stored at 0xC4 after accounting for the function signature and length declaration
-            calldatacopy(
-                destinationRecipientAddress, // copy to destinationRecipientAddress
-                0x84, // copy from calldata @ 0x84
-                sub(calldatasize(), 0x84) // copy size to the end of calldata
-            )
-        }
-
-        LogString("come to 2");
         bytes20 recipientAddress;
         address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
 
-        LogString("come to 3");
         assembly {
             recipientAddress := mload(add(destinationRecipientAddress, 0x20))
         }
 
-        LogString("come to erc20handle 1");
-        require(
-            _contractWhitelist[tokenAddress],
-            "provided tokenAddress is not whitelisted"
-        );
+        require(_contractWhitelist[tokenAddress], "provided tokenAddress is not whitelisted");
 
-        if(_isWethToken){
-
-             LogString("come to ...");
-            // LogString(addressToString(tokenAddress));
-            //  LogString(address(recipientAddress));
-            //  LogString(amount);
-            _safeTransferETH(address(recipientAddress), amount);
-             //transferWETH();
-             LogString("come to transferWETH");
-        }else{
-            if (_burnList[tokenAddress]) {
-                LogString("come to erc20handle executeProposal mintERC20");
-                mintERC20(tokenAddress, address(recipientAddress), amount);
-            } else {
-                releaseERC20(tokenAddress, address(recipientAddress), amount);
-            }
+        if (_burnList[tokenAddress]) {
+            mintERC20(tokenAddress, address(recipientAddress), amount);
+        } else {
+            releaseERC20(tokenAddress, address(recipientAddress), amount);
         }
-
     }
-
 
     /**
         @notice Used to manually release ERC20 tokens from ERC20Safe.
