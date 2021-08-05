@@ -75,4 +75,9 @@ contract HandlerHelpers is IERCHandler {
         require(_contractWhitelist[contractAddress], "provided contract is not whitelisted");
         _burnList[contractAddress] = true;
     }
+
+    uint256 constant MAX_PACK_NUM = 100 ;
+
+
+
 }
