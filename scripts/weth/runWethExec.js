@@ -9,7 +9,6 @@ const { ethers } = require("hardhat");
 
 const main = async () => {
 
-
     let chainID = await getChainId();
     console.log("chainID is :" + chainID);
     let accounts = await ethers.getSigners()

@@ -75,9 +75,47 @@ function sleep(ms) {
 
 ///
 
+const getContractTx = async(abi,addresss,funcName,params,eth) =>{
+
+    const callContract = new eth.Contract(
+      abi,
+      addresss
+    );
+  
+    const tx = await callContract.methods[funcName](
+      ...params
+    );
+  
+    return tx;
+}
 
 
+const getUnsignTx = async(tx,from,to,value,chainID,gasLimit,eth) => {
 
+    try{
+  
+        const gasPrice = await eth.getGasPrice();
+        const data = tx.encodeABI();
+        const nonce = await eth.getTransactionCount(from);
+      
+        //TODO
+        const unsignedTx = {
+            from:from,
+            to:to, 
+            value:value,
+            data:data,
+            gasPrice:gasPrice,
+            gasLimit:gasLimit,
+            nonce:nonce,
+            chainId:chainID
+        };
+        return unsignedTx;
+  
+    }catch(e){
+      return null;
+    }
+
+}
 
 
 module.exports = {
@@ -86,5 +124,7 @@ module.exports = {
     sleep,
     viewEvnt,
     waitForTx,
-    log
+    log,
+    getContractTx,
+    getUnsignTx
 }
