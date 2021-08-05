@@ -390,7 +390,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,Log,HandlerHelpers{
         for(uint256 i = 0 ;i < lenBatch ; i++){
 
             address handler = _resourceIDToHandlerAddress[resourceID[i]];
-            uint72 nonceAndID = (uint72(depositNonce[0]) << 8) | uint72(chainID);
+            uint72 nonceAndID = (uint72(depositNonce[i]) << 8) | uint72(chainID);
             bytes32 dataHash = keccak256(abi.encodePacked(handler, data[i]));
             Proposal storage proposal = _proposals[nonceAndID][dataHash];
 
