@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/Bridge.sol": {
-      "lastModificationDate": 1628154470725,
-      "contentHash": "56ee1593fa966eb5f1a28d42b9d6f921",
+      "lastModificationDate": 1628674551972,
+      "contentHash": "cbb1530dd0c698564edc9519cc1e540f",
       "sourceName": "contracts/Bridge.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -652,8 +652,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/HandlerHelpers.sol": {
-      "lastModificationDate": 1627686259544,
-      "contentHash": "5b6081f1c1843a6c6f586cfc80477a83",
+      "lastModificationDate": 1628676072144,
+      "contentHash": "2f335e25270529f6581485b7e3f7e8a0",
       "sourceName": "contracts/handlers/HandlerHelpers.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -686,7 +686,9 @@
         }
       },
       "imports": [
-        "../interfaces/IERCHandler.sol"
+        "../interfaces/IERCHandler.sol",
+        "../utils/Seriality.sol",
+        "hardhat/console.sol"
       ],
       "versionPragmas": [
         "0.6.12"
@@ -2206,6 +2208,178 @@
       ],
       "artifacts": [
         "ToString"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/BytesToTypes.sol": {
+      "lastModificationDate": 1628558554641,
+      "contentHash": "cc71ed7d6fae1b59f79a4d6d4aff17b4",
+      "sourceName": "contracts/utils/BytesToTypes.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.6.12"
+      ],
+      "artifacts": [
+        "BytesToTypes"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/Seriality.sol": {
+      "lastModificationDate": 1628558562257,
+      "contentHash": "4142b401b1aa8f80c68807c25c440911",
+      "sourceName": "contracts/utils/Seriality.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./BytesToTypes.sol",
+        "./TypesToBytes.sol",
+        "./SizeOf.sol"
+      ],
+      "versionPragmas": [
+        "0.6.12"
+      ],
+      "artifacts": [
+        "Seriality"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/TypesToBytes.sol": {
+      "lastModificationDate": 1628560473855,
+      "contentHash": "d373c1bc90931f2907082d2449e7ce30",
+      "sourceName": "contracts/utils/TypesToBytes.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.6.12"
+      ],
+      "artifacts": [
+        "TypesToBytes"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/SizeOf.sol": {
+      "lastModificationDate": 1628558568857,
+      "contentHash": "b6e6c23c29027e0229029f26a7991204",
+      "sourceName": "contracts/utils/SizeOf.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.6.12"
+      ],
+      "artifacts": [
+        "SizeOf"
       ]
     }
   }

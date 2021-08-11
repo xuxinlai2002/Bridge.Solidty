@@ -545,12 +545,9 @@ const privKey = "0xc03b0a988e2e18794f2f0e881d7ffcd340d583f63c1be078426ae09ddbdec
 const stepN9 = async(sleepTime,amount,recipient) => {
 
     let chainID = await getChainId();
-    console.log("chainID is :" + chainID);
     let accounts = await ethers.getSigners()
-
-    //console.log(amount.toString());
-
-    //
+    console.log("chainID is : " + chainID + " from address : " + accounts[0].address + " to address : " + recipient);
+    
     args = {
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
@@ -571,10 +568,6 @@ const stepN9 = async(sleepTime,amount,recipient) => {
     console.log("srcHandler eth : " + beforeEthBalace);
     console.log("**************************************************************************\n");
     
-    //stop here
-    //const Factory__Bridge = await ethers.getContractFactory('Bridge',accounts[0])
-    //let bridgeInstance = await Factory__Bridge.connect(accounts[0]).attach(srcBridge);
-
     let data = '0x' +
     ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +                               // Deposit Amount        (32 bytes)
     ethers.utils.hexZeroPad(ethers.utils.hexlify((args.recipient.length - 2)/2), 32).substr(2) +     // len(recipientAddress) (32 bytes)
@@ -589,23 +582,8 @@ const stepN9 = async(sleepTime,amount,recipient) => {
     console.log(`Creating deposit to initiate transfer!`);
     
     try{
-        /////
-        // await accounts[0].sendTransaction({
-        //     to: srcBridge, 
-        //     value: args.amount,
-        //  })
-        // // Perform deposit
-        // tx = await bridgeInstance.deposit(
-        //     args.dest, // destination chain id
-        //     args.resourceId,
-        //     data,
-        //     {
-        //         gasPrice: args.gasPrice,
-        //         gasLimit: args.gasLimit
-        //     }
-        // );
-        
-        let l1URL = "http://localhost:6111";
+          
+        let l1URL = "http://localhost:1111";
         let params = [args.dest,args.resourceId,data];
         //let web3 = new Web3();
         var web3 = new Web3(new Web3.providers.HttpProvider(l1URL));
@@ -617,9 +595,6 @@ const stepN9 = async(sleepTime,amount,recipient) => {
                 web3.eth
         );
 
-        //console.log(contractTx.encodeABI());
-        //console.log("xxl 000 0");
-        //const getUnsignTx = async(tx,from,to,value,chainID,gasLimit,eth) => {
         let unsignTx = await getUnsignTx(
                         contractTx,
                         accounts[0].address,
@@ -629,14 +604,8 @@ const stepN9 = async(sleepTime,amount,recipient) => {
                         args.gasLimit,
                         web3.eth
                     );
-
-        //console.log(unsignTx);
-        //console.log("xxl 000 1");
         
         var signTx = await web3.eth.accounts.signTransaction(unsignTx, privKey);
-        //console.log(signTx);
-        //console.log(signTx);
-        //console.log("xxl 000 2");
 
         let tx = await web3.eth.sendSignedTransaction(signTx.rawTransaction)
         console.log(tx.transactionHash);

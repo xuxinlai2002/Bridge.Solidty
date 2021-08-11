@@ -14,11 +14,13 @@ import "./utils/Log.sol";
 import "./handlers/HandlerHelpers.sol";
 
 import "hardhat/console.sol";
+
+
 /**
     @title Facilitates deposits, creation and votiing of deposit proposals, and deposit executions.
     @author ChainSafe Systems.
  */
-contract Bridge is MyPausable, AccessControl, MySafeMath,Log,HandlerHelpers{
+contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
 
     uint8   public _chainID;
     uint256 public _relayerThreshold;
@@ -73,13 +75,6 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,Log,HandlerHelpers{
         ProposalStatus[]  indexed status,
         bytes32[]         resourceID,
         bytes32[]         dataHash
-    );
-
-    event ProposalVote(
-        uint8   indexed originChainID,
-        uint64  indexed depositNonce,
-        ProposalStatus indexed status,
-        bytes32 resourceID
     );
 
     //xxl just for log
@@ -349,7 +344,22 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,Log,HandlerHelpers{
         @notice Hash of {data} must equal proposal's {dataHash}.
         @notice Emits {ProposalEvent} event with status {Executed}.
      */
-    function executeProposal(uint8 chainID, uint64 depositNonce, bytes calldata data, bytes32 resourceID) public {
+    function executeProposal(
+        uint8 chainID, 
+        uint64 depositNonce, 
+        bytes calldata data,
+        bytes32 resourceID,
+        bytes[] memory sig) public {
+        
+        console.log("xxl come to executeProposal ");
+        bool isAbiterVerifierd = false;
+        isAbiterVerifierd = _verifyAbter(chainID,depositNonce,data,resourceID,sig);
+
+        console.log("abiter verify result : ");
+        console.log(isAbiterVerifierd);
+
+        require(isAbiterVerifierd, "Verify abiter do not pass");
+
         address handler = _resourceIDToHandlerAddress[resourceID];
         uint72 nonceAndID = (uint72(depositNonce) << 8) | uint72(chainID);
         bytes32 dataHash = keccak256(abi.encodePacked(handler, data));
@@ -365,6 +375,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,Log,HandlerHelpers{
 
         emit ProposalEvent(chainID, depositNonce, ProposalStatus.Executed, resourceID, dataHash);
     }
+
 
     /**
         @notice Executes a deposit proposal that is considered passed using a specified handler contract.
@@ -484,6 +495,22 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,Log,HandlerHelpers{
         require(success, 'TransferHelper::safeTransferETH: ETH transfer failed');
     }
 
+   
+    /**
+    * @dev set abiter list 
+    * @param _pubKeyList abiter public list
+    */
+    function setAbiterList(
+        bytes[] memory _pubKeyList
+    )
+    external{
+
+        uint8 index = 0;
+        for(index = 0 ; index < DPOS_NUM ; index ++){
+            _signers[index] = _calculateAddress(_pubKeyList[index]);
+        }
+
+    }
 
 
 }

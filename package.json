@@ -26,7 +26,8 @@
     "logs2": "pm2 start 'npx hardhat run scripts/watch/2logs.js' --watch",
     "tools": "npx hardhat run scripts/weth/tools.js",
     "runWeth":"npx hardhat run scripts/weth/runWethExec.js",
-    "clean": "rimraf ./cache-ovm ./cache ./artifacts-ovm ./artifacts ./deployments"
+    "clean": "rimraf ./cache-ovm ./cache ./artifacts-ovm ./artifacts ./deployments",
+    "runEnExec":"npx hardhat run scripts/weth/runEnExec.js"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.1",
