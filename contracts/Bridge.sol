@@ -506,7 +506,8 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
     external{
 
         uint8 index = 0;
-        for(index = 0 ; index < DPOS_NUM ; index ++){
+        uint256 len = _pubKeyList.length;
+        for(index = 0 ; index < len ; index ++){
             _signers[index] = _calculateAddress(_pubKeyList[index]);
         }
 

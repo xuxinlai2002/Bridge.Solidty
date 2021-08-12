@@ -41,11 +41,7 @@ let privateKeyList = [
     "0xe862b48be321770fb002e1972ae71c5fc1848a225251642a1e76408686d98866",
     "0x03cae4498629d0d993886c924ee11a5a9fb3294ad671fbb8f1f088306c036f6c",
     "0xa02b07f741b4c62c5133fe010d994e2f7808e5619d6c4780455cda389072798e",
-    "0xf431f6dea47d3d63d1b9cd2a198cfab2e0a11888d31695547bb17f68b3d6bda8",
-    "0x967fd26d181c8a71113fd4a10281c60b94a03c716c590f28768a4ec41a71f66d",
-    "0xbdd79d38ef7478ce08b3d8e6dc8a77f7e8b5221395a58c6d3e5e11eecf14d8a4",
-    "0x42147830dc78017db789118d8aee808bec2822ea6808197a89b49c4b5118bb61",
-    "0x9fa2ba4752d0f01110784b04b187e51aca5397f7f5f63cc697c119b3e040d41e"
+    "0xf431f6dea47d3d63d1b9cd2a198cfab2e0a11888d31695547bb17f68b3d6bda8"
 ]
 
 const main = async () => {
@@ -83,6 +79,8 @@ const main = async () => {
         let len = privateKeyList.length;
 
         for(var i = 0 ; i < len ;i ++){
+
+
             let pubKey = util.bufferToHex(util.privateToPublic(privateKeyList[i]));
             //console.log(pubKey);
             publicKeyList.push(pubKey);
