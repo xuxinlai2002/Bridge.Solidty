@@ -25,9 +25,10 @@
     "logs1": "pm2 start 'npx hardhat run scripts/watch/1logs.js' --watch",
     "logs2": "pm2 start 'npx hardhat run scripts/watch/2logs.js' --watch",
     "tools": "npx hardhat run scripts/weth/tools.js",
-    "runWeth":"npx hardhat run scripts/weth/runWethExec.js",
+    "runWeth": "npx hardhat run scripts/weth/runWethExec.js",
     "clean": "rimraf ./cache-ovm ./cache ./artifacts-ovm ./artifacts ./deployments",
-    "runEnExec":"npx hardhat run scripts/weth/runEnExec.js"
+    "runEnExec": "npx hardhat run scripts/weth/runEnExec.js",
+    "runEnExecBatch": "npx hardhat run scripts/weth/runEnExecBatch.js"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.1",
@@ -41,6 +42,7 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^3.0.0",
+    "eth-crypto": "^2.0.0",
     "solidity-string-utils": "0.0.7"
   }
 }

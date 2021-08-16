@@ -67,8 +67,8 @@ const main = async () => {
         "recipient":to.address,
 
     }
-
     console.log("main start ...");
+
     try{
 
         //SRC_BRIDGE
@@ -85,24 +85,37 @@ const main = async () => {
             publicKeyList.push(pubKey);
         }
         await bridge.setAbiterList(publicKeyList);
+        console.log(publicKeyList);
 
 
         //2.0
         //sign message 
         //function executeProposal(uint8 chainID, uint64 depositNonce, bytes calldata data, bytes32 resourceID) public {
         //chainID + depositNonce + resourceID + data(amount 0-32 + length 32-64 + recipientAddress 64-84)
-        let depositNonce = 0;
-        let data =  "0x" + 
-                    ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +                               // Deposit Amount        (32 bytes)
-                    ethers.utils.hexZeroPad(ethers.utils.hexlify((args.recipient.length - 2)/2), 32).substr(2) +     // len(recipientAddress) (32 bytes)
-                    args.recipient.substr(2);                                                                        // recipientAddress      (?? bytes)
-        
+        let depositNonces = [],datas = [], resourceIds = [];
+        let txLen = 2;
+
 
         let hexUnit8ChainID = ethers.utils.hexZeroPad("0x" + parseInt(args.chainId).toString(16),32).substr(2);
-        let hexUnit64DepositNonce = ethers.utils.hexZeroPad("0x" + parseInt(depositNonce).toString(16),32).substr(2);
+        let hexMsg = "0x" + hexUnit8ChainID 
+        for(let i = 0 ;i < txLen ;i ++){
+            
+            //
+            let depositNonce = i;
+            depositNonces.push(depositNonce);
 
-        let hexMsg = "0x" + hexUnit8ChainID + hexUnit64DepositNonce  + args.resourceId.substr(2) + data.substr(2)
-       
+            let data =  "0x" + 
+            ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +                               // Deposit Amount        (32 bytes)
+            ethers.utils.hexZeroPad(ethers.utils.hexlify((args.recipient.length - 2)/2), 32).substr(2) +     // len(recipientAddress) (32 bytes)
+            args.recipient.substr(2);                                                                        // recipientAddress      (?? bytes)
+            datas.push(data);
+
+            resourceIds.push(args.resourceId);
+            let hexUnit64DepositNonce = ethers.utils.hexZeroPad("0x" + parseInt(depositNonce).toString(16),32).substr(2);
+            hexMsg +=  hexUnit64DepositNonce  + args.resourceId.substr(2) + data.substr(2)
+
+        }
+
         //add sign
         var web3 = new Web3();
         let msg = web3.utils.sha3(hexMsg);
@@ -116,18 +129,18 @@ const main = async () => {
             sign.push(eachSign.signature);
         }
 
+        console.log(hexMsg);
         //0x64000000000000000000000000000000000000000000000000000000000000000000038d7ea4c6800000000000000000000000000000000000000000000000000000000000000000148F723ec92F28a87c0A1d28d83210487B1af86e19000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00
         //function executeProposal(uint8 chainID, uint64 depositNonce, bytes calldata data, bytes32 resourceID) public {
         // console.log(data);
 
-        await bridge.executeProposal(
+        await bridge._verifyBatch(
             args.chainId,
-            depositNonce,
-            data,
-            args.resourceId,
+            depositNonces,
+            datas,
+            resourceIds,
             sign
         );
-
         process.exit(0);
 
 
