@@ -193,6 +193,7 @@ contract HandlerHelpers is IERCHandler,Seriality {
                 verifiedNum ++ ;
             }
 
+            console.log("xxl _totalCount is : %d ",_totalCount);
             if(verifiedNum >= _totalCount/3 * 2 + 1 ){
                 //console.log("verify is OK ...");
                 return true;

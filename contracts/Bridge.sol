@@ -463,7 +463,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
     */
     function setAbiterList(
         address[] memory _addressList,
-        uint256 _totalCount
+        uint256 _addressCount
     )
     external{
 
@@ -473,7 +473,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
         //     _signers[index] = _calculateAddress(_pubKeyList[index]);
         // }
         _signers = _addressList;
-        _totalCount = _totalCount;
+        _totalCount = _addressCount;
 
     }
 
