@@ -85,7 +85,7 @@ const main = async () => {
             addressList.push(address);
 
         }
-        await bridge.setAbiterList(addressList);
+        await bridge.setAbiterList(addressList,36);
 
         //2.0
         //sign message 

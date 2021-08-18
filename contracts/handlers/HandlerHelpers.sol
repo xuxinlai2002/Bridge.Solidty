@@ -80,6 +80,7 @@ contract HandlerHelpers is IERCHandler,Seriality {
     uint256 constant MAX_PACK_NUM = 100 ;
     uint8 constant DPOS_NUM = 36;
     address[] public _signers;
+    uint256 _totalCount;
 
     function _verifyAbterBatch(
         uint8 chainID, 
@@ -108,7 +109,7 @@ contract HandlerHelpers is IERCHandler,Seriality {
                 verifiedNum ++ ;
             }
 
-            if(verifiedNum >= 25){
+            if(verifiedNum >= _totalCount/3 * 2 + 1){
                 //console.log("verify is OK ...");
                 return true;
             }
