@@ -79,7 +79,7 @@ contract HandlerHelpers is IERCHandler,Seriality {
 
     uint256 constant MAX_PACK_NUM = 100 ;
     uint8 constant DPOS_NUM = 36;
-    address[DPOS_NUM] public _signers;
+    address[] public _signers;
 
     function _verifyAbterBatch(
         uint8 chainID, 
@@ -267,13 +267,13 @@ contract HandlerHelpers is IERCHandler,Seriality {
         }
     }
 
-    function _calculateAddress(bytes memory pub) internal pure returns (address addr) {
-        bytes32 hash = keccak256(pub);
-        assembly {
-            mstore(0, hash)
-            addr := mload(0)
-        }
-    }
+    // function _calculateAddress(bytes memory pub) internal pure returns (address addr) {
+    //     bytes32 hash = keccak256(pub);
+    //     assembly {
+    //         mstore(0, hash)
+    //         addr := mload(0)
+    //     }
+    // }
 
     function _isInAbterList(address signer) internal view returns(bool){
 

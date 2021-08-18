@@ -75,17 +75,17 @@ const main = async () => {
         let bridge = await deployBridgeContract(deployer,args);
 
         //1.0 console.log(bridge.address);
-        let publicKeyList = [];
+        let addressList = [];
         let len = privateKeyList.length;
 
         for(var i = 0 ; i < len ;i ++){
 
             let pubKey = util.bufferToHex(util.privateToPublic(privateKeyList[i]));
-            //console.log(pubKey);
-            publicKeyList.push(pubKey);
-        }
-        await bridge.setAbiterList(publicKeyList);
+            let address = util.bufferToHex(util.pubToAddress(pubKey, true))
+            addressList.push(address);
 
+        }
+        await bridge.setAbiterList(addressList);
 
         //2.0
         //sign message 
@@ -100,7 +100,6 @@ const main = async () => {
 
         let hexUnit8ChainID = ethers.utils.hexZeroPad("0x" + parseInt(args.chainId).toString(16),32).substr(2);
         let hexUnit64DepositNonce = ethers.utils.hexZeroPad("0x" + parseInt(depositNonce).toString(16),32).substr(2);
-
         let hexMsg = "0x" + hexUnit8ChainID + hexUnit64DepositNonce  + args.resourceId.substr(2) + data.substr(2)
        
         //add sign

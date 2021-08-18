@@ -75,17 +75,17 @@ const main = async () => {
         let bridge = await deployBridgeContract(deployer,args);
 
         //1.0 console.log(bridge.address);
-        let publicKeyList = [];
+        let addressList = [];
         let len = privateKeyList.length;
 
         for(var i = 0 ; i < len ;i ++){
 
             let pubKey = util.bufferToHex(util.privateToPublic(privateKeyList[i]));
-            //console.log(pubKey);
-            publicKeyList.push(pubKey);
+            let address = util.bufferToHex(util.pubToAddress(pubKey, true))
+            addressList.push(address);
+
         }
-        await bridge.setAbiterList(publicKeyList);
-        console.log(publicKeyList);
+        await bridge.setAbiterList(addressList);
 
 
         //2.0
@@ -94,7 +94,6 @@ const main = async () => {
         //chainID + depositNonce + resourceID + data(amount 0-32 + length 32-64 + recipientAddress 64-84)
         let depositNonces = [],datas = [], resourceIds = [];
         let txLen = 2;
-
 
         let hexUnit8ChainID = ethers.utils.hexZeroPad("0x" + parseInt(args.chainId).toString(16),32).substr(2);
         let hexMsg = "0x" + hexUnit8ChainID 
@@ -133,7 +132,6 @@ const main = async () => {
         //0x64000000000000000000000000000000000000000000000000000000000000000000038d7ea4c6800000000000000000000000000000000000000000000000000000000000000000148F723ec92F28a87c0A1d28d83210487B1af86e19000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00
         //function executeProposal(uint8 chainID, uint64 depositNonce, bytes calldata data, bytes32 resourceID) public {
         // console.log(data);
-
         await bridge._verifyBatch(
             args.chainId,
             depositNonces,

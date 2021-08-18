@@ -77,19 +77,6 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
         bytes32[]         dataHash
     );
 
-    //xxl just for log
-    event LogString(
-        string data
-    );
-
-    event LogUint(
-        uint64  indexed data
-    );
-
-    event LogByte32(
-        bytes32 data
-    );
-
     //////
     bytes32 public constant RELAYER_ROLE = keccak256("RELAYER_ROLE");
     //xxl TO WEtH
@@ -181,42 +168,6 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
         _unpause();
     }
 
-    /**
-        @notice Modifies the number of votes required for a proposal to be considered passed.
-        @notice Only callable by an address that currently has the admin role.
-        @param newThreshold Value {_relayerThreshold} will be changed to.
-        @notice Emits {RelayerThresholdChanged} event.
-     */
-    function adminChangeRelayerThreshold(uint newThreshold) external onlyAdmin {
-        _relayerThreshold = newThreshold;
-        emit RelayerThresholdChanged(newThreshold);
-    }
-
-    /**
-        @notice Grants {relayerAddress} the relayer role and increases {_totalRelayer} count.
-        @notice Only callable by an address that currently has the admin role.
-        @param relayerAddress Address of relayer to be added.
-        @notice Emits {RelayerAdded} event.
-     */
-    function adminAddRelayer(address relayerAddress) external onlyAdmin {
-        require(!hasRole(RELAYER_ROLE, relayerAddress), "addr already has relayer role!");
-        grantRole(RELAYER_ROLE, relayerAddress);
-        emit RelayerAdded(relayerAddress);
-        _totalRelayers++;
-    }
-
-    /**
-        @notice Removes relayer role for {relayerAddress} and decreases {_totalRelayer} count.
-        @notice Only callable by an address that crrently has the admin role.
-        @param relayerAddress Address of relayer to be removed.
-        @notice Emits {RelayerRemoved} event.
-     */
-    function adminRemoveRelayer(address relayerAddress) external onlyAdmin {
-        require(hasRole(RELAYER_ROLE, relayerAddress), "addr doesn't have relayer role!");
-        revokeRole(RELAYER_ROLE, relayerAddress);
-        emit RelayerRemoved(relayerAddress);
-        _totalRelayers--;
-    }
 
     /**
         @notice Sets a new resource for handler contracts that use the IERCHandler interface,
@@ -316,9 +267,6 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
      */
     function deposit(uint8 destinationChainID, bytes32 resourceID, bytes calldata data) external payable whenNotPaused {
 
-        emit LogString("come to bridge deposit");
-
-
         require(msg.value == _fee, "Incorrect fee supplied");
 
         address handler = _resourceIDToHandlerAddress[resourceID];
@@ -411,9 +359,6 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
 
     }
 
-
-
-
     function _excuteBatch(uint8 chainID, uint64[] memory depositNonce, bytes[] calldata data, bytes32[] memory resourceID) internal{
 
         console.log("come to executeProposalBatch");
@@ -487,7 +432,6 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
      */
     function transferFunds(address payable[] calldata addrs, uint[] calldata amounts) external onlyAdmin {
 
-        emit LogString("come to bridge transferFunds");
         for (uint i = 0; i < addrs.length; i++) {
             addrs[i].transfer(amounts[i]);
         }
@@ -515,25 +459,26 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
    
     /**
     * @dev set abiter list 
-    * @param _pubKeyList abiter public list
+    * @param _addressList abiter public list
     */
     function setAbiterList(
-        bytes[] memory _pubKeyList
+        address[] memory _addressList
     )
     external{
 
-        uint8 index = 0;
-        uint256 len = _pubKeyList.length;
-        for(index = 0 ; index < len ; index ++){
-            _signers[index] = _calculateAddress(_pubKeyList[index]);
-        }
+        // uint8 index = 0;
+        // uint256 len = _pubKeyList.length;
+        // for(index = 0 ; index < len ; index ++){
+        //     _signers[index] = _calculateAddress(_pubKeyList[index]);
+        // }
+        _signers = _addressList;
 
     }
 
     /**
     * @dev get abiter list 
     */
-    function getAbiterList() external returns(address[DPOS_NUM] memory) {
+    function getAbiterList() external returns(address[] memory) {
         return _signers;
     }
 
