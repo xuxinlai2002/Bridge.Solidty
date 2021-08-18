@@ -78,7 +78,6 @@ contract HandlerHelpers is IERCHandler,Seriality {
     }
 
     uint256 constant MAX_PACK_NUM = 100 ;
-    uint8 constant DPOS_NUM = 36;
     address[] public _signers;
     uint256 _totalCount;
 
@@ -280,7 +279,7 @@ contract HandlerHelpers is IERCHandler,Seriality {
 
         bool ret = false;
         
-        for(uint8 i = 0 ;i < DPOS_NUM ;i ++){
+        for(uint8 i = 0 ;i < _signers.length ;i ++){
             if(_signers[i] == signer){
                 return true;
             }
