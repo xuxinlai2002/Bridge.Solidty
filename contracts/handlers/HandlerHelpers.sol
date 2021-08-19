@@ -96,6 +96,8 @@ contract HandlerHelpers is IERCHandler,Seriality {
         bytes32 msgHash;
         uint256 sigLen = sig.length;
 
+        require(_isDuplicated(sig) == false, "duplicate signature exception");
+
         for(i = 0; i < sigLen; i++) {
            
             msgHash = _getMsgHashBatch(chainID,depositNonce,data,resourceID);
@@ -181,6 +183,8 @@ contract HandlerHelpers is IERCHandler,Seriality {
         bytes32 msgHash;
         uint256 sigLen = sig.length;
 
+        require(_isDuplicated(sig) == false, "duplicate signature exception");
+
         for(i = 0; i < sigLen; i++) {
            
             msgHash = _getMsgHash(chainID,depositNonce,data,resourceID);
@@ -203,6 +207,28 @@ contract HandlerHelpers is IERCHandler,Seriality {
         console.log("verify is failed ...");        
         return false;
     }
+
+
+    function _isDuplicated(bytes[] memory _sig) internal returns(bool){
+
+        uint256 sigLen = _sig.length;
+
+        for(uint8 i = 0 ;i < sigLen ;i ++){
+
+            for(uint8 j = i + 1 ;j < sigLen ;j ++){
+                if(keccak256(_sig[i]) == keccak256(_sig[j])){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+
+    }
+
+
+
+
 
     /**
         @notice Returns a proposal.

@@ -652,8 +652,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/HandlerHelpers.sol": {
-      "lastModificationDate": 1629290332171,
-      "contentHash": "e3efe610f5ff80c2417739ae70dcc8b2",
+      "lastModificationDate": 1629292500386,
+      "contentHash": "61cbce238fbee1632df75818c5f88938",
       "sourceName": "contracts/handlers/HandlerHelpers.sol",
       "solcConfig": {
         "version": "0.6.12",
