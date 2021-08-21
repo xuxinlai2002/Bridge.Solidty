@@ -126,9 +126,7 @@ const main = async () => {
             args.resourceId,
             sign
         );
-
         process.exit(0);
-
 
     }catch(e){
         console.log(e);

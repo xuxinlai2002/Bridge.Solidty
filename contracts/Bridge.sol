@@ -267,7 +267,8 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
      */
     function deposit(uint8 destinationChainID, bytes32 resourceID, bytes calldata data) external payable whenNotPaused {
 
-        require(msg.value == _fee, "Incorrect fee supplied");
+        //xxl TODO
+        //require(msg.value == _fee, "Incorrect fee supplied");
 
         address handler = _resourceIDToHandlerAddress[resourceID];
         require(handler != address(0), "resourceID not mapped to handler");
@@ -305,23 +306,29 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
 
         console.log("abiter verify result : ");
         console.log(isAbiterVerifierd);
-
         require(isAbiterVerifierd, "Verify abiter do not pass");
 
-        address handler = _resourceIDToHandlerAddress[resourceID];
-        uint72 nonceAndID = (uint72(depositNonce) << 8) | uint72(chainID);
+        //xxl just for unit test
+        //_executeWeth(data);
+        //xxl weth
+        uint72  nonceAndID = (uint72(depositNonce) << 8) | uint72(chainID);
         bytes32 dataHash = keccak256(abi.encodePacked(handler, data));
+
         Proposal storage proposal = _proposals[nonceAndID][dataHash];
-
         require(proposal._status != ProposalStatus.Executed, "Proposal must have Passed status");
-
         proposal._status = ProposalStatus.Executed;
 
-        IDepositExecute depositHandler = IDepositExecute(handler);
-        depositHandler.executeProposal(resourceID, data);
+        if(resourceID == WETH_RESOURCEID){    
+            _executeWeth(data);
+        }else{
+            IDepositExecute depositHandler = IDepositExecute(handler);
+            depositHandler.executeProposal(resourceID, data);
 
+            
+        }
 
-        emit ProposalEvent(chainID, depositNonce, ProposalStatus.Executed, resourceID, dataHash);
+        emit ProposalEvent(chainID, depositNonce, ProposalStatus.Executed, resourceID, dataHash);    
+            
     }
 
 
@@ -382,7 +389,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
                 arrDataHash[i] = dataHash;
             
                 if(resourceID[i] == WETH_RESOURCEID){
-                    executeWethBatch(data[i]);
+                    _executeWeth(data[i]);
                 }else{
                     IDepositExecute depositHandler = IDepositExecute(handler);
                     depositHandler.executeProposal(resourceID[i], data[i]);
@@ -397,18 +404,13 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
     }
 
 
-    function executeWethBatch(bytes calldata data) public{
-
+    function _executeWeth(bytes calldata data) public{
 
         uint256       amount;
         uint256       lenDestinationRecipientAddress;
         bytes memory  destinationRecipientAddress;
 
-        console.logBytes(data);
         (amount, lenDestinationRecipientAddress) = abi.decode(data, (uint, uint));
-        console.log(amount);
-        console.log(lenDestinationRecipientAddress);
-
         destinationRecipientAddress = bytes(data[64:64 + lenDestinationRecipientAddress]);
 
         bytes20 recipientAddress;
@@ -450,9 +452,10 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
     )
         public
     {
+        
         (bool success, ) = _to.call{value: _value}(new bytes(0));
-
         console.log(success);
+
         require(success, 'TransferHelper::safeTransferETH: ETH transfer failed');
     }
 
@@ -467,11 +470,6 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
     )
     external{
 
-        // uint8 index = 0;
-        // uint256 len = _pubKeyList.length;
-        // for(index = 0 ; index < len ; index ++){
-        //     _signers[index] = _calculateAddress(_pubKeyList[index]);
-        // }
         _signers = _addressList;
         _totalCount = _addressCount;
 
@@ -483,35 +481,6 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
     function getAbiterList() external returns(address[] memory) {
         return _signers;
     }
-
-    // //xxl TODO just for test
-    // function calculateAddress(bytes memory pub) external pure returns (address addr) {
-
-    //     //console.logBytes(pub);
-    //     bytes32 hash = keccak256(pub);
-    //     assembly {
-    //         mstore(0, hash)
-    //         addr := mload(0)
-    //     }
-    // }
-
-
-    // function getAddressFromPublicKey(bytes memory _publicKey) external pure returns (address) {
-    //     // Get address from public key
-    //     bytes32 keyHash = keccak256(_publicKey);
-    //     uint result = 0;
-    //     for (uint i = keyHash.length-1; i+1 > 12; i--) {
-
-    //         uint8 c = uint8(keyHash[i]);
-    //         uint to_inc = c * ( 16 ** ((keyHash.length - i-1) * 2));
-    //         result += to_inc;
-
-
-    //     }
-    //     return address(result);
-    // }
-
-
 
     // get eth balance of contract 
     function getBalanceOfContract() public view returns (uint256) {

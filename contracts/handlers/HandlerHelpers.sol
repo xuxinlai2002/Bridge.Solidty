@@ -188,6 +188,8 @@ contract HandlerHelpers is IERCHandler,Seriality {
         for(i = 0; i < sigLen; i++) {
            
             msgHash = _getMsgHash(chainID,depositNonce,data,resourceID);
+            console.logBytes32(msgHash);
+
             signer = _recoverSigner(msgHash, sig[i]);
             
             if(_isInAbterList(signer) == false){
@@ -196,8 +198,6 @@ contract HandlerHelpers is IERCHandler,Seriality {
                 //console.log("_isInAbterList OK");
                 verifiedNum ++ ;
             }
-
-            console.log("xxl _totalCount is : %d ",_totalCount);
             if(verifiedNum >= _totalCount/3 * 2 + 1 ){
                 //console.log("verify is OK ...");
                 return true;
@@ -225,10 +225,6 @@ contract HandlerHelpers is IERCHandler,Seriality {
         return false;
 
     }
-
-
-
-
 
     /**
         @notice Returns a proposal.

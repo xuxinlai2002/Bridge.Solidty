@@ -2,13 +2,8 @@ const {
     deployBridgeContract
 } = require("../utils/deploy");
 
-const {
-    sleep,
-    getSign,
-    getAbiterList
-} = require('../utils/helper')
-
 const { utils } = require('ethers')
+const { sleep } = require("../utils/helper");
 const { ethers } = require("hardhat");
 
 
@@ -29,7 +24,7 @@ const main = async () => {
         "expiry":100,
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
-        "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8",
+        "resourceId":"0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
         "dest":82,
         "amount":sendValue,
         "recipient":to.address
@@ -48,23 +43,12 @@ const main = async () => {
             to: bridge.address, 
             value: contractAmount
         })
+
+        let dataArray = []
+        let tokenLen = 100;
+
         sleep(3000);
-        
-        // //prov = ethers.getDefaultProvider();
-        // let beforeEthBalace = await utils.formatEther(await accounts[0].getBalance());
-        // //let beforeEthBalace = await utils.formatEther(await prov.getBalance(bridge.address));
-        // console.log("bridge eth : " + beforeEthBalace);
 
-        //xxl TODO
-        //1.0 console.log(bridge.address);
-        let abiterList = getAbiterList();
-        console.log(abiterList);
-
-        await bridge.setAbiterList(abiterList,32);
-
-
-
-        
 
         const data = '0x' +
         ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +                               // Deposit Amount        (32 bytes)
@@ -78,19 +62,30 @@ const main = async () => {
         console.log(`Recipient: ${args.recipient}`)
         console.log(`Creating deposit to initiate transfer!`);
 
-        console.log("executeProposal call before");
-        let depositNonce = 0;
-        let sign = await getSign(args.dest,depositNonce,args.resourceId,data); 
-        
 
-        //console.log(sign);
+        let depositNonce = []
+        let resourceID = [];
+        let strID = "0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8"
+        for(var i = 1 ;i < (tokenLen + 1);i ++){
 
-        await bridge.executeProposal(
+            depositNonce.push(i);
+            dataArray.push(data);
+
+            console.log(strID);
+            resourceID.push(strID);
+
+        }
+
+        console.log("executeProposalBatch call before");
+        console.log(dataArray);
+        console.log(resourceID);
+
+        //////
+        await bridge.executeProposalBatch(
             args.dest,
             depositNonce,
-            data,
-            args.resourceId,
-            sign
+            dataArray,
+            resourceID
         )
 
         process.exit(0);

@@ -560,6 +560,9 @@ const stepN9 = async(sleepTime,amount,recipient) => {
     let srcBridge = await readConfig("1weth_config","SRC_BRIDGE");
     args["bridgeAddress"] = srcBridge
 
+    console.log("xxl bridge is : " + srcBridge);
+
+
     console.log("\n*************************check balance before****************************");
     let beforeEthBalace = await utils.formatEther(await accounts[0].getBalance());
     console.log("acount[0] eth  : " + beforeEthBalace);
@@ -608,7 +611,7 @@ const stepN9 = async(sleepTime,amount,recipient) => {
         var signTx = await web3.eth.accounts.signTransaction(unsignTx, privKey);
 
         let tx = await web3.eth.sendSignedTransaction(signTx.rawTransaction)
-        console.log(tx.transactionHash);
+        console.log(tx);
         
     } catch (e) {
         console.log("error ");
@@ -677,15 +680,6 @@ const stepN10 = async(sleepTime,amount,recipient) => {
     console.log(bridgeInstance.address);
 
     try{
-        // args = {
-        //     "gasPrice":0x02540be400,
-        //     "gasLimit":0x7a1200,
-    
-        //     "bridge":srcBridge,
-        //     "recipient":srcHandlerWETH,
-        //     "amount":amount,
-        //     "wethAddress":srcWETH
-        // }
 
         console.log('0');
         await approve(accounts[2],args);
