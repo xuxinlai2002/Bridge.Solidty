@@ -121,7 +121,8 @@ const step1 = async (sleepTime) => {
     console.log("chainID is :" + chainID);
     let accounts = await ethers.getSigners()
    
-    //
+    //0823 xxl set step 1 
+    //"resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8"
     args = {
         "chainId": chainID,
         "relayers":[accounts[0].address],
@@ -131,7 +132,7 @@ const step1 = async (sleepTime) => {
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
 
-        "resourceId":"0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00"
+        "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8"
     }
 
     //SRC_BRIDGE
@@ -170,7 +171,9 @@ const step2 = async (sleepTime) => {
     let srcBridge = await readConfig("1weth_config","SRC_BRIDGE");
     let srcHandlerWETH = await readConfig("1weth_config","SRC_HANDLER_WETH");
     let srcWETH = await readConfig("1weth_config","SRC_WETH");
-    //
+    
+    //0823 xxl set step 2
+    //"resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8"
     args = {
         "chainId": chainID,
         "relayers":[accounts[0].address],
@@ -180,7 +183,7 @@ const step2 = async (sleepTime) => {
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
 
-        "resourceId":"0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
+        "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8",
         "bridge":srcBridge,
         "handler":srcHandlerWETH,
         "targetContract":srcWETH
@@ -201,7 +204,6 @@ const step3 = async (sleepTime,isWeth) => {
     let accounts = await ethers.getSigners()
     let workAccount = accounts[1];
 
-    //
     args = {
         "chainId": chainID,
         "relayers":[workAccount.address],
@@ -259,7 +261,7 @@ const step4 = async (sleepTime) => {
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
 
-        "resourceId":"0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
+        "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8",
         "bridge":dstBridge,
         "handler":dstHandlerERC20,
         "targetContract":dstERC20
@@ -290,7 +292,7 @@ const step5 = async (sleepTime) => {
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
 
-        "resourceId":"0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
+        "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8",
 
         "bridge":dstBridge,
         "handler":dstHandlerERC20,
@@ -445,7 +447,7 @@ const step9 = async(sleepTime,amount) => {
         "amount":amount,
         "wethAddress":srcWETH,
 
-        "resourceId":"0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
+        "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8",
         "dest":83
 
     }
@@ -484,7 +486,7 @@ const stepN1 = async (sleepTime) => {
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
 
-        "resourceId":"0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00"
+        "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8"
     }
 
     //SRC_BRIDGE
@@ -526,7 +528,7 @@ const stepN2 = async (sleepTime) => {
     //     "gasPrice":0x02540be400,
     //     "gasLimit":0x7a1200,
 
-    //     "resourceId":"0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
+    //     "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8",
     //     "bridge":srcBridge,
     //     "handler":srcHandlerWETH,
     //     "targetContract":srcWETH
@@ -551,7 +553,7 @@ const stepN9 = async(sleepTime,amount,recipient) => {
     args = {
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
-        "resourceId":"0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
+        "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8",
         "dest":83,
         "amount":amount,
         "recipient":recipient
@@ -650,7 +652,7 @@ const stepN10 = async(sleepTime,amount,recipient) => {
     args = {
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
-        "resourceId":"0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
+        "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8",
 
         "bridge":dstBridge,
         "dest":1,
@@ -753,7 +755,7 @@ const tool = async(sleepTime,amount,recipient) => {
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
 
-        "resourceId":"0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00"
+        "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8"
     }
 
     //SRC_BRIDGE

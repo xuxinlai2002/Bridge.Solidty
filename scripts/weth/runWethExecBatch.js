@@ -24,7 +24,7 @@ const main = async () => {
         "expiry":100,
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
-        "resourceId":"0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
+        "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8",
         "dest":82,
         "amount":sendValue,
         "recipient":to.address

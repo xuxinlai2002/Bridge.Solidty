@@ -267,9 +267,6 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
      */
     function deposit(uint8 destinationChainID, bytes32 resourceID, bytes calldata data) external payable whenNotPaused {
 
-        //xxl TODO
-        //require(msg.value == _fee, "Incorrect fee supplied");
-
         address handler = _resourceIDToHandlerAddress[resourceID];
         require(handler != address(0), "resourceID not mapped to handler");
 
@@ -453,7 +450,10 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
     {
         
         (bool success, ) = _to.call{value: _value}(new bytes(0));
+
+        console.log("transfer is start ");
         console.log(success);
+        console.log("transfer is end ");
 
         require(success, 'TransferHelper::safeTransferETH: ETH transfer failed');
     }
