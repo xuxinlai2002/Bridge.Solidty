@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/Bridge.sol": {
-      "lastModificationDate": 1629545635366,
-      "contentHash": "630149efe3d662db2531ad8aa47badf4",
+      "lastModificationDate": 1629705398510,
+      "contentHash": "f8b122ca0a16b280966384282b0bda1e",
       "sourceName": "contracts/Bridge.sol",
       "solcConfig": {
         "version": "0.6.12",

@@ -311,6 +311,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
         //xxl just for unit test
         //_executeWeth(data);
         //xxl weth
+        address handler = _resourceIDToHandlerAddress[resourceID];
         uint72  nonceAndID = (uint72(depositNonce) << 8) | uint72(chainID);
         bytes32 dataHash = keccak256(abi.encodePacked(handler, data));
 
@@ -322,13 +323,11 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
             _executeWeth(data);
         }else{
             IDepositExecute depositHandler = IDepositExecute(handler);
-            depositHandler.executeProposal(resourceID, data);
-
-            
+            depositHandler.executeProposal(resourceID, data);            
         }
 
         emit ProposalEvent(chainID, depositNonce, ProposalStatus.Executed, resourceID, dataHash);    
-            
+
     }
 
 
