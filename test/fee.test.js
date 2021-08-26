@@ -25,12 +25,13 @@ describe(`Fee Setting`, () => {
   before(`load accounts and chainID`, async () => {
     ;[ deplyer, admin,alice ] = await ethers.getSigners()
     chainID = await getChainId();
+    console.log("chainID is :" + chainID);
   })
 
   let bridgeContact
   beforeEach(`deploy Bridge contract`, async () => {
 
-    console.log("chainID is :" + chainID);
+    //console.log("chainID is :" + chainID);
     args = {
         "chainId": chainID,
         "relayers":[admin.address],

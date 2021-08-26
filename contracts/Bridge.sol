@@ -23,21 +23,14 @@ import "hardhat/console.sol";
 contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
 
     uint8   public _chainID;
-    uint256 public _relayerThreshold;
-    uint256 public _totalRelayers;
-    uint256 public _totalProposals;
     uint256 public _fee;
     uint256 public _expiry;
-
-    enum Vote {No, Yes}
 
     enum ProposalStatus {Inactive, Active, Passed, Executed, Cancelled}
 
     struct Proposal {
         bytes32 _resourceID;
         bytes32 _dataHash;
-        address[] _yesVotes;
-        address[] _noVotes;
         ProposalStatus _status;
         uint256 _proposedBlock;
     }
@@ -50,12 +43,7 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
     mapping(uint64 => mapping(uint8 => bytes)) public _depositRecords;
     // destinationChainID + depositNonce => dataHash => Proposal
     mapping(uint72 => mapping(bytes32 => Proposal)) public _proposals;
-    // destinationChainID + depositNonce => dataHash => relayerAddress => bool
-    mapping(uint72 => mapping(bytes32 => mapping(address => bool))) public _hasVotedOnProposal;
 
-    event RelayerThresholdChanged(uint indexed newThreshold);
-    event RelayerAdded(address indexed relayer);
-    event RelayerRemoved(address indexed relayer);
     event Deposit(
         uint8   indexed destinationChainID,
         bytes32 indexed resourceID,
@@ -77,9 +65,6 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
         bytes32[]         dataHash
     );
 
-    //////
-    bytes32 public constant RELAYER_ROLE = keccak256("RELAYER_ROLE");
-    //xxl TO WEtH
     bytes32 public constant WETH_RESOURCEID = keccak256("WETH_RESOURCEID");
 
     modifier onlyAdmin() {
@@ -87,59 +72,24 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
         _;
     }
 
-    modifier onlyAdminOrRelayer() {
-        _onlyAdminOrRelayer();
-        _;
-    }
-
-    modifier onlyRelayers() {
-        _onlyRelayers();
-        _;
-    }
-
-    function _onlyAdminOrRelayer() private view{
-        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender) || hasRole(RELAYER_ROLE, msg.sender),
-            "sender is not relayer or admin");
-    }
-
     function _onlyAdmin() private view {
         require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "sender doesn't have admin role");
-    }
-
-    function _onlyRelayers() private view{
-        require(hasRole(RELAYER_ROLE, msg.sender), "sender doesn't have relayer role");
     }
 
     /**
         @notice Initializes Bridge, creates and grants {msg.sender} the admin role,
         creates and grants {initialRelayers} the relayer role.
         @param chainID ID of chain the Bridge contract exists on.
-        @param initialRelayers Addresses that should be initially granted the relayer role.
-        @param initialRelayerThreshold Number of votes needed for a deposit proposal to be considered passed.
+        @param fee cross chain fee
+        @param expiry cross chain expiry time setting.
      */
-    constructor (uint8 chainID, address[] memory initialRelayers, uint initialRelayerThreshold, uint256 fee, uint256 expiry) public payable{
+    constructor (uint8 chainID,uint256 fee, uint256 expiry) public payable{
         
         _chainID = chainID;
-        _relayerThreshold = initialRelayerThreshold;
         _fee = fee;
         _expiry = expiry;
-
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _setRoleAdmin(RELAYER_ROLE, DEFAULT_ADMIN_ROLE);
-
-        for (uint i; i < initialRelayers.length; i++) {
-            grantRole(RELAYER_ROLE, initialRelayers[i]);
-            _totalRelayers++;
-        }
-
-    }
-
-    /**
-        @notice Returns true if {relayer} has the relayer role.
-        @param relayer Address to check.
-     */
-    function isRelayer(address relayer) external view returns (bool) {
-        return hasRole(RELAYER_ROLE, relayer);
+    
     }
 
     /**

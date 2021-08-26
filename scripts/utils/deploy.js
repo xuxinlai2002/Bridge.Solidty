@@ -6,13 +6,11 @@ async function deployBridgeContract(account,args) {
 
     const Factory__Bridge = await ethers.getContractFactory('Bridge',account)
 
-    console.log("----------------deployBridgeContract----------------");
-    console.log("args.chainId          : " + args.chainId);
-    console.log("args.relayers         : " + args.relayers);
-    console.log("args.relayerThreshold : " + args.relayerThreshold);
-    console.log("args.fee              : " + args.fee);
-    console.log("args.expiry           : " + args.expiry);
-    console.log("---------------------------------------------------");
+    // console.log("----------------deployBridgeContract----------------");
+    // console.log("args.chainId          : " + args.chainId);
+    // console.log("args.fee              : " + args.fee);
+    // console.log("args.expiry           : " + args.expiry);
+    // console.log("---------------------------------------------------");
 
     // Bridge = await Factory__Bridge.connect(account).deploy(
     //     args.chainId,
@@ -25,8 +23,6 @@ async function deployBridgeContract(account,args) {
     
     Bridge = await Factory__Bridge.connect(account).deploy(
         args.chainId,
-        args.relayers,
-        args.relayerThreshold,
         args.fee,
         args.expiry,
         { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
