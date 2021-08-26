@@ -104,6 +104,7 @@ contract HandlerHelpers is IERCHandler,Seriality {
             signer = _recoverSigner(msgHash, sig[i]);
             
             if(_isInAbterList(signer) == false){
+
                 continue;
             }else{
                 //console.log("_isInAbterList OK");
@@ -111,6 +112,8 @@ contract HandlerHelpers is IERCHandler,Seriality {
             }
 
             if(verifiedNum >= _totalCount/3 * 2 + 1){
+
+                 console.log("4");
                 //console.log("verify is OK ...");
                 return true;
             }

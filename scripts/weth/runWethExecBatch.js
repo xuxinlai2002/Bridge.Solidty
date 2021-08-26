@@ -3,8 +3,13 @@ const {
 } = require("../utils/deploy");
 
 const { utils } = require('ethers')
-const { sleep } = require("../utils/helper");
 const { ethers } = require("hardhat");
+
+const {
+    sleep,
+    getAbiterList,
+    getSignBatch
+} = require('../utils/helper')
 
 
 const main = async () => {
@@ -15,7 +20,8 @@ const main = async () => {
     let deployer = accounts[0]
     let to =  accounts[1]
 
-    let sendValue = utils.parseEther("0.001");
+    let sendValue = utils.parseEther("0.01");
+
     args = {
         "chainId": chainID,
         "relayers":[deployer.address],
@@ -25,7 +31,7 @@ const main = async () => {
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
         "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8",
-        "dest":82,
+        "dest":chainID,
         "amount":sendValue,
         "recipient":to.address
     }
@@ -45,9 +51,14 @@ const main = async () => {
         })
 
         let dataArray = []
-        let tokenLen = 100;
+        let tokenLen = 2;
 
-        sleep(3000);
+        await sleep(3000);
+
+        let abiterList = getAbiterList();
+        console.log(abiterList);
+        await bridge.setAbiterList(abiterList,1);
+
 
 
         const data = '0x' +
@@ -65,14 +76,11 @@ const main = async () => {
 
         let depositNonce = []
         let resourceID = [];
-        let strID = "0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8"
         for(var i = 1 ;i < (tokenLen + 1);i ++){
 
             depositNonce.push(i);
             dataArray.push(data);
-
-            console.log(strID);
-            resourceID.push(strID);
+            resourceID.push(args.resourceId);
 
         }
 
@@ -81,13 +89,24 @@ const main = async () => {
         console.log(resourceID);
 
         //////
+        //const getSignBatch = async(chainId,depositNonce,resourceId,data) => {
+        console.log("----------");
+        console.log(chainID);
+        console.log(depositNonce);
+        console.log(resourceID);
+        console.log(dataArray);
+        console.log("----------");
+
+        let sign = await getSignBatch(chainID,depositNonce,resourceID,dataArray); 
+        
         await bridge.executeProposalBatch(
             args.dest,
             depositNonce,
             dataArray,
-            resourceID
+            resourceID,
+            sign
         )
-
+        
         process.exit(0);
 
     }catch(e){

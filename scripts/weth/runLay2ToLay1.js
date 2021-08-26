@@ -32,7 +32,7 @@ const main = async () => {
     let dstHandlerERC20 = await readConfig("3weth_config","DST_HANDLER_ERC20");
 
     //
-    let sendValue = utils.parseEther("1");
+    let sendValue = utils.parseEther("0.1");
     args = {
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,

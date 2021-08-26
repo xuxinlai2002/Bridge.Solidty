@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "compile": "npx hardhat compile",
+    "test": "hardhat test",
     "weth0": "npx hardhat run scripts/weth/0initAccounts.js --network my1",
     "weth1": "npx hardhat run scripts/weth/1deploySrc.js --network my1",
     "weth2": "npx hardhat run scripts/weth/2registerSrc.js --network my1",
@@ -26,9 +27,7 @@
     "logs2": "pm2 start 'npx hardhat run scripts/watch/2logs.js' --watch",
     "tools": "npx hardhat run scripts/weth/tools.js",
     "clean": "rimraf ./cache-ovm ./cache ./artifacts-ovm ./artifacts ./deployments",
-
     "runLay2ToLay1": "npx hardhat run scripts/weth/runLay2ToLay1.js --network my2",
-    
     "runEnExec": "npx hardhat run scripts/weth/runEnExec.js",
     "runEnExecBatch": "npx hardhat run scripts/weth/runEnExecBatch.js",
     "runWeth": "npx hardhat run scripts/weth/runWethExec.js",
@@ -46,6 +45,7 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^3.0.0",
+    "chai": "^4.3.4",
     "eth-crypto": "^2.0.0",
     "solidity-string-utils": "0.0.7"
   }

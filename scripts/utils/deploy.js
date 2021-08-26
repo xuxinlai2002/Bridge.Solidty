@@ -14,15 +14,24 @@ async function deployBridgeContract(account,args) {
     console.log("args.expiry           : " + args.expiry);
     console.log("---------------------------------------------------");
 
+    // Bridge = await Factory__Bridge.connect(account).deploy(
+    //     args.chainId,
+    //     args.relayers,
+    //     args.relayerThreshold,
+    //     ethers.utils.parseEther(args.fee.toString()),
+    //     args.expiry,
+    //     { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
+    // );
+    
     Bridge = await Factory__Bridge.connect(account).deploy(
         args.chainId,
         args.relayers,
         args.relayerThreshold,
-        ethers.utils.parseEther(args.fee.toString()),
+        args.fee,
         args.expiry,
         { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
     );
-    
+
     // await viewEvnt(args.chainId,Bridge.deployTransaction.hash);
     console.log("✓ Bridge contract deployed")
     return Bridge;

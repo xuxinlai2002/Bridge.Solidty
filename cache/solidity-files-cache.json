@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/Bridge.sol": {
-      "lastModificationDate": 1629711256483,
-      "contentHash": "89a856994dc98906a10c347e39f66e20",
+      "lastModificationDate": 1629940167031,
+      "contentHash": "5b3ea10a082b61d385746250d1b1c2f2",
       "sourceName": "contracts/Bridge.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -652,8 +652,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/HandlerHelpers.sol": {
-      "lastModificationDate": 1629546862558,
-      "contentHash": "38c749b025e8e873cab6281d253f60d5",
+      "lastModificationDate": 1629786656867,
+      "contentHash": "67c0523589f3366bcf1363f711470af7",
       "sourceName": "contracts/handlers/HandlerHelpers.sol",
       "solcConfig": {
         "version": "0.6.12",

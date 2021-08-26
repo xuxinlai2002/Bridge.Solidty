@@ -240,6 +240,11 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
         _fee = newFee;
     }
 
+    function getFee() view external returns(uint256){
+
+        return _fee;
+    }
+
     /**
         @notice Used to manually withdraw funds from ERC safes.
         @param handlerAddress Address of handler to withdraw from.
@@ -346,7 +351,6 @@ contract Bridge is MyPausable, AccessControl, MySafeMath,HandlerHelpers{
         _excuteBatch(chainID,depositNonce,data,resourceID);
     }
 
-    //xxl TODO
     function _verifyBatch(uint8 chainID, uint64[] memory depositNonce, bytes[] calldata data, bytes32[] memory resourceID,bytes[] memory sig) internal{
     //function _verifyBatch(uint8 chainID, uint64[] memory depositNonce, bytes[] calldata data, bytes32[] memory resourceID,bytes[] memory sig) public{
 
