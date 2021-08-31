@@ -6,7 +6,6 @@ pragma experimental ABIEncoderV2;
 import "../interfaces/IDepositExecute.sol";
 import "./HandlerHelpers.sol";
 import "../ERC20Safe.sol";
-import "../WETHSafe.sol";
 
 import "@openzeppelin/contracts/presets/ERC20PresetMinterPauser.sol";
 
@@ -15,7 +14,7 @@ import "@openzeppelin/contracts/presets/ERC20PresetMinterPauser.sol";
     @author ChainSafe Systems.
     @notice This contract is intended to be used with the Bridge contract.
  */
-contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
+contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
 
     struct DepositRecord {
         address _tokenAddress;
@@ -27,13 +26,8 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
         uint256 _amount;
     }
 
-    event LogString(
-        string data
-    );
-
     // depositNonce => Deposit Record
     mapping(uint8 => mapping(uint64 => DepositRecord)) public _depositRecords;
-    bool _isWethToken;
 
     /**
         @param bridgeAddress Contract address of previously deployed Bridge.
@@ -49,7 +43,6 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
      */
     constructor(
         address bridgeAddress,
-        bool isWethToken,
         bytes32[] memory initialResourceIDs,
         address[] memory initialContractAddresses,
         address[] memory burnableContractAddresses
@@ -58,9 +51,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
             initialResourceIDs.length == initialContractAddresses.length,
             "initialResourceIDs and initialContractAddresses len mismatch"
         );
-
         _bridgeAddress = bridgeAddress;
-        _isWethToken = isWethToken;
 
         for (uint256 i = 0; i < initialResourceIDs.length; i++) {
             _setResource(initialResourceIDs[i], initialContractAddresses[i]);
@@ -84,10 +75,9 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
         - _amount Amount of tokens that were deposited.
     */
     function getDepositRecord(uint64 depositNonce, uint8 destId)
-        external
+        external view
         returns (DepositRecord memory)
     {
-        LogString("come to erc20handle getDepositRecord");
         return _depositRecords[destId][depositNonce];
     }
 
@@ -116,20 +106,22 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
         uint256 amount;
         uint256 lenRecipientAddress;
 
-        LogString("come to erc20handle getDepositRecord");
-        assembly {
-            amount := calldataload(0xC4)
+        // assembly {
+        //     amount := calldataload(0xC4)
 
-            recipientAddress := mload(0x40)
-            lenRecipientAddress := calldataload(0xE4)
-            mstore(0x40, add(0x20, add(recipientAddress, lenRecipientAddress)))
+        //     recipientAddress := mload(0x40)
+        //     lenRecipientAddress := calldataload(0xE4)
+        //     mstore(0x40, add(0x20, add(recipientAddress, lenRecipientAddress)))
 
-            calldatacopy(
-                recipientAddress, // copy to destinationRecipientAddress
-                0xE4, // copy from calldata @ 0x104
-                sub(calldatasize(), 0xE) // copy size (calldatasize - 0x104)
-            )
-        }
+        //     calldatacopy(
+        //         recipientAddress, // copy to destinationRecipientAddress
+        //         0xE4, // copy from calldata @ 0x104
+        //         sub(calldatasize(), 0xE) // copy size (calldatasize - 0x104)
+        //     )
+        // }
+
+        (amount, lenRecipientAddress) = abi.decode(data, (uint, uint));
+        recipientAddress = bytes(data[64:64 + lenRecipientAddress]);
 
         address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
         require(
@@ -199,32 +191,13 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe,WETHSafe{
         address recipient,
         uint256 amount
     ) external override onlyBridge {
-        LogString("come to erc20handle withdraw");
         releaseERC20(tokenAddress, recipient, amount);
     }
 
-        /**
-     * @dev Internal accounting function for moving around L1 ETH.
-     *
-     * @param _to L1 address to transfer ETH to
-     * @param _value Amount of ETH to send to
-     */
-    function _safeTransferETH(
-        address _to,
-        uint256 _value
-    )
-        public
-    {
-        //(bool success, ) = _to.call{value: _value}(new bytes(0));
-        // console.log(success);
-        //require(success, 'TransferHelper::safeTransferETH: ETH transfer failed');
-    }
 
-    receive()
-        external
-        payable
-    {
-
+    function getType() external override pure returns(HandleTypes) {
+        //return ERC20;
+        return IDepositExecute.HandleTypes.ERC20;
     }
 
 

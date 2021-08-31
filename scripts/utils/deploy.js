@@ -34,16 +34,15 @@ async function deployBridgeContract(account,args) {
 }
 
 
-async function deployERC20Handler(account,args,isWeth) {
+async function deployERC20Handler(account,args) {
 
-    console.log("----------------deployERC20Handler-----------------");
-    console.log("args.bridgeAddress    : " + args.bridgeAddress);
-    console.log("---------------------------------------------------");
+    // console.log("----------------deployERC20Handler-----------------");
+    // console.log("args.bridgeAddress    : " + args.bridgeAddress);
+    // console.log("---------------------------------------------------");
 
     const Factory__Erc20Handler = await ethers.getContractFactory('ERC20Handler',account)
     Erc20Handler = await Factory__Erc20Handler.connect(account).deploy(
         args.bridgeAddress,
-        isWeth,
         [], 
         [], 
         [],
@@ -56,9 +55,9 @@ async function deployERC20Handler(account,args,isWeth) {
 
 async function deployWETHHandler(account,args) {
 
-    console.log("----------------deployWETHHandler-----------------");
-    console.log("args.bridgeAddress    : " + args.bridgeAddress);
-    console.log("---------------------------------------------------");
+    // console.log("----------------deployWETHHandler-----------------");
+    // console.log("args.bridgeAddress    : " + args.bridgeAddress);
+    // console.log("---------------------------------------------------");
 
     const Factory__WETHHandler = await ethers.getContractFactory('WETHHandler',account)
     WETHHandler = await Factory__WETHHandler.connect(account).deploy(
@@ -95,7 +94,7 @@ async function deployERC721Handler(account,args) {
 async function deployERC20(account,args) {
     
 
-    console.log("---------------deployERC20---------------------");
+    //console.log("---------------deployERC20---------------------");
     const Factory__ERC20Mintable = await ethers.getContractFactory('ERC20PresetMinterPauser',account)
     WETH = await Factory__ERC20Mintable.connect(account).deploy(
         args.erc20Name, 

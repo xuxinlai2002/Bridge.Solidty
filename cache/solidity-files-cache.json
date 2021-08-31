@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/Bridge.sol": {
-      "lastModificationDate": 1629941414998,
-      "contentHash": "142f7e2dba870ac0f06d3b553338ccf5",
+      "lastModificationDate": 1630415070281,
+      "contentHash": "b1166a48737a07ca89127ba7391be7b7",
       "sourceName": "contracts/Bridge.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -37,15 +37,12 @@
       },
       "imports": [
         "@openzeppelin/contracts/access/AccessControl.sol",
-        "./utils/MyPausable.sol",
-        "./utils/MySafeMath.sol",
+        "./utils/Pausable.sol",
         "./interfaces/IDepositExecute.sol",
         "./interfaces/IBridge.sol",
         "./interfaces/IERCHandler.sol",
         "./interfaces/IGenericHandler.sol",
-        "./utils/Log.sol",
-        "./handlers/HandlerHelpers.sol",
-        "hardhat/console.sol"
+        "./handlers/HandlerHelpers.sol"
       ],
       "versionPragmas": [
         "0.6.12"
@@ -100,93 +97,9 @@
         "AccessControl"
       ]
     },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/MyPausable.sol": {
-      "lastModificationDate": 1627545648269,
-      "contentHash": "3215f885678b05c5a263eefd603cb2c1",
-      "sourceName": "contracts/utils/MyPausable.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "MyPausable"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/MySafeMath.sol": {
-      "lastModificationDate": 1627545648270,
-      "contentHash": "c4bdc2a7164c826fde25de3f47686898",
-      "sourceName": "contracts/utils/MySafeMath.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "MySafeMath"
-      ]
-    },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/interfaces/IDepositExecute.sol": {
-      "lastModificationDate": 1627545648274,
-      "contentHash": "b9b321d895eb51b7508b48e634c0b1a7",
+      "lastModificationDate": 1630143655899,
+      "contentHash": "5c33547133a51f22f944ca8a294a1e4a",
       "sourceName": "contracts/interfaces/IDepositExecute.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -350,51 +263,6 @@
       ],
       "artifacts": [
         "IGenericHandler"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/Log.sol": {
-      "lastModificationDate": 1627545648270,
-      "contentHash": "258e5147942b05bd75e1f0b6ee7ef7ef",
-      "sourceName": "contracts/utils/Log.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "solidity-string-utils/StringUtils.sol",
-        "hardhat/console.sol"
-      ],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "Log"
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/node_modules/hardhat/console.sol": {
@@ -652,8 +520,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/HandlerHelpers.sol": {
-      "lastModificationDate": 1629786656867,
-      "contentHash": "67c0523589f3366bcf1363f711470af7",
+      "lastModificationDate": 1630415174453,
+      "contentHash": "81e21775a36880f34006adba2048ece6",
       "sourceName": "contracts/handlers/HandlerHelpers.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -698,8 +566,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/WETHHandler.sol": {
-      "lastModificationDate": 1627634748219,
-      "contentHash": "3cee70fe9a4dc44e8dae1637646fcbc6",
+      "lastModificationDate": 1630145566358,
+      "contentHash": "4059d03e8bd576a1fcf4922f120cfa87",
       "sourceName": "contracts/handlers/WETHHandler.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -743,8 +611,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/ERC721Handler.sol": {
-      "lastModificationDate": 1627634748217,
-      "contentHash": "b0d8fc378708a588a4ca450667f65936",
+      "lastModificationDate": 1630145516880,
+      "contentHash": "5f22c27ce686e59532bb43950e2f3f99",
       "sourceName": "contracts/handlers/ERC721Handler.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1815,8 +1683,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/ERC20Handler.sol": {
-      "lastModificationDate": 1627634748216,
-      "contentHash": "e3e6bdaf4faebbc23a7f1dbf19c515c5",
+      "lastModificationDate": 1630234161095,
+      "contentHash": "467445452e79e0f83369f986d8bc4134",
       "sourceName": "contracts/handlers/ERC20Handler.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1852,7 +1720,6 @@
         "../interfaces/IDepositExecute.sol",
         "./HandlerHelpers.sol",
         "../ERC20Safe.sol",
-        "../WETHSafe.sol",
         "@openzeppelin/contracts/presets/ERC20PresetMinterPauser.sol"
       ],
       "versionPragmas": [
@@ -1907,50 +1774,6 @@
       ],
       "artifacts": [
         "ERC20Safe"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/WETHSafe.sol": {
-      "lastModificationDate": 1627545647808,
-      "contentHash": "76c7cb4e73adf9e3ada1ed53a5dc253b",
-      "sourceName": "contracts/WETHSafe.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/math/SafeMath.sol"
-      ],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "WETHSafe"
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/CentrifugeAsset.sol": {
@@ -2166,8 +1989,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/ToString.sol": {
-      "lastModificationDate": 1627634748225,
-      "contentHash": "3391fb8db304306db09e441575b73941",
+      "lastModificationDate": 1630248855460,
+      "contentHash": "6b784e111e391b2eee38509b4bb4710d",
       "sourceName": "contracts/utils/ToString.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -2200,8 +2023,7 @@
         }
       },
       "imports": [
-        "solidity-string-utils/StringUtils.sol",
-        "hardhat/console.sol"
+        "solidity-string-utils/StringUtils.sol"
       ],
       "versionPragmas": [
         "0.6.12"
@@ -2380,6 +2202,48 @@
       ],
       "artifacts": [
         "SizeOf"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/Pausable.sol": {
+      "lastModificationDate": 1630144203234,
+      "contentHash": "326324ce335db255788a89295f53a948",
+      "sourceName": "contracts/utils/Pausable.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.6.12"
+      ],
+      "artifacts": [
+        "Pausable"
       ]
     }
   }

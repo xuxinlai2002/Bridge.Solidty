@@ -8,13 +8,10 @@ chai.use(solidity)
 
 const {
   deployBridgeContract,
-  deployERC20Handler,
-  deployWETHHandler,
-  deployWETH,
-  deployERC20
 } = require("../scripts/utils/deploy")
 
 
+const { utils } = require('ethers')
 
 describe(`Fee Setting`, () => {
 
@@ -25,10 +22,10 @@ describe(`Fee Setting`, () => {
   before(`load accounts and chainID`, async () => {
     ;[ deplyer, admin,alice ] = await ethers.getSigners()
     chainID = await getChainId();
-    console.log("chainID is :" + chainID);
+    //console.log("chainID is :" + chainID);
   })
 
-  let bridgeContact
+  let bridgeContract,wethHandlerContract
   beforeEach(`deploy Bridge contract`, async () => {
 
     //console.log("chainID is :" + chainID);
@@ -45,22 +42,22 @@ describe(`Fee Setting`, () => {
     }
 
     //DST_BRIDGE
-    bridgeContact =  await deployBridgeContract(deplyer,args);
-  
+    bridgeContract =  await deployBridgeContract(deplyer,args);
+
   })
 
   it(`get initial fee`, async () => {
 
-    const fee = await bridgeContact.getFee()
+    const fee = await bridgeContract.getFee()
     expect(fee).to.equal(INITIAL_FEE)
 
   })
 
   it(`admin change fee`, async () => {
 
-    await bridgeContact.adminChangeFee(1000)
+    await bridgeContract.adminChangeFee(1000)
 
-    const fee = await bridgeContact.getFee()
+    const fee = await bridgeContract.getFee()
     expect(fee).to.equal(1000)
 
   })

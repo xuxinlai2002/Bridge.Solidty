@@ -26,9 +26,6 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
     // depositNonce => Deposit Record
     mapping(uint8 => mapping(uint64 => DepositRecord)) public _depositRecords;
 
-    event LogString(
-        string data
-    );
     /**
         @param bridgeAddress Contract address of previously deployed Bridge.
         @param initialResourceIDs Resource IDs are used to identify a specific contract address.
@@ -76,10 +73,9 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
         - _amount Amount of tokens that were deposited.
     */
     function getDepositRecord(uint64 depositNonce, uint8 destId)
-        external
+        external view
         returns (DepositRecord memory)
     {
-        emit LogString("come to wethhander getDepositRecord");
         return _depositRecords[destId][depositNonce];
     }
 
@@ -108,20 +104,22 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
         uint256 amount;
         uint256 lenRecipientAddress;
 
-        LogString("come to wethhander deposit");
-        assembly {
-            amount := calldataload(0xC4)
+        // assembly {
+        //     amount := calldataload(0xC4)
 
-            recipientAddress := mload(0x40)
-            lenRecipientAddress := calldataload(0xE4)
-            mstore(0x40, add(0x20, add(recipientAddress, lenRecipientAddress)))
+        //     recipientAddress := mload(0x40)
+        //     lenRecipientAddress := calldataload(0xE4)
+        //     mstore(0x40, add(0x20, add(recipientAddress, lenRecipientAddress)))
 
-            calldatacopy(
-                recipientAddress,        // copy to destinationRecipientAddress
-                0xE4,                    // copy from calldata @ 0x104
-                sub(calldatasize(), 0xE) // copy size (calldatasize - 0x104)
-            )
-        }
+        //     calldatacopy(
+        //         recipientAddress,        // copy to destinationRecipientAddress
+        //         0xE4,                    // copy from calldata @ 0x104
+        //         sub(calldatasize(), 0xE) // copy size (calldatasize - 0x104)
+        //     )
+        // }
+
+        (amount, lenRecipientAddress) = abi.decode(data, (uint, uint));
+        recipientAddress = bytes(data[64:64 + lenRecipientAddress]);
 
         address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
         require(
@@ -159,8 +157,15 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
         override
         onlyBridge
     {
-        emit LogString("come to wethhander executeProposal");
+        //emit LogString("come to wethhander executeProposal");
+    }
 
+    /**
+        @notice get the handler type
+     */
+    function getType() external override pure returns(HandleTypes) {
+        //return WETH;
+        return IDepositExecute.HandleTypes.WETH;
     }
 
 }

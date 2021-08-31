@@ -3,7 +3,7 @@
 import "solidity-string-utils/StringUtils.sol";
 
 pragma solidity 0.6.12;
-import "hardhat/console.sol";
+//import "hardhat/console.sol";
 
 contract ToString {
 
