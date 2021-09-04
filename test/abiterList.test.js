@@ -92,7 +92,7 @@ describe(`abiter list `, () => {
     let abiterList = getAbiterList();
     let signList = await getAbiterSign(abiterList);
     
-    let tx = await bridgeContract.setAbiterList(abiterList,32,signList,true);
+    let tx = await bridgeContract.setAbiterList(abiterList,32,signList);
     let result = await tx.wait();
     console.log("first time  Abiter gas used : " + result.gasUsed);
 
@@ -105,7 +105,7 @@ describe(`abiter list `, () => {
     let signList = await getAbiterSign(abiterList);
     
     await expect(
-      bridgeContract.connect(alice).setAbiterList(abiterList,32,signList,true)
+      bridgeContract.connect(alice).setAbiterList(abiterList,32,signList)
     ).to.revertedWith("sender doesn't have admin role");
 
 
@@ -117,9 +117,9 @@ describe(`abiter list `, () => {
     let abiterList = getAbiterList();
     let signList = await getAbiterSign(abiterList);
 
-    await bridgeContract.setAbiterList(abiterList,32,signList,true);
+    await bridgeContract.setAbiterList(abiterList,32,signList);
     
-    await bridgeContract.connect(alice).setAbiterList(abiterList,32,signList,false)
+    await bridgeContract.connect(alice).setAbiterList(abiterList,32,signList)
     
 
   })

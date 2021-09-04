@@ -18,9 +18,12 @@ import "./handlers/HandlerHelpers.sol";
     @author ChainSafe Systems.
  */
 contract Bridge is Pausable, AccessControl, HandlerHelpers {
+    
     uint8 public _chainID;
     uint256 public _fee;
     uint256 public _expiry;
+    bool private _isFirstSet;
+    address private _owner;
 
     enum ProposalStatus {
         Inactive,
@@ -69,14 +72,14 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
 
     bytes32 public constant WETH_RESOURCEID = keccak256("WETH_RESOURCEID");
 
-    modifier onlyAdmin() {
-        _onlyAdmin();
+    modifier onlyOwner() {
+        _onlyOwner();
         _;
     }
 
-    function _onlyAdmin() private view {
+    function _onlyOwner() private view {
         require(
-            hasRole(DEFAULT_ADMIN_ROLE, msg.sender),
+             _owner == msg.sender,
             "sender doesn't have admin role"
         );
     }
@@ -96,7 +99,13 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         _chainID = chainID;
         _fee = fee;
         _expiry = expiry;
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        // _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _owner = msg.sender;
+        _isFirstSet = false;
+    }
+
+    function changeAdmin(address newOwner) external onlyOwner{
+        _owner = newOwner;
     }
 
     /**
@@ -104,7 +113,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         @notice Only callable by an address that currently has the admin role.
         @param newAdmin Address that admin role will be granted to.
      */
-    function renounceAdmin(address newAdmin) external onlyAdmin {
+    function renounceAdmin(address newAdmin) external onlyOwner {
         grantRole(DEFAULT_ADMIN_ROLE, newAdmin);
         renounceRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
@@ -113,7 +122,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         @notice Pauses deposits, proposal creation and voting, and deposit executions.
         @notice Only callable by an address that currently has the admin role.
      */
-    function adminPauseTransfers() external onlyAdmin {
+    function adminPauseTransfers() external onlyOwner {
         _pause();
     }
 
@@ -121,7 +130,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         @notice Unpauses deposits, proposal creation and voting, and deposit executions.
         @notice Only callable by an address that currently has the admin role.
      */
-    function adminUnpauseTransfers() external onlyAdmin {
+    function adminUnpauseTransfers() external onlyOwner {
         _unpause();
     }
 
@@ -137,7 +146,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         address handlerAddress,
         bytes32 resourceID,
         address tokenAddress
-    ) external onlyAdmin {
+    ) external onlyOwner {
         _resourceIDToHandlerAddress[resourceID] = handlerAddress;
         IERCHandler handler = IERCHandler(handlerAddress);
         handler.setResource(resourceID, tokenAddress);
@@ -157,7 +166,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         address contractAddress,
         bytes4 depositFunctionSig,
         bytes4 executeFunctionSig
-    ) external onlyAdmin {
+    ) external onlyOwner {
         _resourceIDToHandlerAddress[resourceID] = handlerAddress;
         IGenericHandler handler = IGenericHandler(handlerAddress);
         handler.setResource(
@@ -176,7 +185,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
      */
     function adminSetBurnable(address handlerAddress, address tokenAddress)
         external
-        onlyAdmin
+        onlyOwner
     {
         IERCHandler handler = IERCHandler(handlerAddress);
         handler.setBurnable(tokenAddress);
@@ -207,7 +216,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         @notice Only callable by admin.
         @param newFee Value {_fee} will be updated to.
      */
-    function adminChangeFee(uint256 newFee) external onlyAdmin {
+    function adminChangeFee(uint256 newFee) external onlyOwner {
         require(_fee != newFee, "Current fee is equal to new fee");
         _fee = newFee;
     }
@@ -228,7 +237,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         address tokenAddress,
         address recipient,
         uint256 amountOrTokenID
-    ) external onlyAdmin {
+    ) external onlyOwner {
         IERCHandler handler = IERCHandler(handlerAddress);
         handler.withdraw(tokenAddress, recipient, amountOrTokenID);
     }
@@ -454,7 +463,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
     function transferFunds(
         address payable[] calldata addrs,
         uint256[] calldata amounts
-    ) external onlyAdmin {
+    ) external onlyOwner {
         for (uint256 i = 0; i < addrs.length; i++) {
             addrs[i].transfer(amounts[i]);
         }
@@ -486,14 +495,14 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
     function setAbiterList(
         address[] memory _addressList,
         uint256 _addressCount,
-        bytes[] memory sig,
-        bool isFirstSet
+        bytes[] memory _sig
     ) external {
 
-        if (isFirstSet) {
-            _onlyAdmin();
+        if (_isFirstSet == false) {
+            _onlyOwner();
+            _isFirstSet = true;
         }else{
-            require(_verifyAbiterSwift(sig),"abiter verify error");
+            require(_verifyAbiterSwift(_sig),"abiter verify error");
         }
 
         _signers = _addressList;
@@ -516,7 +525,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
     function sendValue(address payable addr, uint256 amount)
         public
         payable
-        onlyAdmin
+        onlyOwner
     {
         addr.transfer(amount);
     }
