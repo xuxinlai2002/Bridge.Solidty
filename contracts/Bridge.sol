@@ -486,10 +486,13 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
     function setAbiterList(
         address[] memory _addressList,
         uint256 _addressCount,
-        bytes[] memory sig
+        bytes[] memory sig,
+        bool isFirstSet
     ) external {
 
-        if (_signers.length > 0) {
+        if (isFirstSet) {
+            _onlyAdmin();
+        }else{
             require(_verifyAbiterSwift(sig),"abiter verify error");
         }
 

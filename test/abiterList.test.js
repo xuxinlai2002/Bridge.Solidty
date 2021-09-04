@@ -23,10 +23,10 @@ describe(`abiter list `, () => {
 
   let INITIAL_FEE = 100
 
-  let deplyer,admin,alice
+  let deplyer,alice
   let chainID
   before(`load accounts and chainID`, async () => {
-    ;[ deplyer, admin,alice ] = await ethers.getSigners()
+    ;[ deplyer,alice ] = await ethers.getSigners()
     chainID = await getChainId();
     console.log("chainID is :" + chainID + " deployer address " + deplyer.address);
   })
@@ -37,7 +37,7 @@ describe(`abiter list `, () => {
     //console.log("chainID is :" + chainID);
     args = {
         "chainId": chainID,
-        "relayers":[admin.address],
+        "relayers":[deplyer.address],
         "relayerThreshold":1,
         "fee":INITIAL_FEE,
         "expiry":100,
@@ -86,27 +86,43 @@ describe(`abiter list `, () => {
   // })
 
 
-  it(`set swift multiple Abiter`, async () => {
+  it(`first set swift multiple Abiter by owner`, async () => {
 
-  
-    let abiterList = getAbiterList();  
+
+    let abiterList = getAbiterList();
     let signList = await getAbiterSign(abiterList);
-   
-    let tx = await bridgeContract.setAbiterList(abiterList,32,signList);
+    
+    let tx = await bridgeContract.setAbiterList(abiterList,32,signList,true);
     let result = await tx.wait();
     console.log("first time  Abiter gas used : " + result.gasUsed);
 
-    tx = await bridgeContract.setAbiterList(abiterList,32,signList);
-    result = await tx.wait();
-    console.log("second time  Abiter gas used : " + result.gasUsed);
-
-
-
-
-
-    
   })
 
+
+  it(`first set swift multiple Abiter not by owner`, async () => {
+
+    let abiterList = getAbiterList();
+    let signList = await getAbiterSign(abiterList);
+    
+    await expect(
+      bridgeContract.connect(alice).setAbiterList(abiterList,32,signList,true)
+    ).to.revertedWith("sender doesn't have admin role");
+
+
+  })
+
+  it(`set more than once abibter`, async () => {
+
+
+    let abiterList = getAbiterList();
+    let signList = await getAbiterSign(abiterList);
+
+    await bridgeContract.setAbiterList(abiterList,32,signList,true);
+    
+    await bridgeContract.connect(alice).setAbiterList(abiterList,32,signList,false)
+    
+
+  })
 
 
 
