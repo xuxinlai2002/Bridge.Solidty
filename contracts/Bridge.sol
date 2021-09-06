@@ -383,6 +383,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         //console.log("batch verify OK ...");
     }
 
+    //xxl TODO 5 为了防止攻击，在执行成功时候再退钱
     function _excuteBatch(
         uint8 chainID,
         uint64[] memory depositNonce,
@@ -396,6 +397,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         arrProposalStatus = new ProposalStatus[](lenBatch);
         arrDataHash = new bytes32[](lenBatch);
 
+        //xxl TODO 4 修改比较大 再议
         for (uint256 i = 0; i < lenBatch; i++) {
             //console.log("run number %d",(i + 1));
             address handler = _resourceIDToHandlerAddress[resourceID[i]];
@@ -488,6 +490,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         );
     }
 
+    //xxl TODO 3 solidity 省gas的多签方式
     /**
      * @dev set abiter list
      * @param _addressList abiter public list

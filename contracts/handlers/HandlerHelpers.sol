@@ -276,6 +276,7 @@ contract HandlerHelpers is IERCHandler, Seriality {
     function _isDuplicated(bytes[] memory _sig) internal pure returns (bool) {
         uint256 sigLen = _sig.length;
 
+        //xxl TODO 1
         for (uint8 i = 0; i < sigLen; i++) {
             for (uint8 j = i + 1; j < sigLen; j++) {
                 if (keccak256(_sig[i]) == keccak256(_sig[j])) {

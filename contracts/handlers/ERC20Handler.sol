@@ -16,6 +16,7 @@ import "@openzeppelin/contracts/presets/ERC20PresetMinterPauser.sol";
  */
 contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
 
+    //xxl TODO 2 去掉 DepositRecord
     struct DepositRecord {
         address _tokenAddress;
         uint8 _lenDestinationRecipientAddress;
@@ -144,6 +145,11 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
             depositer,
             amount
         );
+
+        //xxl 2 TODO emit _depositRecords
+        //
+
+
     }
 
     /**
