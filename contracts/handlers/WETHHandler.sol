@@ -13,18 +13,20 @@ import "./HandlerHelpers.sol";
  */
 contract WETHHandler is IDepositExecute, HandlerHelpers{
 
-    struct DepositRecord {
-        address _tokenAddress;
-        uint8 _lenDestinationRecipientAddress;
-        uint8 _destinationChainID;
-        bytes32 _resourceID;
-        bytes _destinationRecipientAddress;
-        address _depositer;
-        uint256 _amount;
-    }
+    // xxl TODO 2
+    // struct DepositRecord {
+    //     address _tokenAddress;
+    //     uint8 _lenDestinationRecipientAddress;
+    //     uint8 _destinationChainID;
+    //     bytes32 _resourceID;
+    //     bytes _destinationRecipientAddress;
+    //     address _depositer;
+    //     uint256 _amount;
+    // }
 
-    // depositNonce => Deposit Record
-    mapping(uint8 => mapping(uint64 => DepositRecord)) public _depositRecords;
+    // xxl TODO 2
+    // // depositNonce => Deposit Record
+    // mapping(uint8 => mapping(uint64 => DepositRecord)) public _depositRecords;
 
     /**
         @param bridgeAddress Contract address of previously deployed Bridge.
@@ -72,12 +74,13 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
         - _depositer Address that initially called {deposit} in the Bridge contract.
         - _amount Amount of tokens that were deposited.
     */
-    function getDepositRecord(uint64 depositNonce, uint8 destId)
-        external view
-        returns (DepositRecord memory)
-    {
-        return _depositRecords[destId][depositNonce];
-    }
+    // xxl TODO 2 
+    // function getDepositRecord(uint64 depositNonce, uint8 destId)
+    //     external view
+    //     returns (DepositRecord memory)
+    // {
+    //     return _depositRecords[destId][depositNonce];
+    // }
 
     /**
         @notice A deposit is initiatied by making a deposit in the Bridge contract.
@@ -104,20 +107,6 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
         uint256 amount;
         uint256 lenRecipientAddress;
 
-        // assembly {
-        //     amount := calldataload(0xC4)
-
-        //     recipientAddress := mload(0x40)
-        //     lenRecipientAddress := calldataload(0xE4)
-        //     mstore(0x40, add(0x20, add(recipientAddress, lenRecipientAddress)))
-
-        //     calldatacopy(
-        //         recipientAddress,        // copy to destinationRecipientAddress
-        //         0xE4,                    // copy from calldata @ 0x104
-        //         sub(calldatasize(), 0xE) // copy size (calldatasize - 0x104)
-        //     )
-        // }
-
         (amount, lenRecipientAddress) = abi.decode(data, (uint, uint));
         recipientAddress = bytes(data[64:64 + lenRecipientAddress]);
 
@@ -126,18 +115,16 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
             _contractWhitelist[tokenAddress],
             "provided tokenAddress is not whitelisted"
         );
-
-        // lockWETH(tokenAddress, depositer, address(this), amount);
-
-        _depositRecords[destinationChainID][depositNonce] = DepositRecord(
-            tokenAddress,
-            uint8(lenRecipientAddress),
-            destinationChainID,
-            resourceID,
-            recipientAddress,
-            depositer,
-            amount
-        );
+        
+        // _depositRecords[destinationChainID][depositNonce] = DepositRecord(
+        //     tokenAddress,
+        //     uint8(lenRecipientAddress),
+        //     destinationChainID,
+        //     resourceID,
+        //     recipientAddress,
+        //     depositer,
+        //     amount
+        // );
     }
 
 

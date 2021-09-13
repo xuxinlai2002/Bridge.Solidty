@@ -280,6 +280,7 @@ contract HandlerHelpers is IERCHandler, Seriality {
         for (uint8 i = 0; i < sigLen; i++) {
             for (uint8 j = i + 1; j < sigLen; j++) {
                 if (keccak256(_sig[i]) == keccak256(_sig[j])) {
+                //if( _sig[i].equals((_sig[j])) ) {    
                     return true;
                 }
             }
@@ -445,4 +446,5 @@ contract HandlerHelpers is IERCHandler, Seriality {
 
         return addr;
     }
+
 }

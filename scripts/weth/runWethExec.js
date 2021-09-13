@@ -55,7 +55,7 @@ const main = async () => {
         // //let beforeEthBalace = await utils.formatEther(await prov.getBalance(bridge.address));
         // console.log("bridge eth : " + beforeEthBalace);
 
-        //xxl TODO 2
+        
         //1.0 console.log(bridge.address);
         let abiterList = getAbiterList();
         console.log(abiterList);

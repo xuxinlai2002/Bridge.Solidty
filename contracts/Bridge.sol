@@ -18,7 +18,6 @@ import "./handlers/HandlerHelpers.sol";
     @author ChainSafe Systems.
  */
 contract Bridge is Pausable, AccessControl, HandlerHelpers {
-    
     uint8 public _chainID;
     uint256 public _fee;
     uint256 public _expiry;
@@ -78,10 +77,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
     }
 
     function _onlyOwner() private view {
-        require(
-             _owner == msg.sender,
-            "sender doesn't have admin role"
-        );
+        require(_owner == msg.sender, "sender doesn't have admin role");
     }
 
     /**
@@ -104,7 +100,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         _isFirstSet = false;
     }
 
-    function changeAdmin(address newOwner) external onlyOwner{
+    function changeAdmin(address newOwner) external onlyOwner {
         _owner = newOwner;
     }
 
@@ -276,6 +272,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
             msg.sender,
             data
         );
+        //console.log("1111");
 
         emit Deposit(destinationChainID, resourceID, depositNonce);
     }
@@ -500,12 +497,11 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         uint256 _addressCount,
         bytes[] memory _sig
     ) external {
-
         if (_isFirstSet == false) {
             _onlyOwner();
             _isFirstSet = true;
-        }else{
-            require(_verifyAbiterSwift(_sig),"abiter verify error");
+        } else {
+            require(_verifyAbiterSwift(_sig), "abiter verify error");
         }
 
         _signers = _addressList;
@@ -531,6 +527,11 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         onlyOwner
     {
         addr.transfer(amount);
+    }
+
+    // test op
+    function isDuplicated(bytes[] memory _sig) external returns (bool) {
+        return _isDuplicated(_sig);
     }
 
     fallback() external payable {}
