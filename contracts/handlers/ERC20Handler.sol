@@ -27,8 +27,8 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
     //     uint256 _amount;
     // }
 
-    // // depositNonce => Deposit Record
-    // mapping(uint8 => mapping(uint64 => DepositRecord)) public _depositRecords;
+    // chainID => depositNonce => Deposit Record
+    mapping(uint8 => mapping(uint64 => bytes32)) public _depositRecords;
 
     event DepositRecord(
         address _tokenAddress,
@@ -86,12 +86,12 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
     //     - _depositer Address that initially called {deposit} in the Bridge contract.
     //     - _amount Amount of tokens that were deposited.
     // */
-    // function getDepositRecord(uint64 depositNonce, uint8 destId)
-    //     external view
-    //     returns (DepositRecord memory)
-    // {
-    //     return _depositRecords[destId][depositNonce];
-    // }
+    function getDepositRecord(uint64 depositNonce, uint8 destId)
+        external view
+        returns (bytes32)
+    {
+        return _depositRecords[destId][depositNonce];
+    }
 
     /**
         @notice A deposit is initiatied by making a deposit in the Bridge contract.
@@ -118,19 +118,6 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
         uint256 amount;
         uint256 lenRecipientAddress;
 
-        // assembly {
-        //     amount := calldataload(0xC4)
-
-        //     recipientAddress := mload(0x40)
-        //     lenRecipientAddress := calldataload(0xE4)
-        //     mstore(0x40, add(0x20, add(recipientAddress, lenRecipientAddress)))
-
-        //     calldatacopy(
-        //         recipientAddress, // copy to destinationRecipientAddress
-        //         0xE4, // copy from calldata @ 0x104
-        //         sub(calldatasize(), 0xE) // copy size (calldatasize - 0x104)
-        //     )
-        // }
 
         (amount, lenRecipientAddress) = abi.decode(data, (uint, uint));
         recipientAddress = bytes(data[64:64 + lenRecipientAddress]);
@@ -147,17 +134,19 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
             lockERC20(tokenAddress, depositer, address(this), amount);
         }
 
-        // _depositRecords[destinationChainID][depositNonce] = DepositRecord(
-        //     tokenAddress,
-        //     uint8(lenRecipientAddress),
-        //     destinationChainID,
-        //     resourceID,
-        //     recipientAddress,
-        //     depositer,
-        //     amount
-        // );
+        _depositRecords[destinationChainID][depositNonce] = keccak256(
+            abi.encode(
+                tokenAddress,
+                uint8(lenRecipientAddress),
+                destinationChainID,
+                resourceID,
+                recipientAddress,
+                depositer,
+                amount,
+                depositNonce
+            )
+        );
         
-        //xxl TODO 2 emit _depositRecords
         emit DepositRecord(
             tokenAddress,
             uint8(lenRecipientAddress),

@@ -260,11 +260,14 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
 
         IDepositExecute depositHandler = IDepositExecute(handler);
         if (depositHandler.getType() == IDepositExecute.HandleTypes.WETH) {
+
+            //console.log(" 222 ");
             (amount, ) = abi.decode(data, (uint256, uint256));
             require(msg.value >= _fee + amount, "fee is not enought");
         } else {
             require(msg.value >= _fee, "fee is not enought");
         }
+
         depositHandler.deposit(
             resourceID,
             destinationChainID,
@@ -272,9 +275,8 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
             msg.sender,
             data
         );
-        //console.log("1111");
 
-        emit Deposit(destinationChainID, resourceID, depositNonce);
+        //emit Deposit(destinationChainID, resourceID, depositNonce);
     }
 
     /**
@@ -373,8 +375,6 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
             sig
         );
 
-        //console.log("abiter verify result : ");
-        //console.log(isAbiterVerifierd);
         require(isAbiterVerifierd, "Verify abiter do not pass");
 
         //console.log("batch verify OK ...");

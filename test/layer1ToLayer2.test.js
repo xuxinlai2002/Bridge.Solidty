@@ -18,7 +18,8 @@ const { utils } = require('ethers')
 const {
   sleep,
   getSign,
-  getAbiterList
+  getAbiterList,
+  getAbiterSign
 } = require('../scripts/utils/helper')
 
 
@@ -151,8 +152,12 @@ describe(`layer1 => layer2 `, () => {
 
       await sleep(2000);
     
+      // let abiterList = getAbiterList();
+      // await bridgeContract.setAbiterList(abiterList,12);
+
       let abiterList = getAbiterList();
-      await bridgeContract.setAbiterList(abiterList,32);
+      let signList = await getAbiterSign(abiterList);
+      await bridgeContract.setAbiterList(abiterList,12,signList);
 
       const data = '0x' +
       ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +                               // Deposit Amount        (32 bytes)

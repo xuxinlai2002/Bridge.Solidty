@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/Bridge.sol": {
-      "lastModificationDate": 1630915095759,
-      "contentHash": "ff4188ce1a2bfac869cfa5e7d5fc5828",
+      "lastModificationDate": 1631761144526,
+      "contentHash": "bb654b6a4aa6c5140f9b931c80ba0174",
       "sourceName": "contracts/Bridge.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -520,8 +520,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/HandlerHelpers.sol": {
-      "lastModificationDate": 1630914659494,
-      "contentHash": "1bdb7e8039e339ba49dc96b2399cfbb8",
+      "lastModificationDate": 1631763016554,
+      "contentHash": "44fc59e88f58c54318fc6e9a89015fb3",
       "sourceName": "contracts/handlers/HandlerHelpers.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -566,8 +566,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/WETHHandler.sol": {
-      "lastModificationDate": 1630915366940,
-      "contentHash": "a3d8e5fa21dd6fa6403bba3ff4889b22",
+      "lastModificationDate": 1631758268042,
+      "contentHash": "be3fb0c9ae5c737529639073cce33063",
       "sourceName": "contracts/handlers/WETHHandler.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -611,7 +611,7 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/ERC721Handler.sol": {
-      "lastModificationDate": 1630145516880,
+      "lastModificationDate": 1631500807721,
       "contentHash": "5f22c27ce686e59532bb43950e2f3f99",
       "sourceName": "contracts/handlers/ERC721Handler.sol",
       "solcConfig": {
@@ -1683,8 +1683,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/ERC20Handler.sol": {
-      "lastModificationDate": 1631501170081,
-      "contentHash": "49c7f28f79b8f30568c2facc35e44043",
+      "lastModificationDate": 1631748829691,
+      "contentHash": "d98a0d283792eaf756ac2517b5a97cf6",
       "sourceName": "contracts/handlers/ERC20Handler.sol",
       "solcConfig": {
         "version": "0.6.12",

@@ -28,6 +28,19 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
     // // depositNonce => Deposit Record
     // mapping(uint8 => mapping(uint64 => DepositRecord)) public _depositRecords;
 
+    mapping(uint8 => mapping(uint64 => bytes32)) public _depositRecords;
+
+    event DepositRecord(
+        address _tokenAddress,
+        uint8 _lenDestinationRecipientAddress,
+        uint8 _destinationChainID,
+        bytes32 _resourceID,
+        bytes _destinationRecipientAddress,
+        address _depositer,
+        uint256 _amount,
+        uint64 _depositNonce
+    );
+
     /**
         @param bridgeAddress Contract address of previously deployed Bridge.
         @param initialResourceIDs Resource IDs are used to identify a specific contract address.
@@ -74,13 +87,12 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
         - _depositer Address that initially called {deposit} in the Bridge contract.
         - _amount Amount of tokens that were deposited.
     */
-    // xxl TODO 2 
-    // function getDepositRecord(uint64 depositNonce, uint8 destId)
-    //     external view
-    //     returns (DepositRecord memory)
-    // {
-    //     return _depositRecords[destId][depositNonce];
-    // }
+    function getDepositRecord(uint64 depositNonce, uint8 destId)
+        external view
+        returns (bytes32)
+    {
+        return _depositRecords[destId][depositNonce];
+    }
 
     /**
         @notice A deposit is initiatied by making a deposit in the Bridge contract.
@@ -115,16 +127,34 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
             _contractWhitelist[tokenAddress],
             "provided tokenAddress is not whitelisted"
         );
-        
-        // _depositRecords[destinationChainID][depositNonce] = DepositRecord(
-        //     tokenAddress,
-        //     uint8(lenRecipientAddress),
-        //     destinationChainID,
-        //     resourceID,
-        //     recipientAddress,
-        //     depositer,
-        //     amount
-        // );
+
+
+        _depositRecords[destinationChainID][depositNonce] = keccak256(
+            abi.encode(
+                tokenAddress,
+                uint8(lenRecipientAddress),
+                destinationChainID,
+                resourceID,
+                recipientAddress,
+                depositer,
+                amount,
+                depositNonce
+            )
+        );
+
+        //xxl TODO 2 emit _depositRecords
+        emit DepositRecord(
+            tokenAddress,
+            uint8(lenRecipientAddress),
+            destinationChainID,
+            resourceID,
+            recipientAddress,
+            depositer,
+            amount,
+            depositNonce
+        );
+
+
     }
 
 

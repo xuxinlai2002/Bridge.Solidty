@@ -166,14 +166,16 @@ contract HandlerHelpers is IERCHandler, Seriality {
 
         require(_isDuplicated(sig) == false, "duplicate signature exception");
 
+        //console.log("verify %d",( i + 1 ));
+        msgHash = _getMsgHashBatch(chainID, depositNonce, data, resourceID);
+        console.logBytes32(msgHash);
+
         for (i = 0; i < sigLen; i++) {
 
-            //console.log("verify %d",( i + 1 ));
-            msgHash = _getMsgHashBatch(chainID, depositNonce, data, resourceID);
             //msgHash = 0xbe4824f27f749c96ceffb6736cff8fc5a01bf58c6eb2ec041c139b26f0aa5707;
-            //console.logBytes32(msgHash);
-            
+            //console.logBytes32(msgHash);            
             signer = _recoverSigner(msgHash, sig[i]);
+            console.log(signer);
 
             if (_isInAbterList(signer) == false) {
                 continue;
@@ -208,32 +210,53 @@ contract HandlerHelpers is IERCHandler, Seriality {
         uint64[] memory depositNonce,
         bytes[] calldata data,
         bytes32[] memory resourceID
-    ) internal pure returns (bytes32) {
-        uint256 txLen = depositNonce.length;
-        bytes memory allSerialData;
+    ) internal view returns (bytes32) {
 
-        bytes memory chainIDbuffer = new bytes(32);
-        uintToBytes(32, chainID, chainIDbuffer);
-        allSerialData = _mergeBytes(allSerialData, chainIDbuffer);
 
-        for (uint256 i = 0; i < txLen; i++) {
-            uint256 offset = 64;
-            bytes memory buffer = new bytes(offset);
+        // uint256 txLen = depositNonce.length;
+        // bytes memory allSerialData;
 
-            bytes32ToBytes(offset, resourceID[i], buffer);
-            //console.logBytes(buffer);
+        // bytes memory chainIDbuffer = new bytes(32);
+        // uintToBytes(32, chainID, chainIDbuffer);
+        // allSerialData = _mergeBytes(allSerialData, chainIDbuffer);
 
-            offset -= 32;
-            uintToBytes(offset, depositNonce[i], buffer);
-            //console.logBytes(buffer);
+        // for (uint256 i = 0; i < txLen; i++) {
+        //     uint256 offset = 64;
+        //     bytes memory buffer = new bytes(offset);
 
-            bytes memory serialData = _mergeBytes(buffer, data[i]);
-            allSerialData = _mergeBytes(allSerialData, serialData);
-        }
+        //     bytes32ToBytes(offset, resourceID[i], buffer);
+        //     //console.logBytes(buffer);
 
-        bytes32 msgHash = keccak256(allSerialData);
-        //console.logBytes32(msgHash);
+        //     offset -= 32;
+        //     uintToBytes(offset, depositNonce[i], buffer);
+        //     //console.logBytes(buffer);
+
+        //     bytes memory serialData = _mergeBytes(buffer, data[i]);
+        //     allSerialData = _mergeBytes(allSerialData, serialData);
+        // }
+
+        // bytes32 msgHash = keccak256(allSerialData);
+        // console.log(chainID);
+        // console.log(depositNonce.length);
+
+        // console.log(depositNonce[0]);
+        // console.logBytes(data[0]);
+        // console.logBytes32(resourceID[0]);
+
+
+        bytes32 msgHash = keccak256(
+            abi.encode(
+                chainID,
+                depositNonce,
+                data,
+                resourceID
+            )
+        );
         return msgHash;
+
+
+
+
     }
 
     function _verifyAbter(
@@ -251,9 +274,10 @@ contract HandlerHelpers is IERCHandler, Seriality {
 
         require(_isDuplicated(sig) == false, "duplicate signature exception");
 
+        msgHash = _getMsgHash(chainID, depositNonce, data, resourceID);
+        console.logBytes32(msgHash);
+
         for (i = 0; i < sigLen; i++) {
-            msgHash = _getMsgHash(chainID, depositNonce, data, resourceID);
-            //console.logBytes32(msgHash);
 
             signer = _recoverSigner(msgHash, sig[i]);
 
@@ -305,27 +329,39 @@ contract HandlerHelpers is IERCHandler, Seriality {
         bytes calldata data,
         bytes32 resourceID
     ) internal pure returns (bytes32) {
-        uint256 offset = 96;
-        bytes memory buffer = new bytes(offset);
 
-        bytes32ToBytes(offset, resourceID, buffer);
-        //console.logBytes(buffer);
+        // uint256 offset = 96;
+        // bytes memory buffer = new bytes(offset);
 
-        offset -= 32;
-        uintToBytes(offset, depositNonce, buffer);
-        //console.logBytes(buffer);
+        // bytes32ToBytes(offset, resourceID, buffer);
+        // //console.logBytes(buffer);
 
-        offset -= 32;
-        uintToBytes(offset, chainID, buffer);
-        //console.logBytes(buffer);
+        // offset -= 32;
+        // uintToBytes(offset, depositNonce, buffer);
+        // //console.logBytes(buffer);
 
-        bytes memory serialData = _mergeBytes(buffer, data);
-        //console.logBytes(serialData);
+        // offset -= 32;
+        // uintToBytes(offset, chainID, buffer);
+        // //console.logBytes(buffer);
 
-        bytes32 msgHash = keccak256(serialData);
-        //console.logBytes32(msgHash);
+        // bytes memory serialData = _mergeBytes(buffer, data);
+        // //console.logBytes(serialData);
 
+        // bytes32 msgHash = keccak256(serialData);
+        // //console.logBytes32(msgHash);
+
+        // return msgHash;
+
+        bytes32 msgHash = keccak256(
+            abi.encode(
+                chainID,
+                depositNonce,
+                data,
+                resourceID
+            )
+        );
         return msgHash;
+
     }
 
     function _mergeBytes(bytes memory a, bytes memory b)

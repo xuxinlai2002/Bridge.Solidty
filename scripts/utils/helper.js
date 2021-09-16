@@ -133,26 +133,26 @@ let privateKeyList = [
     "0xe36161913a3e02a7fd6459b7465168e24d888a6255ca5da02c53ee92c4c5b59a",
     "0x8c9316f59648822a6e21983c04fe85bffcacd7205233db045c5f5f7ea3a023f5",
     "0x9828905708b9909d1a043aefd81bc4866f1d3d9ea6d6a17ed34abc11eaf3397a",
-    "0xad3d24716cc2608e36316e5443fc20e23a2e5ab93d1371bcc0e331c4856ed438",
-    "0x4ec084e990ed290cfb5e57f1eec801f704b6214db10bb90e5bf46904e1f924ab",
-    "0xfe166d04f5a2ac6d64bfe7384ff4fc2756cd33b844682dbacc406ee4ad49c6fb",
-    "0x184b0f563e4d3e345ffe04d6a6030a4b9d33f52625dbf0460b19290230fa665c",
-    "0xcd3438afc409f5166035f40fd63f0243cc50be360301694468d96d115723e0bf",
-    "0x7c56cbcaf9616135a9d090f3942b874397d7249468aa5c158de4fd7c124aa2de",
-    "0xc9d3db4dea85377b8674015291806f18e94c912f1f203253cecde2f5ce395695",
-    "0x76e99fc4b53086b7deb42abefa377d9648fc177dfc2e38279a89f9f641e88705",
-    "0xe997fab5c06129c533f5656b1c27aa6c3cf620f4aea331b82d35fbb2b0328b4b",
-    "0x7af2740545f1d8fbeaf0d385b596f125b9b6476307276681b88eef38acc6e42e",
-    "0xf8750dd0f6c5d2f959f0b2ef5f14b393983bc417f4be7f75e44005ec9a044416",
-    "0x4ded1bfcda22bcf90cede2cf32abd149a39a381cb2bd0a5125e06f5bfdea074e",
-    "0x04064cf0cfb0c14e08432122ee35e80c1811ea5d039fab8b98c3be2d91607dd0",
-    "0xeb78b86d4eb1c246847fa54861a31d8cf0294c612969f14eb94e6be919ab29dd",
-    "0x94f1c124d696d08f1cd0c2bbfa9c9a5078c0aa6b04d4fb4a7b18d211415cffed",
-    "0x434f0a747d74f29be0b28e478de538b1623edb7d0e3f1000c7e86872b6cf4738",
-    "0xe862b48be321770fb002e1972ae71c5fc1848a225251642a1e76408686d98866",
-    "0x03cae4498629d0d993886c924ee11a5a9fb3294ad671fbb8f1f088306c036f6c",
-    "0xa02b07f741b4c62c5133fe010d994e2f7808e5619d6c4780455cda389072798e",
-    "0xf431f6dea47d3d63d1b9cd2a198cfab2e0a11888d31695547bb17f68b3d6bda8"
+    // "0xad3d24716cc2608e36316e5443fc20e23a2e5ab93d1371bcc0e331c4856ed438",
+    // "0x4ec084e990ed290cfb5e57f1eec801f704b6214db10bb90e5bf46904e1f924ab",
+    // "0xfe166d04f5a2ac6d64bfe7384ff4fc2756cd33b844682dbacc406ee4ad49c6fb",
+    // "0x184b0f563e4d3e345ffe04d6a6030a4b9d33f52625dbf0460b19290230fa665c",
+    // "0xcd3438afc409f5166035f40fd63f0243cc50be360301694468d96d115723e0bf",
+    // "0x7c56cbcaf9616135a9d090f3942b874397d7249468aa5c158de4fd7c124aa2de",
+    // "0xc9d3db4dea85377b8674015291806f18e94c912f1f203253cecde2f5ce395695",
+    // "0x76e99fc4b53086b7deb42abefa377d9648fc177dfc2e38279a89f9f641e88705",
+    // "0xe997fab5c06129c533f5656b1c27aa6c3cf620f4aea331b82d35fbb2b0328b4b",
+    // "0x7af2740545f1d8fbeaf0d385b596f125b9b6476307276681b88eef38acc6e42e",
+    // "0xf8750dd0f6c5d2f959f0b2ef5f14b393983bc417f4be7f75e44005ec9a044416",
+    // "0x4ded1bfcda22bcf90cede2cf32abd149a39a381cb2bd0a5125e06f5bfdea074e",
+    // "0x04064cf0cfb0c14e08432122ee35e80c1811ea5d039fab8b98c3be2d91607dd0",
+    // "0xeb78b86d4eb1c246847fa54861a31d8cf0294c612969f14eb94e6be919ab29dd",
+    // "0x94f1c124d696d08f1cd0c2bbfa9c9a5078c0aa6b04d4fb4a7b18d211415cffed",
+    // "0x434f0a747d74f29be0b28e478de538b1623edb7d0e3f1000c7e86872b6cf4738",
+    // "0xe862b48be321770fb002e1972ae71c5fc1848a225251642a1e76408686d98866",
+    // "0x03cae4498629d0d993886c924ee11a5a9fb3294ad671fbb8f1f088306c036f6c",
+    // "0xa02b07f741b4c62c5133fe010d994e2f7808e5619d6c4780455cda389072798e",
+    // "0xf431f6dea47d3d63d1b9cd2a198cfab2e0a11888d31695547bb17f68b3d6bda8"
 ]
 
 const getSign = async(chainId,depositNonce,resourceId,data) => {
@@ -164,9 +164,10 @@ const getSign = async(chainId,depositNonce,resourceId,data) => {
 
     //add sign
     var web3 = new Web3();
-    let msg = web3.utils.sha3(hexMsg);
+    //let msg = web3.utils.sha3(hexMsg);
     // console.log("hex msg detail : " + hexMsg);
     // console.log("sh3 msg : " + msg);
+    let msg = "0xbf90db37be7af88bf041b410ff13e1c648768723aa6f79e70ac6e32cb4f6ea8b"
 
     let sign = [];
     for(var i = 0 ;i < privateKeyList.length ;i ++){
@@ -196,7 +197,10 @@ const getSignBatch = async(chainId,depositNonce,resourceId,data) => {
 
     //add sign
     var web3 = new Web3();
-    let msg = web3.utils.sha3(hexMsg);
+    //let msg = web3.utils.sha3(hexMsg);
+    let msg = "0x79224dd62c59bf04dee150eb28339297d7acde3d1228abed078b611429ff8786"
+
+    console.log("js " + msg);
     // console.log("hex msg detail : " + hexMsg);
     // console.log("sh3 msg : " + msg);
 
