@@ -210,7 +210,7 @@ contract HandlerHelpers is IERCHandler, Seriality {
         uint64[] memory depositNonce,
         bytes[] calldata data,
         bytes32[] memory resourceID
-    ) internal view returns (bytes32) {
+    ) internal pure returns (bytes32) {
 
 
         // uint256 txLen = depositNonce.length;

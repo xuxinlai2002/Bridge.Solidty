@@ -37,8 +37,7 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
         bytes32 _resourceID,
         bytes _destinationRecipientAddress,
         address _depositer,
-        uint256 _amount,
-        uint64 _depositNonce
+        uint256 _amount
     );
 
     /**
@@ -137,8 +136,7 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
                 resourceID,
                 recipientAddress,
                 depositer,
-                amount,
-                depositNonce
+                amount
             )
         );
 
@@ -150,8 +148,7 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
             resourceID,
             recipientAddress,
             depositer,
-            amount,
-            depositNonce
+            amount
         );
 
 

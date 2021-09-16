@@ -37,8 +37,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
         bytes32 _resourceID,
         bytes _destinationRecipientAddress,
         address _depositer,
-        uint256 _amount,
-        uint64 _depositNonce
+        uint256 _amount
     );
 
     /**
@@ -142,8 +141,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
                 resourceID,
                 recipientAddress,
                 depositer,
-                amount,
-                depositNonce
+                amount
             )
         );
         
@@ -154,8 +152,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
             resourceID,
             recipientAddress,
             depositer,
-            amount,
-            depositNonce
+            amount
         );
 
     }
