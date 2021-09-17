@@ -30,16 +30,6 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
 
     mapping(uint8 => mapping(uint64 => bytes32)) public _depositRecords;
 
-    event DepositRecord(
-        address _tokenAddress,
-        uint8 _lenDestinationRecipientAddress,
-        uint8 _destinationChainID,
-        bytes32 _resourceID,
-        bytes _destinationRecipientAddress,
-        address _depositer,
-        uint256 _amount
-    );
-
     /**
         @param bridgeAddress Contract address of previously deployed Bridge.
         @param initialResourceIDs Resource IDs are used to identify a specific contract address.
@@ -113,14 +103,10 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
         uint64 depositNonce,
         address depositer,
         bytes calldata data
-    ) external override onlyBridge {
-        bytes memory recipientAddress;
+    ) external onlyBridge returns(uint256,address){
         uint256 amount;
-        uint256 lenRecipientAddress;
 
-        (amount, lenRecipientAddress) = abi.decode(data, (uint, uint));
-        recipientAddress = bytes(data[64:64 + lenRecipientAddress]);
-
+        (amount,) = abi.decode(data, (uint, uint));
         address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
         require(
             _contractWhitelist[tokenAddress],
@@ -131,26 +117,14 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
         _depositRecords[destinationChainID][depositNonce] = keccak256(
             abi.encode(
                 tokenAddress,
-                uint8(lenRecipientAddress),
                 destinationChainID,
                 resourceID,
-                recipientAddress,
                 depositer,
                 amount
             )
         );
 
-        //xxl TODO 2 emit _depositRecords
-        emit DepositRecord(
-            tokenAddress,
-            uint8(lenRecipientAddress),
-            destinationChainID,
-            resourceID,
-            recipientAddress,
-            depositer,
-            amount
-        );
-
+        return (amount,tokenAddress);
 
     }
 

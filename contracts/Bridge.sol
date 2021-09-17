@@ -4,12 +4,13 @@ pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "./utils/Pausable.sol";
 import "./interfaces/IDepositExecute.sol";
 import "./interfaces/IBridge.sol";
 import "./interfaces/IERCHandler.sol";
 import "./interfaces/IGenericHandler.sol";
 import "./handlers/HandlerHelpers.sol";
+import "./handlers/ERC20Handler.sol";
+import "./handlers/WETHHandler.sol";
 
 //import "hardhat/console.sol";
 
@@ -47,6 +48,14 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
     mapping(uint64 => mapping(uint8 => bytes)) public _depositRecords;
     // destinationChainID + depositNonce => dataHash => Proposal
     mapping(uint72 => mapping(bytes32 => Proposal)) public _proposals;
+
+    event DepositRecord(
+        address _tokenAddress,
+        uint8 _destinationChainID,
+        bytes32 _resourceID,
+        address _depositer,
+        uint256 _amount
+    );
 
     event Deposit(
         uint8 indexed destinationChainID,
@@ -251,7 +260,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         bytes32 resourceID,
         bytes calldata data
     ) external payable whenNotPaused {
-        uint256 amount;
+
         address handler = _resourceIDToHandlerAddress[resourceID];
         require(handler != address(0), "resourceID not mapped to handler");
 
@@ -259,16 +268,32 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         _depositRecords[depositNonce][destinationChainID] = data;
 
         IDepositExecute depositHandler = IDepositExecute(handler);
-        if (depositHandler.getType() == IDepositExecute.HandleTypes.WETH) {
-
-            //console.log(" 222 ");
-            (amount, ) = abi.decode(data, (uint256, uint256));
-            require(msg.value >= _fee + amount, "fee is not enought");
-        } else {
+        if(depositHandler.getType() == IDepositExecute.HandleTypes.WETH) {
+            _depoistWeth(destinationChainID,resourceID,data,handler,depositNonce);
+        } else if(depositHandler.getType() == IDepositExecute.HandleTypes.ERC20){
+            _depoistERC20(destinationChainID,resourceID,data,handler,depositNonce);
+        }else { //TODO and 721 and other
             require(msg.value >= _fee, "fee is not enought");
         }
+        
+    }
 
-        depositHandler.deposit(
+    function _depoistWeth(        
+        uint8 destinationChainID,
+        bytes32 resourceID,
+        bytes calldata data,
+        address handler,
+        uint64 depositNonce
+    ) internal{
+
+        uint256 amount;
+        address tokenAddress;
+
+        (amount, ) = abi.decode(data, (uint256, uint256));
+        require(msg.value >= _fee + amount, "fee is not enought");
+
+        WETHHandler wethHander = WETHHandler(handler);
+        (amount, tokenAddress) = wethHander.deposit(
             resourceID,
             destinationChainID,
             depositNonce,
@@ -276,7 +301,44 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
             data
         );
 
-        //emit Deposit(destinationChainID, resourceID, depositNonce);
+        emit DepositRecord(
+            tokenAddress,
+            destinationChainID,
+            resourceID,
+            msg.sender,
+            amount
+        );
+
+    }
+
+    function _depoistERC20(        
+        uint8 destinationChainID,
+        bytes32 resourceID,
+        bytes calldata data,
+        address handler,
+        uint64 depositNonce
+    ) internal{
+
+        uint256 amount;
+        address tokenAddress;
+
+        ERC20Handler erc20Hander = ERC20Handler(handler);
+        (amount, tokenAddress) = erc20Hander.deposit(
+            resourceID,
+            destinationChainID,
+            depositNonce,
+            msg.sender,
+            data
+        );
+
+        emit DepositRecord(
+            tokenAddress,
+            destinationChainID,
+            resourceID,
+            msg.sender,
+            amount
+        );
+
     }
 
     /**
@@ -530,7 +592,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
     }
 
     // test op
-    function isDuplicated(bytes[] memory _sig) external returns (bool) {
+    function isDuplicated(bytes[] memory _sig) external pure returns (bool) {
         return _isDuplicated(_sig);
     }
 

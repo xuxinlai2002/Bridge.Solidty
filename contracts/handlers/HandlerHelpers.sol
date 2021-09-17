@@ -212,7 +212,6 @@ contract HandlerHelpers is IERCHandler, Seriality {
         bytes32[] memory resourceID
     ) internal pure returns (bytes32) {
 
-
         // uint256 txLen = depositNonce.length;
         // bytes memory allSerialData;
 
@@ -482,5 +481,6 @@ contract HandlerHelpers is IERCHandler, Seriality {
 
         return addr;
     }
+
 
 }

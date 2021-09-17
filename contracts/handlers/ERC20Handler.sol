@@ -30,15 +30,6 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
     // chainID => depositNonce => Deposit Record
     mapping(uint8 => mapping(uint64 => bytes32)) public _depositRecords;
 
-    event DepositRecord(
-        address _tokenAddress,
-        uint8 _lenDestinationRecipientAddress,
-        uint8 _destinationChainID,
-        bytes32 _resourceID,
-        bytes _destinationRecipientAddress,
-        address _depositer,
-        uint256 _amount
-    );
 
     /**
         @param bridgeAddress Contract address of previously deployed Bridge.
@@ -112,14 +103,10 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
         uint64 depositNonce,
         address depositer,
         bytes calldata data
-    ) external override onlyBridge {
-        bytes memory recipientAddress;
-        uint256 amount;
-        uint256 lenRecipientAddress;
+    ) external onlyBridge returns(uint256,address){
 
-
-        (amount, lenRecipientAddress) = abi.decode(data, (uint, uint));
-        recipientAddress = bytes(data[64:64 + lenRecipientAddress]);
+        uint256 amount;       
+        (amount,) = abi.decode(data, (uint, uint));
 
         address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
         require(
@@ -136,26 +123,16 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
         _depositRecords[destinationChainID][depositNonce] = keccak256(
             abi.encode(
                 tokenAddress,
-                uint8(lenRecipientAddress),
                 destinationChainID,
                 resourceID,
-                recipientAddress,
                 depositer,
                 amount
             )
         );
         
-        emit DepositRecord(
-            tokenAddress,
-            uint8(lenRecipientAddress),
-            destinationChainID,
-            resourceID,
-            recipientAddress,
-            depositer,
-            amount
-        );
-
+        return (amount,tokenAddress);
     }
+
 
     /**
         @notice Proposal execution should be initiated when a proposal is finalized in the Bridge contract.
@@ -204,7 +181,6 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
     ) external override onlyBridge {
         releaseERC20(tokenAddress, recipient, amount);
     }
-
 
     function getType() external override pure returns(HandleTypes) {
         //return ERC20;
