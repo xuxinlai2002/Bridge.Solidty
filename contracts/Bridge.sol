@@ -53,6 +53,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         address _tokenAddress,
         uint8 _destinationChainID,
         bytes32 _resourceID,
+        uint64 _depositNonce,
         address _depositer,
         uint256 _amount
     );
@@ -305,6 +306,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
             tokenAddress,
             destinationChainID,
             resourceID,
+            depositNonce,
             msg.sender,
             amount
         );
@@ -335,6 +337,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
             tokenAddress,
             destinationChainID,
             resourceID,
+            depositNonce,
             msg.sender,
             amount
         );
