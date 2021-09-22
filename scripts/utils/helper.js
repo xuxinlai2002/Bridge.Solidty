@@ -198,7 +198,7 @@ const getSignBatch = async(chainId,depositNonce,resourceId,data) => {
     //add sign
     var web3 = new Web3();
     //let msg = web3.utils.sha3(hexMsg);
-    let msg = "0x79224dd62c59bf04dee150eb28339297d7acde3d1228abed078b611429ff8786"
+    let msg = "0x64e382354eeedd866a95850fbb5a8144fbceee47a6c38e0d7c7313c5513dc034"
 
     console.log("js " + msg);
     // console.log("hex msg detail : " + hexMsg);

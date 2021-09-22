@@ -168,14 +168,16 @@ contract HandlerHelpers is IERCHandler, Seriality {
 
         //console.log("verify %d",( i + 1 ));
         msgHash = _getMsgHashBatch(chainID, depositNonce, data, resourceID);
-        console.logBytes32(msgHash);
+
+        //console.log("xxl ....");
+        //console.logBytes32(msgHash);
 
         for (i = 0; i < sigLen; i++) {
 
             //msgHash = 0xbe4824f27f749c96ceffb6736cff8fc5a01bf58c6eb2ec041c139b26f0aa5707;
             //console.logBytes32(msgHash);            
             signer = _recoverSigner(msgHash, sig[i]);
-            console.log(signer);
+            //console.log(signer);
 
             if (_isInAbterList(signer) == false) {
                 continue;
@@ -274,7 +276,7 @@ contract HandlerHelpers is IERCHandler, Seriality {
         require(_isDuplicated(sig) == false, "duplicate signature exception");
 
         msgHash = _getMsgHash(chainID, depositNonce, data, resourceID);
-        console.logBytes32(msgHash);
+        //console.logBytes32(msgHash);
 
         for (i = 0; i < sigLen; i++) {
 
