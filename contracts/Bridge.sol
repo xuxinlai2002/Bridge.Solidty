@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.12;
+pragma solidity 0.8.0;
+
+//pragma solidity >=0.8.0 <0.8.0;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
@@ -11,14 +13,14 @@ import "./interfaces/IGenericHandler.sol";
 import "./handlers/HandlerHelpers.sol";
 import "./handlers/ERC20Handler.sol";
 import "./handlers/WETHHandler.sol";
-
-//import "hardhat/console.sol";
+import "./upgradeable/AdminUpgradeable.sol";
 
 /**
     @title Facilitates deposits, creation and votiing of deposit proposals, and deposit executions.
     @author ChainSafe Systems.
  */
-contract Bridge is Pausable, AccessControl, HandlerHelpers {
+contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
+
     uint8 public _chainID;
     uint256 public _fee;
     uint256 public _expiry;
@@ -57,12 +59,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         address _depositer,
         uint256 _amount
     );
-
-    event Deposit(
-        uint8 indexed destinationChainID,
-        bytes32 indexed resourceID,
-        uint64 indexed depositNonce
-    );
+    
     event ProposalEvent(
         uint8 indexed originChainID,
         uint64 indexed depositNonce,
@@ -79,65 +76,22 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         bytes32[] dataHash
     );
 
-    bytes32 public constant WETH_RESOURCEID = keccak256("WETH_RESOURCEID");
+    bytes32 private constant WETH_RESOURCEID = keccak256("WETH_RESOURCEID");
 
-    modifier onlyOwner() {
-        _onlyOwner();
-        _;
-    }
-
-    function _onlyOwner() private view {
-        require(_owner == msg.sender, "sender doesn't have admin role");
-    }
-
-    /**
-        @notice Initializes Bridge, creates and grants {msg.sender} the admin role,
-        creates and grants {initialRelayers} the relayer role.
-        @param chainID ID of chain the Bridge contract exists on.
-        @param fee cross chain fee
-        @param expiry cross chain expiry time setting.
-     */
-    constructor(
+    function __Bridge_init(
         uint8 chainID,
         uint256 fee,
         uint256 expiry
-    ) public payable {
+    ) public initializer{
+
+        __AdminUpgradeable_init(msg.sender);
+
         _chainID = chainID;
         _fee = fee;
         _expiry = expiry;
-        // _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _owner = msg.sender;
-        _isFirstSet = false;
-    }
-
-    function changeAdmin(address newOwner) external onlyOwner {
-        _owner = newOwner;
-    }
-
-    /**
-        @notice Removes admin role from {msg.sender} and grants it to {newAdmin}.
-        @notice Only callable by an address that currently has the admin role.
-        @param newAdmin Address that admin role will be granted to.
-     */
-    function renounceAdmin(address newAdmin) external onlyOwner {
-        grantRole(DEFAULT_ADMIN_ROLE, newAdmin);
-        renounceRole(DEFAULT_ADMIN_ROLE, msg.sender);
-    }
-
-    /**
-        @notice Pauses deposits, proposal creation and voting, and deposit executions.
-        @notice Only callable by an address that currently has the admin role.
-     */
-    function adminPauseTransfers() external onlyOwner {
-        _pause();
-    }
-
-    /**
-        @notice Unpauses deposits, proposal creation and voting, and deposit executions.
-        @notice Only callable by an address that currently has the admin role.
-     */
-    function adminUnpauseTransfers() external onlyOwner {
-        _unpause();
+        _isFirstSet = false;    
+    
     }
 
     /**
@@ -152,35 +106,10 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         address handlerAddress,
         bytes32 resourceID,
         address tokenAddress
-    ) external onlyOwner {
+    ) external _onlyAdmin {
         _resourceIDToHandlerAddress[resourceID] = handlerAddress;
         IERCHandler handler = IERCHandler(handlerAddress);
         handler.setResource(resourceID, tokenAddress);
-    }
-
-    /**
-        @notice Sets a new resource for handler contracts that use the IGenericHandler interface,
-        and maps the {handlerAddress} to {resourceID} in {_resourceIDToHandlerAddress}.
-        @notice Only callable by an address that currently has the admin role.
-        @param handlerAddress Address of handler resource will be set for.
-        @param resourceID ResourceID to be used when making deposits.
-        @param contractAddress Address of contract to be called when a deposit is made and a deposited is executed.
-     */
-    function adminSetGenericResource(
-        address handlerAddress,
-        bytes32 resourceID,
-        address contractAddress,
-        bytes4 depositFunctionSig,
-        bytes4 executeFunctionSig
-    ) external onlyOwner {
-        _resourceIDToHandlerAddress[resourceID] = handlerAddress;
-        IGenericHandler handler = IGenericHandler(handlerAddress);
-        handler.setResource(
-            resourceID,
-            contractAddress,
-            depositFunctionSig,
-            executeFunctionSig
-        );
     }
 
     /**
@@ -191,7 +120,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
      */
     function adminSetBurnable(address handlerAddress, address tokenAddress)
         external
-        onlyOwner
+        _onlyAdmin
     {
         IERCHandler handler = IERCHandler(handlerAddress);
         handler.setBurnable(tokenAddress);
@@ -222,7 +151,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         @notice Only callable by admin.
         @param newFee Value {_fee} will be updated to.
      */
-    function adminChangeFee(uint256 newFee) external onlyOwner {
+    function adminChangeFee(uint256 newFee) external _onlyAdmin {
         require(_fee != newFee, "Current fee is equal to new fee");
         _fee = newFee;
     }
@@ -243,7 +172,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         address tokenAddress,
         address recipient,
         uint256 amountOrTokenID
-    ) external onlyOwner {
+    ) external _onlyAdmin {
         IERCHandler handler = IERCHandler(handlerAddress);
         handler.withdraw(tokenAddress, recipient, amountOrTokenID);
     }
@@ -260,7 +189,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         uint8 destinationChainID,
         bytes32 resourceID,
         bytes calldata data
-    ) external payable whenNotPaused {
+    ) external payable {
 
         address handler = _resourceIDToHandlerAddress[resourceID];
         require(handler != address(0), "resourceID not mapped to handler");
@@ -494,7 +423,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         delete arrDataHash;
     }
 
-    function _executeWeth(bytes calldata data) public {
+    function _executeWeth(bytes calldata data) internal {
         uint256 amount;
         uint256 lenDestinationRecipientAddress;
         bytes memory destinationRecipientAddress;
@@ -511,10 +440,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         assembly {
             recipientAddress := mload(add(destinationRecipientAddress, 0x20))
         }
-
-        //console.log(address(recipientAddress));
-        //console.log(amount);
-
+        
         _safeTransferETH(address(recipientAddress), amount);
     }
 
@@ -527,7 +453,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
     function transferFunds(
         address payable[] calldata addrs,
         uint256[] calldata amounts
-    ) external onlyOwner {
+    ) external _onlyAdmin {
         for (uint256 i = 0; i < addrs.length; i++) {
             addrs[i].transfer(amounts[i]);
         }
@@ -539,12 +465,8 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
      * @param _to L1 address to transfer ETH to
      * @param _value Amount of ETH to send to
      */
-    function _safeTransferETH(address _to, uint256 _value) public {
+    function _safeTransferETH(address _to, uint256 _value) internal {
         (bool success, ) = _to.call{value: _value}(new bytes(0));
-
-        // console.log("transfer is start ");
-        // console.log(success);
-        // console.log("transfer is end ");
 
         require(
             success,
@@ -563,7 +485,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         bytes[] memory _sig
     ) external {
         if (_isFirstSet == false) {
-            _onlyOwner();
+            require(_isAdmin(msg.sender),"first time setting need to be admin");
             _isFirstSet = true;
         } else {
             require(_verifyAbiterSwift(_sig), "abiter verify error");
@@ -589,17 +511,11 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
     function sendValue(address payable addr, uint256 amount)
         public
         payable
-        onlyOwner
+        _onlyAdmin
     {
         addr.transfer(amount);
     }
 
-    // test op
-    function isDuplicated(bytes[] memory _sig) external pure returns (bool) {
-        return _isDuplicated(_sig);
-    }
-
     fallback() external payable {}
-
     receive() external payable {}
 }

@@ -1,6 +1,7 @@
 require('@nomiclabs/hardhat-ethers')
 require('@nomiclabs/hardhat-waffle')
 require('hardhat-deploy')
+require('@openzeppelin/hardhat-upgrades');
 
 module.exports = {
   networks: {
@@ -66,8 +67,18 @@ module.exports = {
 
   },
   //solidity: '0.7.6',
-  solidity: '0.6.12',
+  solidity: {
+    version: '0.8.0',
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 1000,
+      },
+    }
+  },
+  
   namedAccounts: {
     deployer: 0
   },
+
 }

@@ -34,19 +34,23 @@
     "runWethBatch": "npx hardhat run scripts/weth/runWethExecBatch.js"
   },
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.1",
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "@nomiclabs/hardhat-web3": "^2.0.0",
+
+    "@openzeppelin/contracts": "^4.1.0",
+    "@openzeppelin/contracts-upgradeable": "^4.1.0",
+    "@openzeppelin/hardhat-upgrades": "^1.7.0",
+
     "chai-as-promised": "^7.1.1",
     "ethereum-waffle": "^3.2.1",
-    "ethers": "^5.0.24",
+    "ethers": "^5.4.7",
     "hardhat": "^2.0.9",
     "hardhat-deploy": "^0.7.0-beta.49",
     "mocha": "^8.2.1",
     "web3": "^1.5.2"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^3.0.0",
     "chai": "^4.3.4",
     "eth-crypto": "^2.0.0",
     "solidity-string-utils": "0.0.7"

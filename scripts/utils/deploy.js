@@ -1,6 +1,7 @@
 
-const { ethers} = require('hardhat');
+const { ethers,upgrades} = require('hardhat');
 const { sleep } = require('./helper');
+
 
 async function deployBridgeContract(account,args) {
 
@@ -21,15 +22,34 @@ async function deployBridgeContract(account,args) {
     //     { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
     // );
     
-    Bridge = await Factory__Bridge.connect(account).deploy(
-        args.chainId,
-        args.fee,
-        args.expiry,
-        { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
+    // await viewEvnt(args.chainId,Bridge.deployTransaction.hash);
+    console.log(args);
+
+    const Bridge = await upgrades.deployProxy(
+            Factory__Bridge,
+            [   
+                args.chainId,
+                args.fee,
+                args.expiry
+            ],
+            {
+                initializer: "__Bridge_init",
+                unsafeAllowLinkedLibraries: true,
+            }
     );
 
-    // await viewEvnt(args.chainId,Bridge.deployTransaction.hash);
-    console.log("✓ Bridge contract deployed")
+    // await box.deployed();
+    // console.log("Box deployed to:", box.address);
+
+    // Bridge = await Factory__Bridge.connect(account).deploy(
+    //         args.chainId,
+    //         args.fee,
+    //         args.expiry,
+    //         { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
+    // );
+    
+    //const bridgeContract = await Bridge.connect(account).deploy();
+    console.log("✓ Bridge contract deployed upgrades")
     return Bridge;
 }
 

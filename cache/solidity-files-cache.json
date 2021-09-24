@@ -2,15 +2,15 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/Bridge.sol": {
-      "lastModificationDate": 1631862534853,
-      "contentHash": "1f7b330db2a25bbc5be76f5586c820f7",
+      "lastModificationDate": 1632317511503,
+      "contentHash": "f6cf81446ed52d5e70d8b0d4df2c2b8f",
       "sourceName": "contracts/Bridge.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -43,25 +43,26 @@
         "./interfaces/IGenericHandler.sol",
         "./handlers/HandlerHelpers.sol",
         "./handlers/ERC20Handler.sol",
-        "./handlers/WETHHandler.sol"
+        "./handlers/WETHHandler.sol",
+        "./upgradeable/AdminUpgradeable.sol"
       ],
       "versionPragmas": [
-        "0.6.12"
+        "0.8.0"
       ],
       "artifacts": [
         "Bridge"
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/access/AccessControl.sol": {
-      "lastModificationDate": 1627545909913,
-      "contentHash": "54eb0b53c109558e8312811342e95bf0",
+      "lastModificationDate": 1632304281638,
+      "contentHash": "74fb01cf14d85fd1e7f25b22c6472e6e",
       "sourceName": "@openzeppelin/contracts/access/AccessControl.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -87,27 +88,28 @@
         }
       },
       "imports": [
-        "../utils/EnumerableSet.sol",
-        "../utils/Address.sol",
-        "../utils/Context.sol"
+        "./IAccessControl.sol",
+        "../utils/Context.sol",
+        "../utils/Strings.sol",
+        "../utils/introspection/ERC165.sol"
       ],
       "versionPragmas": [
-        ">=0.6.0 <0.8.0"
+        "^0.8.0"
       ],
       "artifacts": [
         "AccessControl"
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/interfaces/IDepositExecute.sol": {
-      "lastModificationDate": 1631805219356,
-      "contentHash": "a2ef5bcbdc0953506afa0430974eabea",
+      "lastModificationDate": 1632307595101,
+      "contentHash": "a6d91fcbdb0a505b0b8c74f0e2203f33",
       "sourceName": "contracts/interfaces/IDepositExecute.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -134,22 +136,22 @@
       },
       "imports": [],
       "versionPragmas": [
-        "0.6.12"
+        "0.8.0"
       ],
       "artifacts": [
         "IDepositExecute"
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/interfaces/IBridge.sol": {
-      "lastModificationDate": 1627545648275,
-      "contentHash": "ba42b665187938e32d1b94cb6ba05861",
+      "lastModificationDate": 1632307595101,
+      "contentHash": "07db660d769bb92bdde3a48e60c8f285",
       "sourceName": "contracts/interfaces/IBridge.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -176,22 +178,22 @@
       },
       "imports": [],
       "versionPragmas": [
-        "0.6.12"
+        "0.8.0"
       ],
       "artifacts": [
         "IBridge"
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/interfaces/IERCHandler.sol": {
-      "lastModificationDate": 1627545648276,
-      "contentHash": "d977a5150c6edc677e0104c277522ddb",
+      "lastModificationDate": 1632307595100,
+      "contentHash": "8bcf5adac6d47ecaece0a44ed70bb170",
       "sourceName": "contracts/interfaces/IERCHandler.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -218,22 +220,22 @@
       },
       "imports": [],
       "versionPragmas": [
-        "0.6.12"
+        "0.8.0"
       ],
       "artifacts": [
         "IERCHandler"
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/interfaces/IGenericHandler.sol": {
-      "lastModificationDate": 1627545648276,
-      "contentHash": "3ab8203a30c76a835749a5f74badc894",
+      "lastModificationDate": 1632307595100,
+      "contentHash": "8eb745144cb442dc5af9c3e06ff0f08e",
       "sourceName": "contracts/interfaces/IGenericHandler.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -260,22 +262,462 @@
       },
       "imports": [],
       "versionPragmas": [
-        "0.6.12"
+        "0.8.0"
       ],
       "artifacts": [
         "IGenericHandler"
       ]
     },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/HandlerHelpers.sol": {
+      "lastModificationDate": 1632307595101,
+      "contentHash": "4fb9350e5ab0a7f1f0930ea783ea398f",
+      "sourceName": "contracts/handlers/HandlerHelpers.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/IERCHandler.sol",
+        "../utils/Seriality.sol",
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "0.8.0"
+      ],
+      "artifacts": [
+        "HandlerHelpers"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/ERC20Handler.sol": {
+      "lastModificationDate": 1632307752529,
+      "contentHash": "a34d006c79389a1a849b20ede53f9675",
+      "sourceName": "contracts/handlers/ERC20Handler.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/IDepositExecute.sol",
+        "./HandlerHelpers.sol",
+        "../ERC20Safe.sol",
+        "@openzeppelin/contracts/token/ERC20/presets/ERC20PresetMinterPauser.sol"
+      ],
+      "versionPragmas": [
+        "0.8.0"
+      ],
+      "artifacts": [
+        "ERC20Handler"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/WETHHandler.sol": {
+      "lastModificationDate": 1632307595100,
+      "contentHash": "14d6052da8b5e5af4a511b59e192b88e",
+      "sourceName": "contracts/handlers/WETHHandler.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/IDepositExecute.sol",
+        "./HandlerHelpers.sol"
+      ],
+      "versionPragmas": [
+        "0.8.0"
+      ],
+      "artifacts": [
+        "WETHHandler"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/upgradeable/AdminUpgradeable.sol": {
+      "lastModificationDate": 1632317550415,
+      "contentHash": "d82116e624522257bd247f6df85c949c",
+      "sourceName": "contracts/upgradeable/AdminUpgradeable.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "0.8.0"
+      ],
+      "artifacts": [
+        "AdminUpgradeable"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/access/IAccessControl.sol": {
+      "lastModificationDate": 1632304281638,
+      "contentHash": "e2ed3260ca37d27f68b0ab41f692b407",
+      "sourceName": "@openzeppelin/contracts/access/IAccessControl.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IAccessControl"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/utils/Context.sol": {
+      "lastModificationDate": 1632304281654,
+      "contentHash": "851485d5b925529b1a2f34a0be077891",
+      "sourceName": "@openzeppelin/contracts/utils/Context.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Context"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
+      "lastModificationDate": 1632304281659,
+      "contentHash": "62142442bed149f965c5ed971fae4182",
+      "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Strings"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+      "lastModificationDate": 1632304287242,
+      "contentHash": "a9a5319dff9088c6ffe757ea1c2a6729",
+      "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./IERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC165"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+      "lastModificationDate": 1632304287244,
+      "contentHash": "9a04322bb8f6b8f2767d8358d1d2537b",
+      "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC165"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/Seriality.sol": {
+      "lastModificationDate": 1632308721330,
+      "contentHash": "846c50d9ba6b05960ba35f4dab33eca4",
+      "sourceName": "contracts/utils/Seriality.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./BytesToTypes.sol",
+        "./TypesToBytes.sol",
+        "./SizeOf.sol"
+      ],
+      "versionPragmas": [
+        "0.8.0"
+      ],
+      "artifacts": [
+        "Seriality"
+      ]
+    },
     "/Users/xuxinlai/work/e/deploy-solidity/node_modules/hardhat/console.sol": {
-      "lastModificationDate": 1627545907594,
+      "lastModificationDate": 1632304277613,
       "contentHash": "cc4777addd464ea56fa35b1c45df0591",
       "sourceName": "hardhat/console.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -308,16 +750,16 @@
         "console"
       ]
     },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/utils/EnumerableSet.sol": {
-      "lastModificationDate": 1627545909935,
-      "contentHash": "db7b1afdb2c204e1e52100b79f0c847e",
-      "sourceName": "@openzeppelin/contracts/utils/EnumerableSet.sol",
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/BytesToTypes.sol": {
+      "lastModificationDate": 1632307595101,
+      "contentHash": "061eb78e50347612910d5d4ea6bb6a8e",
+      "sourceName": "contracts/utils/BytesToTypes.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -344,22 +786,641 @@
       },
       "imports": [],
       "versionPragmas": [
-        ">=0.6.0 <0.8.0"
+        "0.8.0"
+      ],
+      "artifacts": [
+        "BytesToTypes"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/TypesToBytes.sol": {
+      "lastModificationDate": 1632308559368,
+      "contentHash": "aee0375a4ea5920da768d6f87deb1d3c",
+      "sourceName": "contracts/utils/TypesToBytes.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.0"
+      ],
+      "artifacts": [
+        "TypesToBytes"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/SizeOf.sol": {
+      "lastModificationDate": 1632307595135,
+      "contentHash": "fd3ef8d5c395b57d2d7180272dbd0514",
+      "sourceName": "contracts/utils/SizeOf.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.0"
+      ],
+      "artifacts": [
+        "SizeOf"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/ERC20Safe.sol": {
+      "lastModificationDate": 1632307864626,
+      "contentHash": "2868195393d5afa12185272b920e6e10",
+      "sourceName": "contracts/ERC20Safe.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/math/SafeMath.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "@openzeppelin/contracts/token/ERC20/presets/ERC20PresetMinterPauser.sol",
+        "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol"
+      ],
+      "versionPragmas": [
+        "0.8.0"
+      ],
+      "artifacts": [
+        "ERC20Safe"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC20/presets/ERC20PresetMinterPauser.sol": {
+      "lastModificationDate": 1632304289210,
+      "contentHash": "39699172cbc3cf76aafbd7d3729afa18",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/presets/ERC20PresetMinterPauser.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../ERC20.sol",
+        "../extensions/ERC20Burnable.sol",
+        "../extensions/ERC20Pausable.sol",
+        "../../../access/AccessControlEnumerable.sol",
+        "../../../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC20PresetMinterPauser"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol": {
+      "lastModificationDate": 1632304287230,
+      "contentHash": "5365090efc586b728719e562ebfed0d6",
+      "sourceName": "@openzeppelin/contracts/utils/math/SafeMath.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SafeMath"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+      "lastModificationDate": 1632304287233,
+      "contentHash": "0eac3e1a83ee62326ca007811285b274",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol": {
+      "lastModificationDate": 1632304289207,
+      "contentHash": "e888f903b629e3ced11f5d1f85cda823",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../ERC20.sol",
+        "../../../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC20Burnable"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
+      "lastModificationDate": 1632304287233,
+      "contentHash": "2cd550cedf51b8d294607dad5023d717",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./IERC20.sol",
+        "./extensions/IERC20Metadata.sol",
+        "../../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC20"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol": {
+      "lastModificationDate": 1632304289207,
+      "contentHash": "805c4c7b9aeebbdd5dbca2f3a8acc6af",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../ERC20.sol",
+        "../../../security/Pausable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC20Pausable"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol": {
+      "lastModificationDate": 1632304281638,
+      "contentHash": "209f579294fd4189dd1884204bc45ad5",
+      "sourceName": "@openzeppelin/contracts/access/AccessControlEnumerable.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./IAccessControlEnumerable.sol",
+        "./AccessControl.sol",
+        "../utils/structs/EnumerableSet.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "AccessControlEnumerable"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+      "lastModificationDate": 1632304289209,
+      "contentHash": "aa1be06992a99bb7393b26a6af3c4dfb",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20Metadata"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/security/Pausable.sol": {
+      "lastModificationDate": 1632304281651,
+      "contentHash": "662437c05ba6f3706097c8d5ca68a52a",
+      "sourceName": "@openzeppelin/contracts/security/Pausable.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Pausable"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/access/IAccessControlEnumerable.sol": {
+      "lastModificationDate": 1632304281638,
+      "contentHash": "248d95dd2b3b61397818fbcbacaad49a",
+      "sourceName": "@openzeppelin/contracts/access/IAccessControlEnumerable.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./IAccessControl.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IAccessControlEnumerable"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/utils/structs/EnumerableSet.sol": {
+      "lastModificationDate": 1632304287232,
+      "contentHash": "2c46fb3033f19693d6cbe230950fec96",
+      "sourceName": "@openzeppelin/contracts/utils/structs/EnumerableSet.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
       ],
       "artifacts": [
         "EnumerableSet"
       ]
     },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/utils/Address.sol": {
-      "lastModificationDate": 1627545909934,
-      "contentHash": "7aa46886ff5abe7515496208a5e2ce5a",
-      "sourceName": "@openzeppelin/contracts/utils/Address.sol",
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol": {
+      "lastModificationDate": 1632304287156,
+      "contentHash": "cbb8386f0120d46d66ff42dffbbc16c1",
+      "sourceName": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -386,241 +1447,22 @@
       },
       "imports": [],
       "versionPragmas": [
-        ">=0.6.2 <0.8.0"
+        "^0.8.0"
       ],
       "artifacts": [
-        "Address"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/utils/Context.sol": {
-      "lastModificationDate": 1627545909933,
-      "contentHash": "2adbd82f6d055a4751566d4671512b03",
-      "sourceName": "@openzeppelin/contracts/utils/Context.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.6.0 <0.8.0"
-      ],
-      "artifacts": [
-        "Context"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/solidity-string-utils/StringUtils.sol": {
-      "lastModificationDate": 1627545908541,
-      "contentHash": "da2b041f162ee16a5989605c4a31cce4",
-      "sourceName": "solidity-string-utils/StringUtils.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.5.0"
-      ],
-      "artifacts": [
-        "StringUtils"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/GenericHandler.sol": {
-      "lastModificationDate": 1627545648273,
-      "contentHash": "33e26f8e5c3cdf6f2e680fd4b2d35d36",
-      "sourceName": "contracts/handlers/GenericHandler.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "../interfaces/IGenericHandler.sol"
-      ],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "GenericHandler"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/HandlerHelpers.sol": {
-      "lastModificationDate": 1631949941673,
-      "contentHash": "0897985d233f284d4c84054a6edfa313",
-      "sourceName": "contracts/handlers/HandlerHelpers.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "../interfaces/IERCHandler.sol",
-        "../utils/Seriality.sol",
-        "hardhat/console.sol"
-      ],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "HandlerHelpers"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/WETHHandler.sol": {
-      "lastModificationDate": 1631936048333,
-      "contentHash": "d6f96d9da48226203e02541fc35defe8",
-      "sourceName": "contracts/handlers/WETHHandler.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "../interfaces/IDepositExecute.sol",
-        "./HandlerHelpers.sol"
-      ],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "WETHHandler"
+        "Initializable"
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/ERC721Handler.sol": {
-      "lastModificationDate": 1631805569455,
-      "contentHash": "37bd299942363380dfeb4eb833ea5e86",
+      "lastModificationDate": 1632307595097,
+      "contentHash": "c335c814fc6e1247869474f4d4735e9c",
       "sourceName": "contracts/handlers/ERC721Handler.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -650,26 +1492,26 @@
         "./HandlerHelpers.sol",
         "../ERC721Safe.sol",
         "../ERC721MinterBurnerPauser.sol",
-        "@openzeppelin/contracts/introspection/ERC165Checker.sol",
-        "@openzeppelin/contracts/token/ERC721/IERC721Metadata.sol"
+        "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol"
       ],
       "versionPragmas": [
-        "0.6.12"
+        "0.8.0"
       ],
       "artifacts": [
         "ERC721Handler"
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/ERC721Safe.sol": {
-      "lastModificationDate": 1627545647809,
-      "contentHash": "746f294e5662c25a6657d3c2d6851742",
+      "lastModificationDate": 1632308590430,
+      "contentHash": "15dbfbcf761e3c755d374b3e8f3abc6c",
       "sourceName": "contracts/ERC721Safe.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -695,27 +1537,27 @@
         }
       },
       "imports": [
-        "@openzeppelin/contracts/math/SafeMath.sol",
+        "@openzeppelin/contracts/utils/math/SafeMath.sol",
         "@openzeppelin/contracts/token/ERC721/IERC721.sol",
         "./ERC721MinterBurnerPauser.sol"
       ],
       "versionPragmas": [
-        "0.6.12"
+        "0.8.0"
       ],
       "artifacts": [
         "ERC721Safe"
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/ERC721MinterBurnerPauser.sol": {
-      "lastModificationDate": 1627545647810,
-      "contentHash": "0d3c3703f22353ce132fd00ef8c241cd",
+      "lastModificationDate": 1632308514238,
+      "contentHash": "f3eb3987b7da7087f139fe833ffdb4e4",
       "sourceName": "contracts/ERC721MinterBurnerPauser.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -740,561 +1582,24 @@
           }
         }
       },
-      "imports": [
-        "@openzeppelin/contracts/access/AccessControl.sol",
-        "@openzeppelin/contracts/GSN/Context.sol",
-        "@openzeppelin/contracts/utils/Counters.sol",
-        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        "@openzeppelin/contracts/token/ERC721/ERC721Burnable.sol",
-        "@openzeppelin/contracts/token/ERC721/ERC721Pausable.sol"
-      ],
+      "imports": [],
       "versionPragmas": [
-        "0.6.12"
+        "0.8.0"
       ],
       "artifacts": [
         "ERC721MinterBurnerPauser"
       ]
     },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/introspection/ERC165Checker.sol": {
-      "lastModificationDate": 1627545909914,
-      "contentHash": "8fd6b2ad5f8044f2e6a346ddf7dbfacd",
-      "sourceName": "@openzeppelin/contracts/introspection/ERC165Checker.sol",
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/utils/introspection/ERC165Checker.sol": {
+      "lastModificationDate": 1632304287243,
+      "contentHash": "1978094106e1418d89168dc2b57c2abe",
+      "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.6.2 <0.8.0"
-      ],
-      "artifacts": [
-        "ERC165Checker"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Metadata.sol": {
-      "lastModificationDate": 1627545913687,
-      "contentHash": "370e7a48f316401b5063bcb604843e1b",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Metadata.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "./IERC721.sol"
-      ],
-      "versionPragmas": [
-        ">=0.6.2 <0.8.0"
-      ],
-      "artifacts": [
-        "IERC721Metadata"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/math/SafeMath.sol": {
-      "lastModificationDate": 1627545909916,
-      "contentHash": "e03e12206057e809eb76c5f681170c32",
-      "sourceName": "@openzeppelin/contracts/math/SafeMath.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.6.0 <0.8.0"
-      ],
-      "artifacts": [
-        "SafeMath"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
-      "lastModificationDate": 1627545913685,
-      "contentHash": "e82621b83943f11c44988c60e83d6ebc",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "../../introspection/IERC165.sol"
-      ],
-      "versionPragmas": [
-        ">=0.6.2 <0.8.0"
-      ],
-      "artifacts": [
-        "IERC721"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/introspection/IERC165.sol": {
-      "lastModificationDate": 1627545909912,
-      "contentHash": "0d62a8380952235f135dae91590f90a3",
-      "sourceName": "@openzeppelin/contracts/introspection/IERC165.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.6.0 <0.8.0"
-      ],
-      "artifacts": [
-        "IERC165"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/GSN/Context.sol": {
-      "lastModificationDate": 1627545909908,
-      "contentHash": "a02aa4ae53018d92603a3ead2c365958",
-      "sourceName": "@openzeppelin/contracts/GSN/Context.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "../utils/Context.sol"
-      ],
-      "versionPragmas": [
-        ">=0.6.0 <0.8.0"
-      ],
-      "artifacts": []
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/utils/Counters.sol": {
-      "lastModificationDate": 1627545909934,
-      "contentHash": "304a56eb1322144704fb39f8c7e6d722",
-      "sourceName": "@openzeppelin/contracts/utils/Counters.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "../math/SafeMath.sol"
-      ],
-      "versionPragmas": [
-        ">=0.6.0 <0.8.0"
-      ],
-      "artifacts": [
-        "Counters"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
-      "lastModificationDate": 1627545913684,
-      "contentHash": "2d9804eb2b6f41ea0a65115e154d90eb",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "../../utils/Context.sol",
-        "./IERC721.sol",
-        "./IERC721Metadata.sol",
-        "./IERC721Enumerable.sol",
-        "./IERC721Receiver.sol",
-        "../../introspection/ERC165.sol",
-        "../../math/SafeMath.sol",
-        "../../utils/Address.sol",
-        "../../utils/EnumerableSet.sol",
-        "../../utils/EnumerableMap.sol",
-        "../../utils/Strings.sol"
-      ],
-      "versionPragmas": [
-        ">=0.6.0 <0.8.0"
-      ],
-      "artifacts": [
-        "ERC721"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC721/ERC721Burnable.sol": {
-      "lastModificationDate": 1627545913685,
-      "contentHash": "ecaa795345e7a1731adc7e58c9812942",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721Burnable.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "../../utils/Context.sol",
-        "./ERC721.sol"
-      ],
-      "versionPragmas": [
-        ">=0.6.0 <0.8.0"
-      ],
-      "artifacts": [
-        "ERC721Burnable"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC721/ERC721Pausable.sol": {
-      "lastModificationDate": 1627545913686,
-      "contentHash": "46f79ddd76e77a7c5bf841b830d0ed1e",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721Pausable.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "./ERC721.sol",
-        "../../utils/Pausable.sol"
-      ],
-      "versionPragmas": [
-        ">=0.6.0 <0.8.0"
-      ],
-      "artifacts": [
-        "ERC721Pausable"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Enumerable.sol": {
-      "lastModificationDate": 1627545913686,
-      "contentHash": "eaebc3874248c26f6ea0b13b9a140a94",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Enumerable.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "./IERC721.sol"
-      ],
-      "versionPragmas": [
-        ">=0.6.2 <0.8.0"
-      ],
-      "artifacts": [
-        "IERC721Enumerable"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
-      "lastModificationDate": 1627545913687,
-      "contentHash": "fad0b3f4424bdbb4b35467b29ea8d334",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.6.0 <0.8.0"
-      ],
-      "artifacts": [
-        "IERC721Receiver"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/introspection/ERC165.sol": {
-      "lastModificationDate": 1627545909913,
-      "contentHash": "08f854e2dd3c262845bba38c9b48e4e0",
-      "sourceName": "@openzeppelin/contracts/introspection/ERC165.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -1323,106 +1628,22 @@
         "./IERC165.sol"
       ],
       "versionPragmas": [
-        ">=0.6.0 <0.8.0"
+        "^0.8.0"
       ],
       "artifacts": [
-        "ERC165"
+        "ERC165Checker"
       ]
     },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/utils/EnumerableMap.sol": {
-      "lastModificationDate": 1627545909935,
-      "contentHash": "b1bb8570824c668943149211d74d6c51",
-      "sourceName": "@openzeppelin/contracts/utils/EnumerableMap.sol",
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
+      "lastModificationDate": 1632304289211,
+      "contentHash": "8aa69ca8424167555baaaa9f607801db",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.6.0 <0.8.0"
-      ],
-      "artifacts": [
-        "EnumerableMap"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
-      "lastModificationDate": 1627545909936,
-      "contentHash": "c86a31bacf868d392eda08a0eccc4735",
-      "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.6.0 <0.8.0"
-      ],
-      "artifacts": [
-        "Strings"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/utils/Pausable.sol": {
-      "lastModificationDate": 1627545909934,
-      "contentHash": "6960b40911542e6004ab95031ef9c3b9",
-      "sourceName": "@openzeppelin/contracts/utils/Pausable.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -1448,25 +1669,25 @@
         }
       },
       "imports": [
-        "./Context.sol"
+        "../IERC721.sol"
       ],
       "versionPragmas": [
-        ">=0.6.0 <0.8.0"
+        "^0.8.0"
       ],
       "artifacts": [
-        "Pausable"
+        "IERC721Metadata"
       ]
     },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/presets/ERC20PresetMinterPauser.sol": {
-      "lastModificationDate": 1627545909924,
-      "contentHash": "683b54445da8c95e82d8d8e20e81e544",
-      "sourceName": "@openzeppelin/contracts/presets/ERC20PresetMinterPauser.sol",
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
+      "lastModificationDate": 1632304287235,
+      "contentHash": "53919d6975f2c0f3dffee5e3a1064116",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -1492,29 +1713,25 @@
         }
       },
       "imports": [
-        "../access/AccessControl.sol",
-        "../utils/Context.sol",
-        "../token/ERC20/ERC20.sol",
-        "../token/ERC20/ERC20Burnable.sol",
-        "../token/ERC20/ERC20Pausable.sol"
+        "../../utils/introspection/IERC165.sol"
       ],
       "versionPragmas": [
-        ">=0.6.0 <0.8.0"
+        "^0.8.0"
       ],
       "artifacts": [
-        "ERC20PresetMinterPauser"
+        "IERC721"
       ]
     },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
-      "lastModificationDate": 1627545913688,
-      "contentHash": "8065b340476f61365c076897199425f1",
-      "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/GenericHandler.sol": {
+      "lastModificationDate": 1632307595100,
+      "contentHash": "c70e2741fa7927edf153c8047a66e379",
+      "sourceName": "contracts/handlers/GenericHandler.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -1540,253 +1757,25 @@
         }
       },
       "imports": [
-        "../../utils/Context.sol",
-        "./IERC20.sol",
-        "../../math/SafeMath.sol"
+        "../interfaces/IGenericHandler.sol"
       ],
       "versionPragmas": [
-        ">=0.6.0 <0.8.0"
+        "0.8.0"
       ],
       "artifacts": [
-        "ERC20"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol": {
-      "lastModificationDate": 1627545913688,
-      "contentHash": "1603b7aab78c87467dde869fd19ec86b",
-      "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "../../utils/Context.sol",
-        "./ERC20.sol"
-      ],
-      "versionPragmas": [
-        ">=0.6.0 <0.8.0"
-      ],
-      "artifacts": [
-        "ERC20Burnable"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC20/ERC20Pausable.sol": {
-      "lastModificationDate": 1627545913689,
-      "contentHash": "42c0638e45b2c33154488610fe3091fe",
-      "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20Pausable.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "./ERC20.sol",
-        "../../utils/Pausable.sol"
-      ],
-      "versionPragmas": [
-        ">=0.6.0 <0.8.0"
-      ],
-      "artifacts": [
-        "ERC20Pausable"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
-      "lastModificationDate": 1627545913689,
-      "contentHash": "e0a41531d159d3a32f84b7a3ecf9fabb",
-      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.6.0 <0.8.0"
-      ],
-      "artifacts": [
-        "IERC20"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/ERC20Handler.sol": {
-      "lastModificationDate": 1631948387759,
-      "contentHash": "f5cc18f528014ba07f5f2f6a7593e856",
-      "sourceName": "contracts/handlers/ERC20Handler.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "../interfaces/IDepositExecute.sol",
-        "./HandlerHelpers.sol",
-        "../ERC20Safe.sol",
-        "@openzeppelin/contracts/presets/ERC20PresetMinterPauser.sol"
-      ],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "ERC20Handler"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/ERC20Safe.sol": {
-      "lastModificationDate": 1627545647810,
-      "contentHash": "dd9ed3fe81b2c3a68bf3606740a1ced8",
-      "sourceName": "contracts/ERC20Safe.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/math/SafeMath.sol",
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@openzeppelin/contracts/presets/ERC20PresetMinterPauser.sol",
-        "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol"
-      ],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "ERC20Safe"
+        "GenericHandler"
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/CentrifugeAsset.sol": {
-      "lastModificationDate": 1627545647811,
-      "contentHash": "83a9b56a96985745900f11aa0a5c0c06",
+      "lastModificationDate": 1632307595097,
+      "contentHash": "82fbca5e6e5fe2cb1b3d910d33c497af",
       "sourceName": "contracts/CentrifugeAsset.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -1813,22 +1802,22 @@
       },
       "imports": [],
       "versionPragmas": [
-        "0.6.12"
+        "0.8.0"
       ],
       "artifacts": [
         "CentrifugeAsset"
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/interfaces/IERC20.sol": {
-      "lastModificationDate": 1627545648274,
+      "lastModificationDate": 1627634748221,
       "contentHash": "08f9577fd2a9d1ba0910837b2f93e579",
       "sourceName": "contracts/interfaces/IERC20.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -1862,15 +1851,15 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/interfaces/IERC2612.sol": {
-      "lastModificationDate": 1627545648274,
+      "lastModificationDate": 1627634748221,
       "contentHash": "712aad81e6a4ad554723d71c9d0f3cc0",
       "sourceName": "contracts/interfaces/IERC2612.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -1904,15 +1893,15 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/interfaces/IERC3156FlashBorrower.sol": {
-      "lastModificationDate": 1627545648275,
+      "lastModificationDate": 1627634748222,
       "contentHash": "7abfad117a6fad59c2a2e458e16e87ac",
       "sourceName": "contracts/interfaces/IERC3156FlashBorrower.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -1946,15 +1935,15 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/interfaces/IERC3156FlashLender.sol": {
-      "lastModificationDate": 1627545648276,
+      "lastModificationDate": 1627634748222,
       "contentHash": "e01ed0ac6e963409e6c12db75b001152",
       "sourceName": "contracts/interfaces/IERC3156FlashLender.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -1989,232 +1978,16 @@
         "IERC3156FlashLender"
       ]
     },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/ToString.sol": {
-      "lastModificationDate": 1630248855460,
-      "contentHash": "6b784e111e391b2eee38509b4bb4710d",
-      "sourceName": "contracts/utils/ToString.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "solidity-string-utils/StringUtils.sol"
-      ],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "ToString"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/BytesToTypes.sol": {
-      "lastModificationDate": 1628558554641,
-      "contentHash": "cc71ed7d6fae1b59f79a4d6d4aff17b4",
-      "sourceName": "contracts/utils/BytesToTypes.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "BytesToTypes"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/Seriality.sol": {
-      "lastModificationDate": 1628558562257,
-      "contentHash": "4142b401b1aa8f80c68807c25c440911",
-      "sourceName": "contracts/utils/Seriality.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "./BytesToTypes.sol",
-        "./TypesToBytes.sol",
-        "./SizeOf.sol"
-      ],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "Seriality"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/TypesToBytes.sol": {
-      "lastModificationDate": 1628560473855,
-      "contentHash": "d373c1bc90931f2907082d2449e7ce30",
-      "sourceName": "contracts/utils/TypesToBytes.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "TypesToBytes"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/SizeOf.sol": {
-      "lastModificationDate": 1628558568857,
-      "contentHash": "b6e6c23c29027e0229029f26a7991204",
-      "sourceName": "contracts/utils/SizeOf.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "SizeOf"
-      ]
-    },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/utils/Pausable.sol": {
-      "lastModificationDate": 1630144203234,
-      "contentHash": "326324ce335db255788a89295f53a948",
+      "lastModificationDate": 1632307595101,
+      "contentHash": "09c3d9ff41c0de8167b4b86371d4f04f",
       "sourceName": "contracts/utils/Pausable.sol",
       "solcConfig": {
-        "version": "0.6.12",
+        "version": "0.8.0",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -2241,7 +2014,7 @@
       },
       "imports": [],
       "versionPragmas": [
-        "0.6.12"
+        "0.8.0"
       ],
       "artifacts": [
         "Pausable"
