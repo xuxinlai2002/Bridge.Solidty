@@ -97,7 +97,7 @@ contract HandlerHelpers is IERCHandler, Seriality {
 
 
     function _verifyAbiterSwift(
-        bytes[] memory sig) internal view returns (bool){
+        address[] memory addressList,bytes[] memory sig) internal view returns (bool){
 
         uint8 i = 0;
         uint8 verifiedNum = 0;
@@ -107,7 +107,7 @@ contract HandlerHelpers is IERCHandler, Seriality {
 
         require(_isDuplicated(sig) == false, "duplicate signature exception");
 
-        msgHash = _getAbiterHash();
+        msgHash = _getAbiterHash(addressList);
         for (i = 0; i < sigLen; i++) {
             
             signer = _recoverSigner(msgHash, sig[i]);
@@ -129,14 +129,14 @@ contract HandlerHelpers is IERCHandler, Seriality {
         return false;
     }
 
-    function _getAbiterHash() internal view returns (bytes32){
+    function _getAbiterHash(address[] memory addressList) internal view returns (bytes32){
 
-        uint256 abiterLen = _signers.length;
+        uint256 abiterLen = addressList.length;
         bytes memory allSerialData;
 
         for (uint256 i = 0; i < abiterLen; i++) {
 
-            bytes memory addressBytes = _address2Bytes(_signers[i]);
+            bytes memory addressBytes = _address2Bytes(addressList[i]);
             allSerialData = _mergeBytes(allSerialData,addressBytes);
         }
 

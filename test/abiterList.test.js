@@ -106,7 +106,7 @@ describe(`abiter list `, () => {
     
     await expect(
       bridgeContract.connect(alice).setAbiterList(abiterList,12,signList)
-    ).to.revertedWith("sender doesn't have admin role");
+    ).to.revertedWith("first time setting need to be admin");
 
 
   })

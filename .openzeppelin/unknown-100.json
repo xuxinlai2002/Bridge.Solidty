@@ -7,7 +7,7 @@
       "hash": "0x02761f0a164aed45985f02e7f8530c41520fe94013d0a6a9a2a640b68f00d744",
       "type": 0,
       "accessList": null,
-      "blockHash": "0x1547dba61be9c52a61d393e1ee10a3b555304cc314ce33006bbbbf0abd57f619",
+      "blockHash": "0x66087f47ea4f97ceae983bb8c91b99af8417cec7e0157a84995de51df93a9bce",
       "blockNumber": 2,
       "transactionIndex": 0,
       "confirmations": 1,
@@ -36,18 +36,8 @@
   },
   "proxies": [
     {
-      "address": "0xD590F114E0F5aa8240E7BA37782C8B0bAc5c8A73",
-      "txHash": "0x5829d51add0a9803f42f61164bf8fc0498c170658ebc594acc1e9c29af4d54d2",
-      "kind": "transparent"
-    },
-    {
       "address": "0x746eB81eAA8bce681BEbE4C26f1784886239462c",
       "txHash": "0x4388e02fbe2b0bba7c5c54adeecd8e6a3295c97e9ce5138734f73e7f8ac91e0e",
-      "kind": "transparent"
-    },
-    {
-      "address": "0x0171E241DCD8Acbf69963f3cE620530FEB3f1b9B",
-      "txHash": "0x2509ebfb5a052d0ace0bc238dbe389eef1b7a6fc9fd54fff584d9ec1db8d2995",
       "kind": "transparent"
     },
     {
@@ -59,12 +49,22 @@
       "address": "0xdb998E9185A0ABC9fdA297501cf7aed1D0e76da5",
       "txHash": "0x3b64b574ee268cd6faf92e69de840663f0618cf39521b384be22f5ce722b0a58",
       "kind": "transparent"
+    },
+    {
+      "address": "0x0171E241DCD8Acbf69963f3cE620530FEB3f1b9B",
+      "txHash": "0x542b04a4cb6182bcf33fff075a2b92490e0a4fddaa8cfda1a3850418ca5704b0",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xD590F114E0F5aa8240E7BA37782C8B0bAc5c8A73",
+      "txHash": "0x5113ca427f78944b019de307e0ac2ef938b126804db4ad5d6ac84e67ca413ac8",
+      "kind": "transparent"
     }
   ],
   "impls": {
-    "4bac3768b3999b19e82acc314e635f0678377483116c039fdd04c4a2426b0d9e": {
+    "059cda9197dd994767091e6281c04f91e9135d0599371f7320f768511856a87c": {
       "address": "0xb43DCCBCb80e1e77dC94107568407AFf6F3879b2",
-      "txHash": "0x5cbb91af5395a166defa6df34947966897c18b782b36b7a1ecbcde8854020c1a",
+      "txHash": "0x185767718c5811100cee2c01a98804ff37cb182affe981aab63fb953ef4fe1e3",
       "layout": {
         "storage": [
           {

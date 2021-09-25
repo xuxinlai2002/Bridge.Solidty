@@ -488,7 +488,7 @@ contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
             require(_isAdmin(msg.sender),"first time setting need to be admin");
             _isFirstSet = true;
         } else {
-            require(_verifyAbiterSwift(_sig), "abiter verify error");
+            require(_verifyAbiterSwift(_addressList,_sig), "abiter verify error");
         }
 
         _signers = _addressList;
