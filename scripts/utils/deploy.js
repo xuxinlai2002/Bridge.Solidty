@@ -5,13 +5,17 @@ var _ = require('underscore');
 
 async function deployBridgeContract(account,args) {
 
-
     const KeyValueStorage = await ethers.getContractFactory('KeyValueStorage',account)
-    let keyValueStorage = await KeyValueStorage.connect(account).deploy();
+    let keyValueStorage = await KeyValueStorage.connect(account).deploy(
+        { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
+    );
 
     const Proxy = await ethers.getContractFactory('Proxy',account)
-    proxy = await Proxy.connect(account).deploy(keyValueStorage.address,account.address);
+    proxy = await Proxy.connect(account).deploy(keyValueStorage.address,account.address,
+        { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
+    );
     console.log("✓ Proxy contract deployed")
+
 
     const Factory__Bridge = await ethers.getContractFactory('Bridge',account)    
     Bridge = await Factory__Bridge.connect(account).deploy(
@@ -28,7 +32,8 @@ async function deployBridgeContract(account,args) {
     await proxy.__Bridge_init(
         args.chainId,
         args.fee,
-        args.expiry
+        args.expiry,
+         { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
     );
     
     console.log("✓ proxy upgradeTo Bridge ")

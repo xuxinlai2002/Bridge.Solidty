@@ -7,10 +7,10 @@
             "endpoint": "ws://localhost:20637",
             "from": "0x41eA6aD88bbf4E22686386783e7817bB7E82c1ed",
             "opts": {
-                "bridge": "0xb43DCCBCb80e1e77dC94107568407AFf6F3879b2",
-                "wethHandler": "0xdb998E9185A0ABC9fdA297501cf7aed1D0e76da5",
-                "erc20Handler": "0x54d3223E1A3bC493cA69D9bEFD3Cce44Decd5545",
-                "genericHandler": "0x54d3223E1A3bC493cA69D9bEFD3Cce44Decd5545",
+                "bridge": "0xB562ccF5784bcD2518BB3bcbf89d0eE12D613ca6",
+                "wethHandler": "0x0cE380044B8F8b58D9c852901Be556F4111E14c6",
+                "erc20Handler": "0x185d0623c0Ea127D18C69B656fEff2A3535CcedE",
+                "genericHandler": "0x185d0623c0Ea127D18C69B656fEff2A3535CcedE",
                 "gasLimit": "1000000",
                 "maxGasPrice": "10000000000",
                 "blockConfirmations": "1"
@@ -23,9 +23,9 @@
             "endpoint": "ws://localhost:21637",
             "from": "0x4f2C793DB2163A7A081b984E6E8e2c504825668b",
             "opts": {
-                "bridge": "0xC15cCA616B581fa3CcAa1091855E41c94d5589Ca",
-                "erc20Handler": "0x32b4903454f05e92a37b2e1c0839eFf2C2FDdE0f",
-                "genericHandler": "0x32b4903454f05e92a37b2e1c0839eFf2C2FDdE0f",
+                "bridge": "0x32b4903454f05e92a37b2e1c0839eFf2C2FDdE0f",
+                "erc20Handler": "0xecC44F95117a3253693f6174ed9F3fA96AD5456d",
+                "genericHandler": "0xecC44F95117a3253693f6174ed9F3fA96AD5456d",
                 "gasLimit": "1000000",
                 "maxGasPrice": "10000000000",
                 "blockConfirmations": "1"
