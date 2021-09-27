@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.0;
+pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
 import "../interfaces/IGenericHandler.sol";
@@ -43,7 +43,7 @@ contract GenericHandler is IGenericHandler {
         _;
     }
 
-    function _onlyBridge() private {
+    function _onlyBridge() private view{
          require(msg.sender == _bridgeAddress, "sender must be bridge contract");
     }
 

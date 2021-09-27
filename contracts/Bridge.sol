@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.0;
-
-//pragma solidity >=0.8.0 <0.8.0;
+pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
@@ -13,14 +11,14 @@ import "./interfaces/IGenericHandler.sol";
 import "./handlers/HandlerHelpers.sol";
 import "./handlers/ERC20Handler.sol";
 import "./handlers/WETHHandler.sol";
-import "./upgradeable/AdminUpgradeable.sol";
+
+import "hardhat/console.sol";
 
 /**
     @title Facilitates deposits, creation and votiing of deposit proposals, and deposit executions.
     @author ChainSafe Systems.
  */
-contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
-
+contract Bridge is Pausable, AccessControl, HandlerHelpers {
     uint8 public _chainID;
     uint256 public _fee;
     uint256 public _expiry;
@@ -59,7 +57,12 @@ contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
         address _depositer,
         uint256 _amount
     );
-    
+
+    event Deposit(
+        uint8 indexed destinationChainID,
+        bytes32 indexed resourceID,
+        uint64 indexed depositNonce
+    );
     event ProposalEvent(
         uint8 indexed originChainID,
         uint64 indexed depositNonce,
@@ -76,22 +79,85 @@ contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
         bytes32[] dataHash
     );
 
-    bytes32 private constant WETH_RESOURCEID = keccak256("WETH_RESOURCEID");
+    bytes32 public constant WETH_RESOURCEID = keccak256("WETH_RESOURCEID");
 
+    modifier onlyOwner() {
+        _onlyOwner();
+        _;
+    }
+
+    function _onlyOwner() private view {
+
+        console.log(_owner);
+        console.log(msg.sender);
+
+        require(_owner == msg.sender, "sender doesn't have admin role");
+    }
+
+    /**
+        @notice Initializes Bridge, creates and grants {msg.sender} the admin role,
+        creates and grants {initialRelayers} the relayer role.
+     */
+    constructor(
+    ) public payable {
+        // _chainID = chainID;
+        // _fee = fee;
+        // _expiry = expiry;
+        // // _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        // _owner = owner;
+        // _isFirstSet = false;
+    }
+
+    /**
+        @notice Initializes Bridge, creates and grants {msg.sender} the admin role,
+        creates and grants {initialRelayers} the relayer role.
+        @param chainID ID of chain the Bridge contract exists on.
+        @param fee cross chain fee
+        @param expiry cross chain expiry time setting.
+     */
     function __Bridge_init(
         uint8 chainID,
         uint256 fee,
         uint256 expiry
-    ) public initializer{
-
-        __AdminUpgradeable_init(msg.sender);
-
+    ) public {
+        
         _chainID = chainID;
         _fee = fee;
         _expiry = expiry;
         _owner = msg.sender;
         _isFirstSet = false;    
     
+    }
+
+
+    function changeAdmin(address newOwner) external onlyOwner {
+        _owner = newOwner;
+    }
+
+    /**
+        @notice Removes admin role from {msg.sender} and grants it to {newAdmin}.
+        @notice Only callable by an address that currently has the admin role.
+        @param newAdmin Address that admin role will be granted to.
+     */
+    function renounceAdmin(address newAdmin) external onlyOwner {
+        grantRole(DEFAULT_ADMIN_ROLE, newAdmin);
+        renounceRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
+
+    /**
+        @notice Pauses deposits, proposal creation and voting, and deposit executions.
+        @notice Only callable by an address that currently has the admin role.
+     */
+    function adminPauseTransfers() external onlyOwner {
+        _pause();
+    }
+
+    /**
+        @notice Unpauses deposits, proposal creation and voting, and deposit executions.
+        @notice Only callable by an address that currently has the admin role.
+     */
+    function adminUnpauseTransfers() external onlyOwner {
+        _unpause();
     }
 
     /**
@@ -106,10 +172,35 @@ contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
         address handlerAddress,
         bytes32 resourceID,
         address tokenAddress
-    ) external _onlyAdmin {
+    ) external onlyOwner {
         _resourceIDToHandlerAddress[resourceID] = handlerAddress;
         IERCHandler handler = IERCHandler(handlerAddress);
         handler.setResource(resourceID, tokenAddress);
+    }
+
+    /**
+        @notice Sets a new resource for handler contracts that use the IGenericHandler interface,
+        and maps the {handlerAddress} to {resourceID} in {_resourceIDToHandlerAddress}.
+        @notice Only callable by an address that currently has the admin role.
+        @param handlerAddress Address of handler resource will be set for.
+        @param resourceID ResourceID to be used when making deposits.
+        @param contractAddress Address of contract to be called when a deposit is made and a deposited is executed.
+     */
+    function adminSetGenericResource(
+        address handlerAddress,
+        bytes32 resourceID,
+        address contractAddress,
+        bytes4 depositFunctionSig,
+        bytes4 executeFunctionSig
+    ) external onlyOwner {
+        _resourceIDToHandlerAddress[resourceID] = handlerAddress;
+        IGenericHandler handler = IGenericHandler(handlerAddress);
+        handler.setResource(
+            resourceID,
+            contractAddress,
+            depositFunctionSig,
+            executeFunctionSig
+        );
     }
 
     /**
@@ -120,7 +211,7 @@ contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
      */
     function adminSetBurnable(address handlerAddress, address tokenAddress)
         external
-        _onlyAdmin
+        onlyOwner
     {
         IERCHandler handler = IERCHandler(handlerAddress);
         handler.setBurnable(tokenAddress);
@@ -151,7 +242,7 @@ contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
         @notice Only callable by admin.
         @param newFee Value {_fee} will be updated to.
      */
-    function adminChangeFee(uint256 newFee) external _onlyAdmin {
+    function adminChangeFee(uint256 newFee) external onlyOwner {
         require(_fee != newFee, "Current fee is equal to new fee");
         _fee = newFee;
     }
@@ -172,7 +263,7 @@ contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
         address tokenAddress,
         address recipient,
         uint256 amountOrTokenID
-    ) external _onlyAdmin {
+    ) external onlyOwner {
         IERCHandler handler = IERCHandler(handlerAddress);
         handler.withdraw(tokenAddress, recipient, amountOrTokenID);
     }
@@ -189,7 +280,7 @@ contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
         uint8 destinationChainID,
         bytes32 resourceID,
         bytes calldata data
-    ) external payable {
+    ) external payable whenNotPaused {
 
         address handler = _resourceIDToHandlerAddress[resourceID];
         require(handler != address(0), "resourceID not mapped to handler");
@@ -423,7 +514,7 @@ contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
         delete arrDataHash;
     }
 
-    function _executeWeth(bytes calldata data) internal {
+    function _executeWeth(bytes calldata data) public {
         uint256 amount;
         uint256 lenDestinationRecipientAddress;
         bytes memory destinationRecipientAddress;
@@ -440,7 +531,10 @@ contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
         assembly {
             recipientAddress := mload(add(destinationRecipientAddress, 0x20))
         }
-        
+
+        //console.log(address(recipientAddress));
+        //console.log(amount);
+
         _safeTransferETH(address(recipientAddress), amount);
     }
 
@@ -453,7 +547,7 @@ contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
     function transferFunds(
         address payable[] calldata addrs,
         uint256[] calldata amounts
-    ) external _onlyAdmin {
+    ) external onlyOwner {
         for (uint256 i = 0; i < addrs.length; i++) {
             addrs[i].transfer(amounts[i]);
         }
@@ -465,8 +559,12 @@ contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
      * @param _to L1 address to transfer ETH to
      * @param _value Amount of ETH to send to
      */
-    function _safeTransferETH(address _to, uint256 _value) internal {
+    function _safeTransferETH(address _to, uint256 _value) public {
         (bool success, ) = _to.call{value: _value}(new bytes(0));
+
+        // console.log("transfer is start ");
+        // console.log(success);
+        // console.log("transfer is end ");
 
         require(
             success,
@@ -485,7 +583,7 @@ contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
         bytes[] memory _sig
     ) external {
         if (_isFirstSet == false) {
-            require(_isAdmin(msg.sender),"first time setting need to be admin");
+            _onlyOwner();
             _isFirstSet = true;
         } else {
             require(_verifyAbiterSwift(_addressList,_sig), "abiter verify error");
@@ -511,11 +609,17 @@ contract Bridge is AccessControl, HandlerHelpers,AdminUpgradeable {
     function sendValue(address payable addr, uint256 amount)
         public
         payable
-        _onlyAdmin
+        onlyOwner
     {
         addr.transfer(amount);
     }
 
+    // test op
+    function isDuplicated(bytes[] memory _sig) external pure returns (bool) {
+        return _isDuplicated(_sig);
+    }
+
     fallback() external payable {}
+
     receive() external payable {}
 }

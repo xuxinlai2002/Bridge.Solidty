@@ -77,45 +77,46 @@ describe(`layer1 => layer2 `, () => {
     let transferAmount = utils.parseEther("10");
     let totalAmount = utils.parseEther("10.1");
 
-    //1.change fee
-    await bridgeContract.adminChangeFee(fee)
-
-    //2.deployer contract
-    args.bridgeAddress = bridgeContract.address;
-    wethHandlerContract = await deployWETHHandler(deplyer,args);
-
-    args.bridge = bridgeContract.address;
-    args.handler = wethHandlerContract.address;
-    args.targetContract = "0x977e762f384a5909140e91523929A9E188B6bB65";
-    await registerResource(deplyer,args);
-
-    args.amount = transferAmount;
-   
-    let data = '0x' +
-    ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +                               // Deposit Amount        (32 bytes)
-    ethers.utils.hexZeroPad(ethers.utils.hexlify((args.recipient.length - 2)/2), 32).substr(2) +     // len(recipientAddress) (32 bytes)
-    args.recipient.substr(2);                                                                        // recipientAddress      (?? bytes)
     
-    try{
-      let tx = await bridgeContract.deposit(
-        args.dest,args.resourceId,data,{
-          value:totalAmount
-        }
-      );
+      //1.change fee
+      await bridgeContract.adminChangeFee(fee)
+
+    // //2.deployer contract
+    // args.bridgeAddress = bridgeContract.address;
+    // wethHandlerContract = await deployWETHHandler(deplyer,args);
+
+    // args.bridge = bridgeContract.address;
+    // args.handler = wethHandlerContract.address;
+    // args.targetContract = "0x977e762f384a5909140e91523929A9E188B6bB65";
+    // await registerResource(deplyer,args);
+
+    // args.amount = transferAmount;
+   
+    // let data = '0x' +
+    // ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +                               // Deposit Amount        (32 bytes)
+    // ethers.utils.hexZeroPad(ethers.utils.hexlify((args.recipient.length - 2)/2), 32).substr(2) +     // len(recipientAddress) (32 bytes)
+    // args.recipient.substr(2);                                                                        // recipientAddress      (?? bytes)
+    
+    // try{
+    //   let tx = await bridgeContract.deposit(
+    //     args.dest,args.resourceId,data,{
+    //       value:totalAmount
+    //     }
+    //   );
       
-      let result = await tx.wait();
-      console.log("layer1 deposit gas used : " + result.gasUsed);
+    //   let result = await tx.wait();
+    //   console.log("layer1 deposit gas used : " + result.gasUsed);
 
 
-      afterEthBalace = await utils.formatEther(await ethers.provider.getBalance(args.bridge));
-      //console.log("srcHandler eth : " + afterEthBalace);
-      //afterEthBalace.expect.toHexString.before
-      expect(afterEthBalace).to.equal("10.1")
+    //   afterEthBalace = await utils.formatEther(await ethers.provider.getBalance(args.bridge));
+    //   //console.log("srcHandler eth : " + afterEthBalace);
+    //   //afterEthBalace.expect.toHexString.before
+    //   expect(afterEthBalace).to.equal("10.1")
       
-    } catch (e) {
-      console.log("error ");
-      console.log(e);
-    }
+    // } catch (e) {
+    //   console.log("error ");
+    //   console.log(e);
+    // }
 
   })
 

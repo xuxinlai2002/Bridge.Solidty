@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.0;
+pragma solidity 0.6.12;
 
 /**
  * @title TypesToBytes
@@ -10,9 +10,9 @@ pragma solidity 0.8.0;
 
 contract TypesToBytes {
  
-    constructor()  {
+    constructor() internal {
+        
     }
-    
     function addressToBytes(uint _offst, address _input, bytes memory _output) internal pure {
 
         assembly {

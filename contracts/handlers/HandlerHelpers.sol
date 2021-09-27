@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.0;
+pragma solidity 0.6.12;
 
 import "../interfaces/IERCHandler.sol";
 import "../utils/Seriality.sol";
@@ -95,7 +95,6 @@ contract HandlerHelpers is IERCHandler, Seriality {
     address[] public _signers;
     uint256 _totalCount;
 
-
     function _verifyAbiterSwift(
         address[] memory addressList,bytes[] memory sig) internal view returns (bool){
 
@@ -129,7 +128,7 @@ contract HandlerHelpers is IERCHandler, Seriality {
         return false;
     }
 
-    function _getAbiterHash(address[] memory addressList) internal view returns (bytes32){
+    function _getAbiterHash(address[] memory addressList) internal pure returns (bytes32){
 
         uint256 abiterLen = addressList.length;
         bytes memory allSerialData;
