@@ -3,8 +3,7 @@ pragma solidity 0.6.12;
 
 import "./Ownable.sol";
 import "./StorageState.sol";
-
-import "hardhat/console.sol";
+//import "hardhat/console.sol";
 
 contract Proxy is StorageState , Ownable {
     

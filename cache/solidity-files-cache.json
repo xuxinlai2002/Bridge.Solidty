@@ -44,8 +44,8 @@
       "artifacts": []
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/Bridge.sol": {
-      "lastModificationDate": 1632731710467,
-      "contentHash": "0b3fdfb84758446ab126b8a7cef6c45d",
+      "lastModificationDate": 1633766191451,
+      "contentHash": "9af32c20fea5a32be7db97f85de2b4e4",
       "sourceName": "contracts/Bridge.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -85,8 +85,7 @@
         "./interfaces/IGenericHandler.sol",
         "./handlers/HandlerHelpers.sol",
         "./handlers/ERC20Handler.sol",
-        "./handlers/WETHHandler.sol",
-        "hardhat/console.sol"
+        "./handlers/WETHHandler.sol"
       ],
       "versionPragmas": [
         "0.6.12"
@@ -403,8 +402,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/WETHHandler.sol": {
-      "lastModificationDate": 1632731710493,
-      "contentHash": "d6f96d9da48226203e02541fc35defe8",
+      "lastModificationDate": 1633766292759,
+      "contentHash": "bc73991db44849bb1a8e5b3b7405a244",
       "sourceName": "contracts/handlers/WETHHandler.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1147,8 +1146,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/upgradeable/Proxy.sol": {
-      "lastModificationDate": 1632731710481,
-      "contentHash": "aadd30fb885b06b00476c77cbd1bb287",
+      "lastModificationDate": 1633766254586,
+      "contentHash": "6feb655e8fe26e82c5eab8de96a52a1d",
       "sourceName": "contracts/upgradeable/Proxy.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -1182,8 +1181,7 @@
       },
       "imports": [
         "./Ownable.sol",
-        "./StorageState.sol",
-        "hardhat/console.sol"
+        "./StorageState.sol"
       ],
       "versionPragmas": [
         "0.6.12"
@@ -1460,8 +1458,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/ERC721MinterBurnerPauser.sol": {
-      "lastModificationDate": 1632731710475,
-      "contentHash": "0d3c3703f22353ce132fd00ef8c241cd",
+      "lastModificationDate": 1633766232671,
+      "contentHash": "36805c550420f20dd828d86ae2f9cd1e",
       "sourceName": "contracts/ERC721MinterBurnerPauser.sol",
       "solcConfig": {
         "version": "0.6.12",

@@ -113,7 +113,6 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
             "provided tokenAddress is not whitelisted"
         );
 
-
         _depositRecords[destinationChainID][depositNonce] = keccak256(
             abi.encode(
                 tokenAddress,
@@ -125,7 +124,6 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
         );
 
         return (amount,tokenAddress);
-
     }
 
 

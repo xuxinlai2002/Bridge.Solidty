@@ -12,7 +12,7 @@ import "./handlers/HandlerHelpers.sol";
 import "./handlers/ERC20Handler.sol";
 import "./handlers/WETHHandler.sol";
 
-import "hardhat/console.sol";
+//import "hardhat/console.sol";
 
 /**
     @title Facilitates deposits, creation and votiing of deposit proposals, and deposit executions.
@@ -88,9 +88,8 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
 
     function _onlyOwner() private view {
 
-        console.log(_owner);
-        console.log(msg.sender);
-
+        //console.log(_owner);
+        //console.log(msg.sender);
         require(_owner == msg.sender, "sender doesn't have admin role");
     }
 

@@ -11,7 +11,6 @@ const {
   deployBridgeContract,
 } = require("../scripts/utils/deploy")
 
-
 const { utils } = require('ethers')
 
 describe(`Storage and upgradability example `, () => {
@@ -55,8 +54,6 @@ describe(`Storage and upgradability example `, () => {
       "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8"
     }
     // bridgeContract =  await deployBridgeContract(deplyer,args);
-
-
     Bridge = await ethers.getContractFactory('Bridge',deplyer)    
     bridge = await Bridge.connect(deplyer).deploy(
         { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
@@ -87,7 +84,6 @@ describe(`Storage and upgradability example `, () => {
     let numOwnerV2 = await proxy.getNumberOfOwners();
     //console.log(numOwnerV2.toNumber())
     expect(numOwnerV2.toNumber()).to.equal(2);
-
 
   })
 
