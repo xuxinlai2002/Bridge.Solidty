@@ -43,7 +43,7 @@
     "hardhat": "^2.0.9",
     "hardhat-deploy": "^0.7.0-beta.49",
     "mocha": "^8.2.1",
-    "web3": "^1.5.2",
+    "web3": "^1.5.3",
     "underscore": "^1.13.1",
     "eth-crypto": "^2.0.0"
   },

@@ -23,7 +23,7 @@ async function deployBridgeContract(account,args) {
     );
 
     // await viewEvnt(args.chainId,Bridge.deployTransaction.hash);
-    console.log("✓ Bridge contract deployed")
+    console.log("✓ Bridge contract deployed " + Bridge.address)
 
 
     await proxy.upgradeTo(Bridge.address)

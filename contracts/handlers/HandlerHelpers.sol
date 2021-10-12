@@ -5,7 +5,7 @@ pragma solidity 0.6.12;
 import "../interfaces/IERCHandler.sol";
 import "../utils/Seriality.sol";
 
-import "hardhat/console.sol";
+//import "hardhat/console.sol";
 
 /**
     @title Function used across handler contracts.

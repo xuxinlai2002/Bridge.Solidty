@@ -43,9 +43,51 @@
       ],
       "artifacts": []
     },
+    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1632731730886,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/Bridge.sol": {
-      "lastModificationDate": 1633766191451,
-      "contentHash": "9af32c20fea5a32be7db97f85de2b4e4",
+      "lastModificationDate": 1634022177860,
+      "contentHash": "bfc7739409114674918f884ba8b72f58",
       "sourceName": "contracts/Bridge.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -309,8 +351,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/HandlerHelpers.sol": {
-      "lastModificationDate": 1632731710491,
-      "contentHash": "b00b87cd6221886ac3efa9f4a2502103",
+      "lastModificationDate": 1633768429001,
+      "contentHash": "ff058f93f267a330bc81b0166b9556a7",
       "sourceName": "contracts/handlers/HandlerHelpers.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -344,8 +386,7 @@
       },
       "imports": [
         "../interfaces/IERCHandler.sol",
-        "../utils/Seriality.sol",
-        "hardhat/console.sol"
+        "../utils/Seriality.sol"
       ],
       "versionPragmas": [
         "0.6.12"
@@ -444,48 +485,6 @@
       ],
       "artifacts": [
         "WETHHandler"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/node_modules/hardhat/console.sol": {
-      "lastModificationDate": 1632731730886,
-      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
-      "sourceName": "hardhat/console.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.4.22 <0.9.0"
-      ],
-      "artifacts": [
-        "console"
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/node_modules/@openzeppelin/contracts/utils/EnumerableSet.sol": {
@@ -1143,223 +1142,6 @@
       ],
       "artifacts": [
         "Pausable"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/upgradeable/Proxy.sol": {
-      "lastModificationDate": 1633766254586,
-      "contentHash": "6feb655e8fe26e82c5eab8de96a52a1d",
-      "sourceName": "contracts/upgradeable/Proxy.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "./Ownable.sol",
-        "./StorageState.sol"
-      ],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "Proxy"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/upgradeable/Ownable.sol": {
-      "lastModificationDate": 1632731710479,
-      "contentHash": "87a041e6587ca4eb9b86d11de8f8ad7a",
-      "sourceName": "contracts/upgradeable/Ownable.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "Ownable"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/upgradeable/StorageState.sol": {
-      "lastModificationDate": 1632731710486,
-      "contentHash": "617edfe3eb2ccad79d6d8850d147fd19",
-      "sourceName": "contracts/upgradeable/StorageState.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "./KeyValueStorage.sol"
-      ],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "StorageState"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/upgradeable/KeyValueStorage.sol": {
-      "lastModificationDate": 1632731710489,
-      "contentHash": "98ad7886974b81ac78bf63264c2816e2",
-      "sourceName": "contracts/upgradeable/KeyValueStorage.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "KeyValueStorage"
-      ]
-    },
-    "/Users/xuxinlai/work/e/deploy-solidity/contracts/upgradeable/StorageLibrary.sol": {
-      "lastModificationDate": 1632731710485,
-      "contentHash": "cd8374633cae0ac99fb542e7f5fc2054",
-      "sourceName": "contracts/upgradeable/StorageLibrary.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "./StorageState.sol"
-      ],
-      "versionPragmas": [
-        "0.6.12"
-      ],
-      "artifacts": [
-        "StorageLibrary"
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/ERC721Handler.sol": {
@@ -2081,7 +1863,7 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/GenericHandler.sol": {
-      "lastModificationDate": 1632731710494,
+      "lastModificationDate": 1633766091445,
       "contentHash": "918029f2c29aff36e25d5f09ec16dbc9",
       "sourceName": "contracts/handlers/GenericHandler.sol",
       "solcConfig": {
@@ -2337,7 +2119,7 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/upgradeable/DelegateV1.sol": {
-      "lastModificationDate": 1632731710486,
+      "lastModificationDate": 1633766091446,
       "contentHash": "28fcb37938d1406de0838a37c7de80b3",
       "sourceName": "contracts/upgradeable/DelegateV1.sol",
       "solcConfig": {
@@ -2379,7 +2161,7 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/upgradeable/DelegateV2.sol": {
-      "lastModificationDate": 1632731710489,
+      "lastModificationDate": 1633766091446,
       "contentHash": "16315237adc1734ee7ff2b8897063ed9",
       "sourceName": "contracts/upgradeable/DelegateV2.sol",
       "solcConfig": {
@@ -2420,8 +2202,225 @@
         "DelegateV2"
       ]
     },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/upgradeable/KeyValueStorage.sol": {
+      "lastModificationDate": 1633766091447,
+      "contentHash": "98ad7886974b81ac78bf63264c2816e2",
+      "sourceName": "contracts/upgradeable/KeyValueStorage.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.6.12"
+      ],
+      "artifacts": [
+        "KeyValueStorage"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/upgradeable/StorageState.sol": {
+      "lastModificationDate": 1633766091450,
+      "contentHash": "617edfe3eb2ccad79d6d8850d147fd19",
+      "sourceName": "contracts/upgradeable/StorageState.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./KeyValueStorage.sol"
+      ],
+      "versionPragmas": [
+        "0.6.12"
+      ],
+      "artifacts": [
+        "StorageState"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/upgradeable/StorageLibrary.sol": {
+      "lastModificationDate": 1633766091449,
+      "contentHash": "cd8374633cae0ac99fb542e7f5fc2054",
+      "sourceName": "contracts/upgradeable/StorageLibrary.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./StorageState.sol"
+      ],
+      "versionPragmas": [
+        "0.6.12"
+      ],
+      "artifacts": [
+        "StorageLibrary"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/upgradeable/Proxy.sol": {
+      "lastModificationDate": 1633940511982,
+      "contentHash": "6feb655e8fe26e82c5eab8de96a52a1d",
+      "sourceName": "contracts/upgradeable/Proxy.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./Ownable.sol",
+        "./StorageState.sol"
+      ],
+      "versionPragmas": [
+        "0.6.12"
+      ],
+      "artifacts": [
+        "Proxy"
+      ]
+    },
+    "/Users/xuxinlai/work/e/deploy-solidity/contracts/upgradeable/Ownable.sol": {
+      "lastModificationDate": 1633766091447,
+      "contentHash": "87a041e6587ca4eb9b86d11de8f8ad7a",
+      "sourceName": "contracts/upgradeable/Ownable.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.6.12"
+      ],
+      "artifacts": [
+        "Ownable"
+      ]
+    },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/upgradeable/SafeMath.sol": {
-      "lastModificationDate": 1632731710480,
+      "lastModificationDate": 1633766091448,
       "contentHash": "09e5a5cdb9df393c32828edd15eca8c8",
       "sourceName": "contracts/upgradeable/SafeMath.sol",
       "solcConfig": {

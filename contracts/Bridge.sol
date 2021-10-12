@@ -128,7 +128,6 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
     
     }
 
-
     function changeAdmin(address newOwner) external onlyOwner {
         _owner = newOwner;
     }
@@ -279,7 +278,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         uint8 destinationChainID,
         bytes32 resourceID,
         bytes calldata data
-    ) external payable whenNotPaused {
+    ) external payable {
 
         address handler = _resourceIDToHandlerAddress[resourceID];
         require(handler != address(0), "resourceID not mapped to handler");
