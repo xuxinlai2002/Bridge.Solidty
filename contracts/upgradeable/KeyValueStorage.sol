@@ -9,7 +9,6 @@ contract KeyValueStorage {
    mapping (address => mapping (address => mapping(address => uint256)))  _allowanceStorage;
 
   /**** Get Methods ***********/
-
   function getAddress(bytes32 key) public view returns (address) {
       return _addressStorage[msg.sender][key];
   }
@@ -25,7 +24,6 @@ contract KeyValueStorage {
     return _allowanceStorage[msg.sender][owner][spender];
   }
   /**** Set Methods ***********/
-
   function setAddress(bytes32 key, address value) public {
     _addressStorage[msg.sender][key] = value;
   }

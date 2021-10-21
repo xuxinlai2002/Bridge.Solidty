@@ -2,19 +2,27 @@
   "manifestVersion": "3.2",
   "admin": {
     "address": "0x54d3223E1A3bC493cA69D9bEFD3Cce44Decd5545",
-    "txHash": "0x02761f0a164aed45985f02e7f8530c41520fe94013d0a6a9a2a640b68f00d744",
+    "txHash": "0x44e22fb5f0e796ce7654a591d42bd9ad64b68a1fddcf4054be1c23dfbc30e6df",
     "deployTransaction": {
-      "hash": "0x02761f0a164aed45985f02e7f8530c41520fe94013d0a6a9a2a640b68f00d744",
-      "type": 0,
-      "accessList": null,
-      "blockHash": "0x66087f47ea4f97ceae983bb8c91b99af8417cec7e0157a84995de51df93a9bce",
+      "hash": "0x44e22fb5f0e796ce7654a591d42bd9ad64b68a1fddcf4054be1c23dfbc30e6df",
+      "type": 2,
+      "accessList": [],
+      "blockHash": "0x24b1f433a8a890f80967b82ddaadaee8a5d5ddb98c48a761aef845162902b61b",
       "blockNumber": 2,
       "transactionIndex": 0,
       "confirmations": 1,
       "from": "0x41eA6aD88bbf4E22686386783e7817bB7E82c1ed",
       "gasPrice": {
         "type": "BigNumber",
-        "hex": "0x01dcd65000"
+        "hex": "0x696e9c73"
+      },
+      "maxPriorityFeePerGas": {
+        "type": "BigNumber",
+        "hex": "0x3b9aca00"
+      },
+      "maxFeePerGas": {
+        "type": "BigNumber",
+        "hex": "0x97426ee6"
       },
       "gasLimit": {
         "type": "BigNumber",
@@ -27,9 +35,9 @@
       },
       "nonce": 1,
       "data": "0x608060405234801561001057600080fd5b50600080546001600160a01b031916339081178255604051909182917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908290a350610759806100616000396000f3fe60806040526004361061007b5760003560e01c80639623609d1161004e5780639623609d1461011157806399a88ec414610124578063f2fde38b14610144578063f3b7dead146101645761007b565b8063204e1c7a14610080578063715018a6146100bc5780637eff275e146100d35780638da5cb5b146100f3575b600080fd5b34801561008c57600080fd5b506100a061009b366004610515565b610184565b6040516001600160a01b03909116815260200160405180910390f35b3480156100c857600080fd5b506100d1610215565b005b3480156100df57600080fd5b506100d16100ee366004610554565b610292565b3480156100ff57600080fd5b506000546001600160a01b03166100a0565b6100d161011f36600461058c565b61031c565b34801561013057600080fd5b506100d161013f366004610554565b6103ad565b34801561015057600080fd5b506100d161015f366004610515565b610405565b34801561017057600080fd5b506100a061017f366004610515565b6104ef565b6000806000836001600160a01b03166040516101aa90635c60da1b60e01b815260040190565b600060405180830381855afa9150503d80600081146101e5576040519150601f19603f3d011682016040523d82523d6000602084013e6101ea565b606091505b5091509150816101f957600080fd5b8080602001905181019061020d9190610538565b949350505050565b6000546001600160a01b031633146102485760405162461bcd60e51b815260040161023f906106c0565b60405180910390fd5b600080546040516001600160a01b03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3600080546001600160a01b0319169055565b6000546001600160a01b031633146102bc5760405162461bcd60e51b815260040161023f906106c0565b6040516308f2839760e41b81526001600160a01b038281166004830152831690638f283970906024015b600060405180830381600087803b15801561030057600080fd5b505af1158015610314573d6000803e3d6000fd5b505050505050565b6000546001600160a01b031633146103465760405162461bcd60e51b815260040161023f906106c0565b60405163278f794360e11b81526001600160a01b03841690634f1ef286903490610376908690869060040161065d565b6000604051808303818588803b15801561038f57600080fd5b505af11580156103a3573d6000803e3d6000fd5b5050505050505050565b6000546001600160a01b031633146103d75760405162461bcd60e51b815260040161023f906106c0565b604051631b2ce7f360e11b81526001600160a01b038281166004830152831690633659cfe6906024016102e6565b6000546001600160a01b0316331461042f5760405162461bcd60e51b815260040161023f906106c0565b6001600160a01b0381166104945760405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b606482015260840161023f565b600080546040516001600160a01b03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a3600080546001600160a01b0319166001600160a01b0392909216919091179055565b6000806000836001600160a01b03166040516101aa906303e1469160e61b815260040190565b600060208284031215610526578081fd5b81356105318161070b565b9392505050565b600060208284031215610549578081fd5b81516105318161070b565b60008060408385031215610566578081fd5b82356105718161070b565b915060208301356105818161070b565b809150509250929050565b6000806000606084860312156105a0578081fd5b83356105ab8161070b565b925060208401356105bb8161070b565b9150604084013567ffffffffffffffff808211156105d7578283fd5b818601915086601f8301126105ea578283fd5b8135818111156105fc576105fc6106f5565b604051601f8201601f19908116603f01168101908382118183101715610624576106246106f5565b8160405282815289602084870101111561063c578586fd5b82602086016020830137856020848301015280955050505050509250925092565b600060018060a01b038416825260206040818401528351806040850152825b818110156106985785810183015185820160600152820161067c565b818111156106a95783606083870101525b50601f01601f191692909201606001949350505050565b6020808252818101527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604082015260600190565b634e487b7160e01b600052604160045260246000fd5b6001600160a01b038116811461072057600080fd5b5056fea2646970667358221220d849f96f3086b9f82cdcf665adb8c697ace05638da1c7c16ab2d26293717af6764736f6c63430008020033",
-      "r": "0xd455e293f6b1407129a37658827281a893643e94461d4bdb5f599ec78bf7aee5",
-      "s": "0x0ffde13278c70c2e89a7d29ce2e763e914e0acc74c45c87ef1afa2622cfefab8",
-      "v": 236,
+      "r": "0xcac36c308822bd24522274497b61284308db8aea8bf52efaded114b6612d6f90",
+      "s": "0x263a70e34b86126a4e77a0df6d92abcac406f32e117fc9a967e5b96e68ac65cb",
+      "v": 1,
       "creates": "0x54d3223E1A3bC493cA69D9bEFD3Cce44Decd5545",
       "chainId": 100
     }
@@ -46,11 +54,6 @@
       "kind": "transparent"
     },
     {
-      "address": "0xdb998E9185A0ABC9fdA297501cf7aed1D0e76da5",
-      "txHash": "0x3b64b574ee268cd6faf92e69de840663f0618cf39521b384be22f5ce722b0a58",
-      "kind": "transparent"
-    },
-    {
       "address": "0x0171E241DCD8Acbf69963f3cE620530FEB3f1b9B",
       "txHash": "0x542b04a4cb6182bcf33fff075a2b92490e0a4fddaa8cfda1a3850418ca5704b0",
       "kind": "transparent"
@@ -59,20 +62,38 @@
       "address": "0xD590F114E0F5aa8240E7BA37782C8B0bAc5c8A73",
       "txHash": "0x5113ca427f78944b019de307e0ac2ef938b126804db4ad5d6ac84e67ca413ac8",
       "kind": "transparent"
+    },
+    {
+      "address": "0xdb998E9185A0ABC9fdA297501cf7aed1D0e76da5",
+      "txHash": "0x4b6d1c11af191d0dbf6f80ee777803fbc0f400d4be604ede83b32ee11f4fe5bd",
+      "kind": "transparent"
     }
   ],
   "impls": {
-    "059cda9197dd994767091e6281c04f91e9135d0599371f7320f768511856a87c": {
-      "address": "0xb43DCCBCb80e1e77dC94107568407AFf6F3879b2",
-      "txHash": "0x185767718c5811100cee2c01a98804ff37cb182affe981aab63fb953ef4fe1e3",
+    "a8c34e30dd42bfa0d900135a30dbc42f877332f6d3aa29d69727e5d34d15e657": {
+      "address": "0x746eB81eAA8bce681BEbE4C26f1784886239462c",
+      "txHash": "0x5aa650b4108be4aee4cdc0958c66355a52b5a078ea9c3596a78085a9dc37e952",
       "layout": {
         "storage": [
           {
-            "contract": "AccessControl",
-            "label": "_roles",
-            "type": "t_mapping(t_bytes32,t_struct(RoleData)65_storage)",
-            "src": "@openzeppelin/contracts/access/AccessControl.sol:54"
-          },
+            "contract": "BoxV2",
+            "label": "_value",
+            "type": "t_uint256",
+            "src": "contracts/mock/BoxV2.sol:5"
+          }
+        ],
+        "types": {
+          "t_uint256": {
+            "label": "uint256"
+          }
+        }
+      }
+    },
+    "85d625b1976b48fb3fc085b60d380f632f8038915dab2e6da9d13556ae4821b5": {
+      "address": "0xb43DCCBCb80e1e77dC94107568407AFf6F3879b2",
+      "txHash": "0x1a54e04b0f94df31ad549d216a9e6f65cb434cded329985e8e169b7059260e78",
+      "layout": {
+        "storage": [
           {
             "contract": "HandlerHelpers",
             "label": "_bridgeAddress",
@@ -116,88 +137,58 @@
             "src": "contracts/handlers/HandlerHelpers.sol:96"
           },
           {
-            "contract": "Initializable",
-            "label": "_initialized",
-            "type": "t_bool",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
-          },
-          {
-            "contract": "Initializable",
-            "label": "_initializing",
-            "type": "t_bool",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
-          },
-          {
-            "contract": "AdminUpgradeable",
-            "label": "admin",
-            "type": "t_address",
-            "src": "contracts/upgradeable/AdminUpgradeable.sol:16"
-          },
-          {
-            "contract": "AdminUpgradeable",
-            "label": "candidate",
-            "type": "t_address",
-            "src": "contracts/upgradeable/AdminUpgradeable.sol:17"
-          },
-          {
-            "contract": "AdminUpgradeable",
-            "label": "__gap",
-            "type": "t_array(t_uint256)48_storage",
-            "src": "contracts/upgradeable/AdminUpgradeable.sol:57"
-          },
-          {
             "contract": "Bridge",
             "label": "_chainID",
             "type": "t_uint8",
-            "src": "contracts/Bridge.sol:24"
+            "src": "contracts/Bridge.sol:20"
           },
           {
             "contract": "Bridge",
             "label": "_fee",
             "type": "t_uint256",
-            "src": "contracts/Bridge.sol:25"
+            "src": "contracts/Bridge.sol:21"
           },
           {
             "contract": "Bridge",
             "label": "_expiry",
             "type": "t_uint256",
-            "src": "contracts/Bridge.sol:26"
+            "src": "contracts/Bridge.sol:22"
           },
           {
             "contract": "Bridge",
             "label": "_isFirstSet",
             "type": "t_bool",
-            "src": "contracts/Bridge.sol:27"
+            "src": "contracts/Bridge.sol:23"
           },
           {
             "contract": "Bridge",
             "label": "_owner",
             "type": "t_address",
-            "src": "contracts/Bridge.sol:28"
+            "src": "contracts/Bridge.sol:24"
           },
           {
             "contract": "Bridge",
             "label": "_depositCounts",
             "type": "t_mapping(t_uint8,t_uint64)",
-            "src": "contracts/Bridge.sol:46"
+            "src": "contracts/Bridge.sol:42"
           },
           {
             "contract": "Bridge",
             "label": "_resourceIDToHandlerAddress",
             "type": "t_mapping(t_bytes32,t_address)",
-            "src": "contracts/Bridge.sol:48"
+            "src": "contracts/Bridge.sol:44"
           },
           {
             "contract": "Bridge",
             "label": "_depositRecords",
             "type": "t_mapping(t_uint64,t_mapping(t_uint8,t_bytes_storage))",
-            "src": "contracts/Bridge.sol:50"
+            "src": "contracts/Bridge.sol:46"
           },
           {
             "contract": "Bridge",
             "label": "_proposals",
-            "type": "t_mapping(t_uint72,t_mapping(t_bytes32,t_struct(Proposal)3167_storage))",
-            "src": "contracts/Bridge.sol:52"
+            "type": "t_mapping(t_uint72,t_mapping(t_bytes32,t_struct(Proposal)2392_storage))",
+            "src": "contracts/Bridge.sol:48"
           }
         ],
         "types": {
@@ -234,16 +225,16 @@
           "t_bytes_storage": {
             "label": "bytes"
           },
-          "t_mapping(t_uint72,t_mapping(t_bytes32,t_struct(Proposal)3167_storage))": {
+          "t_mapping(t_uint72,t_mapping(t_bytes32,t_struct(Proposal)2392_storage))": {
             "label": "mapping(uint72 => mapping(bytes32 => struct Bridge.Proposal))"
           },
           "t_uint72": {
             "label": "uint72"
           },
-          "t_mapping(t_bytes32,t_struct(Proposal)3167_storage)": {
+          "t_mapping(t_bytes32,t_struct(Proposal)2392_storage)": {
             "label": "mapping(bytes32 => struct Bridge.Proposal)"
           },
-          "t_struct(Proposal)3167_storage": {
+          "t_struct(Proposal)2392_storage": {
             "label": "struct Bridge.Proposal",
             "members": [
               {
@@ -256,7 +247,7 @@
               },
               {
                 "label": "_status",
-                "type": "t_enum(ProposalStatus)3157"
+                "type": "t_enum(ProposalStatus)2383"
               },
               {
                 "label": "_proposedBlock",
@@ -264,7 +255,7 @@
               }
             ]
           },
-          "t_enum(ProposalStatus)3157": {
+          "t_enum(ProposalStatus)2383": {
             "label": "enum Bridge.ProposalStatus",
             "members": [
               "Inactive",
@@ -274,9 +265,6 @@
               "Cancelled"
             ]
           },
-          "t_array(t_uint256)48_storage": {
-            "label": "uint256[48]"
-          },
           "t_mapping(t_address,t_bytes32)": {
             "label": "mapping(address => bytes32)"
           },
@@ -285,22 +273,6 @@
           },
           "t_array(t_address)dyn_storage": {
             "label": "address[]"
-          },
-          "t_mapping(t_bytes32,t_struct(RoleData)65_storage)": {
-            "label": "mapping(bytes32 => struct AccessControl.RoleData)"
-          },
-          "t_struct(RoleData)65_storage": {
-            "label": "struct AccessControl.RoleData",
-            "members": [
-              {
-                "label": "members",
-                "type": "t_mapping(t_address,t_bool)"
-              },
-              {
-                "label": "adminRole",
-                "type": "t_bytes32"
-              }
-            ]
           }
         }
       }

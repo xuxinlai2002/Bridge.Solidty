@@ -5,6 +5,7 @@ import "./Ownable.sol";
 import "./StorageState.sol";
 //import "hardhat/console.sol";
 
+
 contract Proxy is StorageState , Ownable {
     
     constructor(KeyValueStorage storage_, address _owner) public {

@@ -12,13 +12,11 @@ import "./handlers/HandlerHelpers.sol";
 import "./handlers/ERC20Handler.sol";
 import "./handlers/WETHHandler.sol";
 
-//import "hardhat/console.sol";
-
 /**
     @title Facilitates deposits, creation and votiing of deposit proposals, and deposit executions.
     @author ChainSafe Systems.
  */
-contract Bridge is Pausable, AccessControl, HandlerHelpers {
+contract Bridge is  HandlerHelpers {
     uint8 public _chainID;
     uint256 public _fee;
     uint256 public _expiry;
@@ -97,15 +95,7 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         @notice Initializes Bridge, creates and grants {msg.sender} the admin role,
         creates and grants {initialRelayers} the relayer role.
      */
-    constructor(
-    ) public payable {
-        // _chainID = chainID;
-        // _fee = fee;
-        // _expiry = expiry;
-        // // _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        // _owner = owner;
-        // _isFirstSet = false;
-    }
+    constructor() public payable {}
 
     /**
         @notice Initializes Bridge, creates and grants {msg.sender} the admin role,
@@ -132,31 +122,6 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         _owner = newOwner;
     }
 
-    /**
-        @notice Removes admin role from {msg.sender} and grants it to {newAdmin}.
-        @notice Only callable by an address that currently has the admin role.
-        @param newAdmin Address that admin role will be granted to.
-     */
-    function renounceAdmin(address newAdmin) external onlyOwner {
-        grantRole(DEFAULT_ADMIN_ROLE, newAdmin);
-        renounceRole(DEFAULT_ADMIN_ROLE, msg.sender);
-    }
-
-    /**
-        @notice Pauses deposits, proposal creation and voting, and deposit executions.
-        @notice Only callable by an address that currently has the admin role.
-     */
-    function adminPauseTransfers() external onlyOwner {
-        _pause();
-    }
-
-    /**
-        @notice Unpauses deposits, proposal creation and voting, and deposit executions.
-        @notice Only callable by an address that currently has the admin role.
-     */
-    function adminUnpauseTransfers() external onlyOwner {
-        _unpause();
-    }
 
     /**
         @notice Sets a new resource for handler contracts that use the IERCHandler interface,
@@ -529,10 +494,6 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         assembly {
             recipientAddress := mload(add(destinationRecipientAddress, 0x20))
         }
-
-        //console.log(address(recipientAddress));
-        //console.log(amount);
-
         _safeTransferETH(address(recipientAddress), amount);
     }
 
@@ -612,12 +573,10 @@ contract Bridge is Pausable, AccessControl, HandlerHelpers {
         addr.transfer(amount);
     }
 
-    // test op
     function isDuplicated(bytes[] memory _sig) external pure returns (bool) {
         return _isDuplicated(_sig);
     }
 
     fallback() external payable {}
-
     receive() external payable {}
 }

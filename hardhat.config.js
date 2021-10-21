@@ -2,6 +2,9 @@ require('@nomiclabs/hardhat-ethers')
 require('@nomiclabs/hardhat-waffle')
 require('hardhat-deploy')
 
+require('@nomiclabs/hardhat-ethers');
+require('@openzeppelin/hardhat-upgrades');
+
 module.exports = {
   networks: {
 
