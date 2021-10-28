@@ -7,10 +7,10 @@
             "endpoint": "ws://localhost:20637",
             "from": "0x41eA6aD88bbf4E22686386783e7817bB7E82c1ed",
             "opts": {
-                "bridge": "0x54d3223E1A3bC493cA69D9bEFD3Cce44Decd5545",
-                "wethHandler": "0x256fA9b75D0e03f0060b68630c5816b180c1f075",
-                "erc20Handler": "0xD590F114E0F5aa8240E7BA37782C8B0bAc5c8A73",
-                "genericHandler": "0xD590F114E0F5aa8240E7BA37782C8B0bAc5c8A73",
+                "bridge": "0xd68251F74a6C1E502653A505cd0cF7072e66981D",
+                "wethHandler": "0xAc8de6fc237be66617F1e80d4b075429E0637953",
+                "erc20Handler": "0xb340b44112106ebAeEeBbC18C08Eac01852AD6a4",
+                "genericHandler": "0xb340b44112106ebAeEeBbC18C08Eac01852AD6a4",
                 "gasLimit": "1000000",
                 "maxGasPrice": "10000000000",
                 "blockConfirmations": "1"
@@ -23,9 +23,9 @@
             "endpoint": "ws://localhost:21637",
             "from": "0x4f2C793DB2163A7A081b984E6E8e2c504825668b",
             "opts": {
-                "bridge": "0x32b4903454f05e92a37b2e1c0839eFf2C2FDdE0f",
-                "erc20Handler": "0xecC44F95117a3253693f6174ed9F3fA96AD5456d",
-                "genericHandler": "0xecC44F95117a3253693f6174ed9F3fA96AD5456d",
+                "bridge": "0xd68251F74a6C1E502653A505cd0cF7072e66981D",
+                "erc20Handler": "0xb340b44112106ebAeEeBbC18C08Eac01852AD6a4",
+                "genericHandler": "0xb340b44112106ebAeEeBbC18C08Eac01852AD6a4",
                 "gasLimit": "1000000",
                 "maxGasPrice": "10000000000",
                 "blockConfirmations": "1"

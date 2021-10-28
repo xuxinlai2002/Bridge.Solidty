@@ -202,7 +202,7 @@ const step3 = async (sleepTime,isWeth) => {
     let chainID = await getChainId();
     console.log("chainID is :" + chainID);
     let accounts = await ethers.getSigners()
-    let workAccount = accounts[1];
+    let workAccount = accounts[0];
 
     args = {
         "chainId": chainID,
@@ -246,7 +246,7 @@ const step4 = async (sleepTime) => {
     let chainID = await getChainId();
     console.log("chainID is :" + chainID);
     let accounts = await ethers.getSigners()
-    let workAccount = accounts[1];
+    let workAccount = accounts[0];
 
     let dstBridge = await readConfig("3weth_config","DST_BRIDGE");
     let dstHandlerERC20 = await readConfig("3weth_config","DST_HANDLER_ERC20");
@@ -277,7 +277,7 @@ const step5 = async (sleepTime) => {
     let chainID = await getChainId();
     console.log("chainID is :" + chainID);
     let accounts = await ethers.getSigners()
-    let workAccount = accounts[1];
+    let workAccount = accounts[0];
 
     let dstBridge = await readConfig("3weth_config","DST_BRIDGE");
     let dstHandlerERC20 = await readConfig("3weth_config","DST_HANDLER_ERC20");
@@ -311,7 +311,7 @@ const step6 = async (sleepTime) => {
     let chainID = await getChainId();
     console.log("chainID is :" + chainID);
     let accounts = await ethers.getSigners()
-    let workAccount = accounts[1];
+    let workAccount = accounts[0];
 
     let dstHandlerERC20 = await readConfig("3weth_config","DST_HANDLER_ERC20");
     let dstERC20 = await readConfig("3weth_config","DST_ERC20");
@@ -564,7 +564,7 @@ const stepN2 = async (sleepTime) => {
 
 //deposit
 const Bridge = require('../../artifacts/contracts/Bridge.sol/Bridge.json');
-const privKey = "c03b0a988e2e18794f2f0e881d7ffcd340d583f63c1be078426ae09ddbdec9f5";
+const privKey = "0x9aede013637152836b14b423dabef30c9b880ea550dbec132183ace7ca6177ed";
 const stepN9 = async(sleepTime,amount,recipient) => {
 
     let chainID = await getChainId();
@@ -628,6 +628,7 @@ const stepN9 = async(sleepTime,amount,recipient) => {
                 web3.eth
         );
 
+        console.log("xxl getContractTx ");
         let unsignTx = await getUnsignTx(
                         contractTx,
                         accounts[0].address,
@@ -637,8 +638,11 @@ const stepN9 = async(sleepTime,amount,recipient) => {
                         args.gasLimit,
                         web3.eth
                     );    
+        console.log("xxl getUnsignTx ");
         var signTx = await web3.eth.accounts.signTransaction(unsignTx, privKey);
+        console.log("xxl signTransaction ");
         let tx = await web3.eth.sendSignedTransaction(signTx.rawTransaction)
+        console.log("xxl sendSignedTransaction ");
         console.log(tx);
         
     } catch (e) {
@@ -787,7 +791,7 @@ const stepN10 = async(sleepTime,amount,recipient) => {
     let chainID = await getChainId();
     console.log("chainID is :" + chainID);
     let accounts = await ethers.getSigners()
-    console.log(accounts[2].address);
+    console.log(accounts[0].address);
 
     //------------------
     let dstBridge = await readConfig("3weth_config","DST_BRIDGE");
@@ -811,7 +815,7 @@ const stepN10 = async(sleepTime,amount,recipient) => {
     }
 
     console.log("\n*************************check balance before****************************");
-    let beforeEthBalace = await utils.formatEther(await accounts[2].getBalance());
+    let beforeEthBalace = await utils.formatEther(await accounts[0].getBalance());
     console.log("acount[2] eth  : " + beforeEthBalace);
    
     prov = ethers.getDefaultProvider();
@@ -821,8 +825,8 @@ const stepN10 = async(sleepTime,amount,recipient) => {
     console.log("**************************************************************************\n");
     
     //stop here
-    const Factory__Bridge = await ethers.getContractFactory('Bridge',accounts[2])
-    let bridgeInstance = await Factory__Bridge.connect(accounts[2]).attach(dstBridge);    
+    const Factory__Bridge = await ethers.getContractFactory('Bridge',accounts[0])
+    let bridgeInstance = await Factory__Bridge.connect(accounts[0]).attach(dstBridge);    
 
     console.log("bridge is : " + dstBridge );
     console.log(bridgeInstance.address);
@@ -830,7 +834,7 @@ const stepN10 = async(sleepTime,amount,recipient) => {
     try{
 
         console.log('0');
-        await approve(accounts[2],args);
+        await approve(accounts[0],args);
         console.log('1');
 
 
@@ -868,7 +872,7 @@ const stepN10 = async(sleepTime,amount,recipient) => {
     await sleep(sleepTime);
 
     console.log("\n*************************check balance after****************************");
-    let afterEthBalace = await utils.formatEther(await accounts[2].getBalance());
+    let afterEthBalace = await utils.formatEther(await accounts[0].getBalance());
     console.log("acount[2] eth  : " + afterEthBalace);
    
     //afterEthBalace =await ethers.provider.getBalance(srcBridge);
@@ -970,7 +974,7 @@ const tool = async(sleepTime,amount,recipient) => {
 
         await sleep(sleepTime);
 
-        let afterEthBalace = await utils.formatEther(await accounts[1].getBalance());
+        let afterEthBalace = await utils.formatEther(await accounts[0].getBalance());
         console.log("acount[0] eth  : " + afterEthBalace);
         // Perform deposit
         // tx = await bridgeInstance.deposit(
