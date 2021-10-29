@@ -396,8 +396,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/ERC20Handler.sol": {
-      "lastModificationDate": 1632731710493,
-      "contentHash": "f5cc18f528014ba07f5f2f6a7593e856",
+      "lastModificationDate": 1635477052303,
+      "contentHash": "f721f3eb8ddde8f9b685a5ca939c53a8",
       "sourceName": "contracts/handlers/ERC20Handler.sol",
       "solcConfig": {
         "version": "0.6.12",
