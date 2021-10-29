@@ -106,7 +106,7 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
     ) external onlyBridge returns(uint256,address){
         uint256 amount;
 
-        (amount,) = abi.decode(data, (uint, uint));
+        amount= abi.decode(data, (uint));
         address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
         require(
             _contractWhitelist[tokenAddress],

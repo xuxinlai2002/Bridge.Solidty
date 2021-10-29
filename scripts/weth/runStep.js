@@ -565,19 +565,18 @@ const stepN2 = async (sleepTime) => {
 //deposit
 const Bridge = require('../../artifacts/contracts/Bridge.sol/Bridge.json');
 const privKey = "0x9aede013637152836b14b423dabef30c9b880ea550dbec132183ace7ca6177ed";
-const stepN9 = async(sleepTime,amount,recipient) => {
+const stepN9 = async(sleepTime,amount) => {
 
     let chainID = await getChainId();
     let accounts = await ethers.getSigners()
-    console.log("chainID is : " + chainID + " from address : " + accounts[0].address + " to address : " + recipient);
+    console.log("chainID is : " + chainID + " from address : " + accounts[0].address);
     
     args = {
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
         "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8",
         "dest":83,
-        "amount":amount,
-        "recipient":recipient
+        "amount":amount
     }
 
     let srcBridge = await readConfig("1weth_config","SRC_BRIDGE");
@@ -601,15 +600,15 @@ const stepN9 = async(sleepTime,amount,recipient) => {
     console.log("**************************************************************************\n");
     
     let data = '0x' +
-    ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +                               // Deposit Amount        (32 bytes)
-    ethers.utils.hexZeroPad(ethers.utils.hexlify((args.recipient.length - 2)/2), 32).substr(2) +     // len(recipientAddress) (32 bytes)
-    args.recipient.substr(2);                                                                        // recipientAddress      (?? bytes)
+    // ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +                               // Deposit Amount        (32 bytes)
+    // ethers.utils.hexZeroPad(ethers.utils.hexlify((args.recipient.length - 2)/2), 32).substr(2) +     // len(recipientAddress) (32 bytes)
+    // args.recipient.substr(2);                                                                        // recipientAddress      (?? bytes)
+    ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) 
+
 
     console.log(`Constructed deposit:`)
     console.log(`Resource Id: ${args.resourceId}`)
     console.log(`Amount: ${args.amount.toHexString()}`)
-    console.log(`len(recipient): ${(args.recipient.length - 2)/ 2}`)
-    console.log(`Recipient: ${args.recipient}`)
     console.log(`Raw: ${data}`)
     console.log(`Creating deposit to initiate transfer!`);
     console.log("xxl srcBrdige : " + srcBridge);

@@ -77,7 +77,6 @@ describe(`layer1 => layer2 `, () => {
     let transferAmount = utils.parseEther("10");
     let totalAmount = utils.parseEther("10.1");
 
-    
     //1.change fee
     await bridgeContract.adminChangeFee(fee)
 
@@ -93,9 +92,7 @@ describe(`layer1 => layer2 `, () => {
     args.amount = transferAmount;
    
     let data = '0x' +
-    ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +                               // Deposit Amount        (32 bytes)
-    ethers.utils.hexZeroPad(ethers.utils.hexlify((args.recipient.length - 2)/2), 32).substr(2) +     // len(recipientAddress) (32 bytes)
-    args.recipient.substr(2);                                                                        // recipientAddress      (?? bytes)
+    ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) 
     
     try{
       let tx = await bridgeContract.deposit(

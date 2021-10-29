@@ -86,8 +86,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/Bridge.sol": {
-      "lastModificationDate": 1635411714275,
-      "contentHash": "5409726568f36f5f39a3f2d436fb3e03",
+      "lastModificationDate": 1635420075269,
+      "contentHash": "ca0d88082c2812ee16109579de847c84",
       "sourceName": "contracts/Bridge.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -443,8 +443,8 @@
       ]
     },
     "/Users/xuxinlai/work/e/deploy-solidity/contracts/handlers/WETHHandler.sol": {
-      "lastModificationDate": 1633766292759,
-      "contentHash": "bc73991db44849bb1a8e5b3b7405a244",
+      "lastModificationDate": 1635420126563,
+      "contentHash": "811c182cecff058d05b872cc99ce70ae",
       "sourceName": "contracts/handlers/WETHHandler.sol",
       "solcConfig": {
         "version": "0.6.12",

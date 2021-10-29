@@ -273,7 +273,7 @@ contract Bridge is  HandlerHelpers {
         uint256 amount;
         address tokenAddress;
 
-        (amount, ) = abi.decode(data, (uint256, uint256));
+        //amount = abi.decode(data,(uint));
         require(msg.value >= _fee + amount, "fee is not enought");
 
         WETHHandler wethHander = WETHHandler(handler);
