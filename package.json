@@ -19,6 +19,7 @@
     "wethN1": "npx hardhat run scripts/weth/n1deploySrc.js --network my1",
     "wethN9": "npx hardhat run scripts/weth/n9deposit12.js --network my1",
     "wethN10": "npx hardhat run scripts/weth/n9deposit21.js --network my2",
+    "wethN11": "npx hardhat run scripts/weth/upgradebridge.js --network my2",
     "runTools": "npx hardhat run scripts/weth/runTools.js",
     "wethAllSrc": "npx hardhat run scripts/weth/allSrc.js",
     "wethAllDst": "npx hardhat run scripts/weth/allDst.js",

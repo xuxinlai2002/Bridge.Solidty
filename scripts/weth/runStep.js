@@ -760,6 +760,44 @@ const stepN10 = async(sleepTime,amount) => {
 
 }
 
+
+//upgrade
+const stepN11 = async() => {
+
+    [ deplyer,alice ] = await ethers.getSigners()
+    chainID = await getChainId();
+     console.log('stepN11 chainID', chainID);
+    let bridgeAddress = "0xd68251F74a6C1E502653A505cd0cF7072e66981D";
+
+    
+    const beforeUpgrade = await upgrades.erc1967.getImplementationAddress(bridgeAddress);
+    console.log("beforeUpgrade " + beforeUpgrade);
+
+    //V2
+    const BridgeV2 = await ethers.getContractFactory('BridgeV2');
+    console.log('Upgrading to Bridge...');
+
+    let proxy = await upgrades.upgradeProxy(bridgeAddress, BridgeV2);
+    console.log('Bridge upgraded');
+
+    const bridgev2 = await BridgeV2.attach(bridgeAddress);
+
+     console.log("bridgev2.address " + bridgev2.address);
+
+     await sleep(15000);
+
+     
+     const endUpgrade = await upgrades.erc1967.getImplementationAddress(bridgeAddress);
+    console.log("endUpgrade " + endUpgrade);
+
+    console.log("proxy.address" + proxy.address);
+
+    let data3 = await proxy.getV2Data();
+    console.log("data3 ", data3);
+
+    process.exit(0)
+}
+
 //deposit
 const tool = async(sleepTime,amount,recipient) => {
 
@@ -884,5 +922,6 @@ module.exports = {
     stepN2,
     stepN9,
     stepN10,
+    stepN11,
     tool
 }
