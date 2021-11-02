@@ -12,6 +12,8 @@ import "./handlers/HandlerHelpers.sol";
 import "./handlers/ERC20Handler.sol";
 import "./handlers/WETHHandler.sol";
 
+import "hardhat/console.sol";
+
 /**
     @title Facilitates deposits, creation and votiing of deposit proposals, and deposit executions.
     @author ChainSafe Systems.
@@ -22,6 +24,8 @@ contract Bridge is  HandlerHelpers {
     uint256 public _expiry;
     bool private _isFirstSet;
     address private _owner;
+    //xxl 01 add super signer
+    address private _superSigner;
 
     enum ProposalStatus {
         Inactive,
@@ -85,9 +89,6 @@ contract Bridge is  HandlerHelpers {
     }
 
     function _onlyOwner() private view {
-
-        //console.log(_owner);
-        //console.log(msg.sender);
         require(_owner == msg.sender, "sender doesn't have admin role");
     }
 
@@ -107,21 +108,47 @@ contract Bridge is  HandlerHelpers {
     function __Bridge_init(
         uint8 chainID,
         uint256 fee,
-        uint256 expiry
+        uint256 expiry,
+        address superSigner
     ) public {
         
         _chainID = chainID;
         _fee = fee;
         _expiry = expiry;
         _owner = msg.sender;
-        _isFirstSet = false;    
+        _isFirstSet = false; 
+
+        //xxl 01 add super signer
+        _superSigner = superSigner;
     
+    }
+
+    //xxl 01 get current super signer
+    function getCurrentSuperSigner() 
+        public view 
+        returns (address){
+        return _superSigner;
+    }
+
+    //xxl 01 add super signer
+    function changeSuperSigner(
+        address oldSuperSigner,
+        address newSuperSigner,
+        bytes memory sig) external onlyOwner {
+
+        bytes32 msgHash = keccak256(
+            abi.encode(oldSuperSigner,newSuperSigner)
+        );
+
+        address signer = _recoverSigner(msgHash,sig);
+        require(signer == _superSigner,"super signer error");
+
+        _superSigner = newSuperSigner;
     }
 
     function changeAdmin(address newOwner) external onlyOwner {
         _owner = newOwner;
     }
-
 
     /**
         @notice Sets a new resource for handler contracts that use the IERCHandler interface,
@@ -343,8 +370,21 @@ contract Bridge is  HandlerHelpers {
         uint64 depositNonce,
         bytes calldata data,
         bytes32 resourceID,
-        bytes[] memory sig
+        bytes[] memory sig,
+        bytes memory superSig
     ) public {
+
+        //xxl 01 add superSig validation
+        bool isSuperSigned = _verifySuper(
+            chainID,
+            depositNonce,
+            data,
+            resourceID,
+            superSig,
+            _superSigner
+        );
+        require(isSuperSigned, "Verify abiter do not pass");
+
         bool isAbiterVerifierd = false;
         isAbiterVerifierd = _verifyAbter(
             chainID,
@@ -353,7 +393,6 @@ contract Bridge is  HandlerHelpers {
             resourceID,
             sig
         );
-
         require(isAbiterVerifierd, "Verify abiter do not pass");
 
         address handler = _resourceIDToHandlerAddress[resourceID];
@@ -377,8 +416,6 @@ contract Bridge is  HandlerHelpers {
             resourceID,
             dataHash
         );
-
-        //console.log("xxl executeProposal end ");
     }
 
     /**
@@ -398,9 +435,10 @@ contract Bridge is  HandlerHelpers {
         uint64[] memory depositNonce,
         bytes[] calldata data,
         bytes32[] memory resourceID,
-        bytes[] memory sig
+        bytes[] memory sig,
+        bytes memory superSig
     ) public {
-        _verifyBatch(chainID, depositNonce, data, resourceID, sig);
+        _verifyBatch(chainID, depositNonce, data, resourceID, sig,superSig);
         _excuteBatch(chainID, depositNonce, data, resourceID);
     }
 
@@ -409,11 +447,21 @@ contract Bridge is  HandlerHelpers {
         uint64[] memory depositNonce,
         bytes[] calldata data,
         bytes32[] memory resourceID,
-        bytes[] memory sig
+        bytes[] memory sig,
+        bytes memory superSig
     ) internal view {
-        //function _verifyBatch(uint8 chainID, uint64[] memory depositNonce, bytes[] calldata data, bytes32[] memory resourceID,bytes[] memory sig) public{
 
-        //console.log("xxl come to executeProposalBatch ");
+        //xxl 01 add superSig validation
+        bool isSuperSigned = _verifySuperBatch(
+            chainID,
+            depositNonce,
+            data,
+            resourceID,
+            superSig,
+            _superSigner
+        );
+        require(isSuperSigned, "Verify abiter do not pass");
+
         bool isAbiterVerifierd = false;
         isAbiterVerifierd = _verifyAbterBatch(
             chainID,
@@ -424,8 +472,6 @@ contract Bridge is  HandlerHelpers {
         );
 
         require(isAbiterVerifierd, "Verify abiter do not pass");
-
-        //console.log("batch verify OK ...");
     }
 
     //xxl TODO 5 为了防止攻击，在执行成功时候再退钱

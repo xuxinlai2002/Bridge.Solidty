@@ -94,7 +94,6 @@ contract HandlerHelpers is IERCHandler, Seriality {
     uint256 constant MAX_PACK_NUM = 100;
     address[] public _signers;
     uint256 _totalCount;
-
     function _verifyAbiterSwift(
         address[] memory addressList,bytes[] memory sig) internal view returns (bool){
 
@@ -149,6 +148,24 @@ contract HandlerHelpers is IERCHandler, Seriality {
 
     }
 
+    function _verifySuperBatch(
+        uint8 chainID,
+        uint64[] memory depositNonce,
+        bytes[] calldata data,
+        bytes32[] memory resourceID,
+        bytes memory sig,
+        address superSigner
+    )internal pure returns (bool) {
+
+        address signer;
+        bytes32 msgHash;
+
+        msgHash = _getMsgHashBatch(chainID, depositNonce, data, resourceID);
+        signer = _recoverSigner(msgHash, sig);
+
+        require(superSigner == signer,"verify super signer error");
+        return true;
+    }
 
     function _verifyAbterBatch(
         uint8 chainID,
@@ -213,37 +230,6 @@ contract HandlerHelpers is IERCHandler, Seriality {
         bytes32[] memory resourceID
     ) internal pure returns (bytes32) {
 
-        // uint256 txLen = depositNonce.length;
-        // bytes memory allSerialData;
-
-        // bytes memory chainIDbuffer = new bytes(32);
-        // uintToBytes(32, chainID, chainIDbuffer);
-        // allSerialData = _mergeBytes(allSerialData, chainIDbuffer);
-
-        // for (uint256 i = 0; i < txLen; i++) {
-        //     uint256 offset = 64;
-        //     bytes memory buffer = new bytes(offset);
-
-        //     bytes32ToBytes(offset, resourceID[i], buffer);
-        //     //console.logBytes(buffer);
-
-        //     offset -= 32;
-        //     uintToBytes(offset, depositNonce[i], buffer);
-        //     //console.logBytes(buffer);
-
-        //     bytes memory serialData = _mergeBytes(buffer, data[i]);
-        //     allSerialData = _mergeBytes(allSerialData, serialData);
-        // }
-
-        // bytes32 msgHash = keccak256(allSerialData);
-        // console.log(chainID);
-        // console.log(depositNonce.length);
-
-        // console.log(depositNonce[0]);
-        // console.logBytes(data[0]);
-        // console.logBytes32(resourceID[0]);
-
-
         bytes32 msgHash = keccak256(
             abi.encode(
                 chainID,
@@ -253,10 +239,25 @@ contract HandlerHelpers is IERCHandler, Seriality {
             )
         );
         return msgHash;
+    }
 
+    function _verifySuper(
+        uint8 chainID,
+        uint64 depositNonce,
+        bytes calldata data,
+        bytes32 resourceID,
+        bytes memory sig,
+        address superSigner
+    )internal pure returns (bool) {
 
+        address signer;
+        bytes32 msgHash;
 
+        msgHash = _getMsgHash(chainID, depositNonce, data, resourceID);
+        signer = _recoverSigner(msgHash, sig);
 
+        require(superSigner == signer,"verify super signer error");
+        return true;
     }
 
     function _verifyAbter(
@@ -273,10 +274,8 @@ contract HandlerHelpers is IERCHandler, Seriality {
         uint256 sigLen = sig.length;
 
         require(_isDuplicated(sig) == false, "duplicate signature exception");
-
         msgHash = _getMsgHash(chainID, depositNonce, data, resourceID);
         //console.logBytes32(msgHash);
-
         for (i = 0; i < sigLen; i++) {
 
             signer = _recoverSigner(msgHash, sig[i]);
@@ -329,28 +328,6 @@ contract HandlerHelpers is IERCHandler, Seriality {
         bytes calldata data,
         bytes32 resourceID
     ) internal pure returns (bytes32) {
-
-        // uint256 offset = 96;
-        // bytes memory buffer = new bytes(offset);
-
-        // bytes32ToBytes(offset, resourceID, buffer);
-        // //console.logBytes(buffer);
-
-        // offset -= 32;
-        // uintToBytes(offset, depositNonce, buffer);
-        // //console.logBytes(buffer);
-
-        // offset -= 32;
-        // uintToBytes(offset, chainID, buffer);
-        // //console.logBytes(buffer);
-
-        // bytes memory serialData = _mergeBytes(buffer, data);
-        // //console.logBytes(serialData);
-
-        // bytes32 msgHash = keccak256(serialData);
-        // //console.logBytes32(msgHash);
-
-        // return msgHash;
 
         bytes32 msgHash = keccak256(
             abi.encode(

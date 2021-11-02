@@ -102,7 +102,6 @@ describe(`abiter list `, () => {
       let result = await tx.wait();
       console.log("layer1 deposit gas used : " + result.gasUsed);
 
-
       afterEthBalace = await utils.formatEther(await ethers.provider.getBalance(args.bridge));
       //console.log("srcHandler eth : " + afterEthBalace);
       //afterEthBalace.expect.toHexString.before

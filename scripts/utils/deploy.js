@@ -6,7 +6,7 @@ async function deployBridgeContract(account,args) {
     const Factory__Bridge = await ethers.getContractFactory('Bridge',account)    
     const Bridge = await upgrades.deployProxy(
         Factory__Bridge, 
-        [args.chainId,args.fee,args.expiry], 
+        [args.chainId,args.fee,args.expiry,account.address], 
         { initializer: '__Bridge_init' },
         { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
     );
@@ -16,27 +16,6 @@ async function deployBridgeContract(account,args) {
     //console.log("Bridge proxy address " + bridge.address);
     return Bridge;
 
-
-    // const Box = await ethers.getContractFactory('Box');
-    // console.log('Deploying Box...');
-    // const box = await upgrades.deployProxy(Box, [42], { initializer: 'store' });
-    
-    // await box.deployed();
-    // console.log('Box deployed to:', box.address);
-    // let result = (await box.retrieve()).toString();
-    // console.log(result);
-
-
-
-
-    //const box = await upgrades.deployProxy(Box, [42], { initializer: 'store' });
-
-    // Bridge = await Factory__Bridge.connect(account).deploy(
-    //     { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
-    // );
-
-    // // await viewEvnt(args.chainId,Bridge.deployTransaction.hash);
-    // console.log("✓ Bridge contract deployed " + Bridge.address)
 
 }
 

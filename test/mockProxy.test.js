@@ -33,6 +33,11 @@ describe(`Storage and upgradability example `, () => {
     console.log(result);
 
 
+    console.log(box.address);
+    console.log(boxV2.address);
+
+
+    
   })
 
 

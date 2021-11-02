@@ -75,7 +75,6 @@ describe(`Storage and upgradability example `, () => {
     //console.log(numOwnerV1.toNumber())
     expect(numOwnerV1.toNumber()).to.equal(1);
 
-
     await proxy.upgradeTo(delegateV2.address)
     proxy = _.extend(proxy,DelegateV2.attach(proxy.address));
     console.log("delegateV2 proxy address ");
