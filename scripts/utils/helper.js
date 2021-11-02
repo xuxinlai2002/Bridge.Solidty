@@ -97,8 +97,9 @@ const getUnsignTx = async(tx,from,to,value,chainID,gasLimit,eth) => {
   
         const gasPrice = await eth.getGasPrice();
         const data = tx.encodeABI();
-        const nonce = await eth.getTransactionCount(from);
-      
+        const n = await eth.getTransactionCount(from);
+        
+        console.log("xxl getUnsignTx nonce is : " + n );
         //TODO
         const unsignedTx = {
             from:from,
@@ -107,7 +108,6 @@ const getUnsignTx = async(tx,from,to,value,chainID,gasLimit,eth) => {
             data:data,
             gasPrice:gasPrice,
             gasLimit:gasLimit,
-            nonce:nonce,
             chainId:chainID
         };
         return unsignedTx;
