@@ -29,6 +29,8 @@ describe(`Storage and upgradability example `, () => {
     //upgrade
     const BoxV2 = await ethers.getContractFactory('BoxV2');
     console.log('Upgrading Box...');
+
+    
     await upgrades.upgradeProxy(box.address, BoxV2);
     console.log('Box upgraded');
 
@@ -45,8 +47,13 @@ describe(`Storage and upgradability example `, () => {
   
 
 
+
+
     console.log(box.address);
     console.log(boxV2.address);
+
+
+    console.log(upgrades);
 
 
     

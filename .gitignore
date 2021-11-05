@@ -9,3 +9,4 @@ deploy_solidity/artifacts/
 artifacts/
 cache/
 .openzeppelin
+scripts/utils/*.json

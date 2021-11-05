@@ -92,6 +92,11 @@ contract Bridge is  HandlerHelpers {
         require(_owner == msg.sender, "sender doesn't have admin role");
     }
 
+    modifier superSigner() {
+       require(_superSigner == msg.sender, "sender doesn't have admin role");
+        _;
+    }
+
     /**
         @notice Initializes Bridge, creates and grants {msg.sender} the admin role,
         creates and grants {initialRelayers} the relayer role.
@@ -109,7 +114,7 @@ contract Bridge is  HandlerHelpers {
         uint8 chainID,
         uint256 fee,
         uint256 expiry,
-        address superSigner
+        address superSignerAddress
     ) public {
         
         _chainID = chainID;
@@ -119,30 +124,17 @@ contract Bridge is  HandlerHelpers {
         _isFirstSet = false; 
 
         //xxl 01 add super signer
-        _superSigner = superSigner;
+        _superSigner = superSignerAddress;
     
     }
 
     //xxl 01 get current super signer
-    function getCurrentSuperSigner() 
-        public view 
-        returns (address){
+    function getCurrentSuperSigner() public view returns (address){
         return _superSigner;
     }
 
     //xxl 01 add super signer
-    function changeSuperSigner(
-        address oldSuperSigner,
-        address newSuperSigner,
-        bytes memory sig) external onlyOwner {
-
-        bytes32 msgHash = keccak256(
-            abi.encode(oldSuperSigner,newSuperSigner)
-        );
-
-        address signer = _recoverSigner(msgHash,sig);
-        require(signer == _superSigner,"super signer error");
-
+    function changeSuperSigner(address newSuperSigner) external superSigner {
         _superSigner = newSuperSigner;
     }
 
