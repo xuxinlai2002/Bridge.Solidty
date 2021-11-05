@@ -136,7 +136,7 @@ const step1 = async (sleepTime) => {
     }
 
     //SRC_BRIDGE
-    let bridge = await deployBridgeContract(accounts[0],args);
+    let bridge = await deployBridgeContract(accounts[0],accounts[3].address,args);
 
     await writeConfig("0weth_config","1weth_config","SRC_BRIDGE",bridge.address);
     console.log("Bridge.address :" + bridge.address);
@@ -217,7 +217,7 @@ const step3 = async (sleepTime,isWeth) => {
     }
 
     //DST_BRIDGE
-    let Bridge = await deployBridgeContract(workAccount,args);
+    let Bridge = await deployBridgeContract(workAccount, accounts[3].address, args);
     await writeConfig("1weth_config","3weth_config","DST_BRIDGE",Bridge.address);
     console.log("Bridge.address :" + Bridge.address);
     console.log("");
@@ -491,7 +491,7 @@ const stepN1 = async (sleepTime) => {
     }
 
     //SRC_BRIDGE
-    let bridge = await deployBridgeContract(accounts[0],args);
+    let bridge = await deployBridgeContract(accounts[0],accounts[3].address, args);
 
     await writeConfig("0weth_config","1weth_config","SRC_BRIDGE",bridge.address);
     console.log("Bridge.address :" + bridge.address);
@@ -821,7 +821,7 @@ const tool = async(sleepTime,amount,recipient) => {
     }
 
     //SRC_BRIDGE
-    let bridge = await deployBridgeContract(accounts[0],args);
+    let bridge = await deployBridgeContract(accounts[0], accounts[3].address, args);
 
     await writeConfig("0weth_config","1weth_config","SRC_BRIDGE",bridge.address);
     console.log("Bridge.address :" + bridge.address);

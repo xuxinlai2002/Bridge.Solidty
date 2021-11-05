@@ -42,7 +42,8 @@ module.exports = {
       accounts: [
         "0x9aede013637152836b14b423dabef30c9b880ea550dbec132183ace7ca6177ed",
         "0x58a6ea95c61cea23a426935067fe276674978be0f12aeaae72faa84ecf893cb8",
-        "0xcb93f47f4ae6e2ee722517f3a2d3e7f55a5074f430c9860bcfe1d6d172492ed0"
+        "0xcb93f47f4ae6e2ee722517f3a2d3e7f55a5074f430c9860bcfe1d6d172492ed0",
+        "0xeb28c63a9715b993a7356ed5f643ab44e687014c62aacf062d5b6ccda0cb69b7"
       ]
     },
 
@@ -52,7 +53,8 @@ module.exports = {
       accounts: [
         "0x9aede013637152836b14b423dabef30c9b880ea550dbec132183ace7ca6177ed",
         "0x58a6ea95c61cea23a426935067fe276674978be0f12aeaae72faa84ecf893cb8",
-        "0xcb93f47f4ae6e2ee722517f3a2d3e7f55a5074f430c9860bcfe1d6d172492ed0"
+        "0xcb93f47f4ae6e2ee722517f3a2d3e7f55a5074f430c9860bcfe1d6d172492ed0",
+        "0xeb28c63a9715b993a7356ed5f643ab44e687014c62aacf062d5b6ccda0cb69b7"
       ]
     },
 
@@ -64,6 +66,7 @@ module.exports = {
         {privateKey:"0x9aede013637152836b14b423dabef30c9b880ea550dbec132183ace7ca6177ed",balance:"10000000000000000000000"},
         {privateKey:"0x58a6ea95c61cea23a426935067fe276674978be0f12aeaae72faa84ecf893cb8",balance:"10000000000000000000000"},
         {privateKey:"0xcb93f47f4ae6e2ee722517f3a2d3e7f55a5074f430c9860bcfe1d6d172492ed0",balance:"10000000000000000000000"},
+        {privateKey:"0xeb28c63a9715b993a7356ed5f643ab44e687014c62aacf062d5b6ccda0cb69b7",balance:"10000000000000000000000"},
       ]
     }
 
