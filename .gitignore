@@ -10,3 +10,4 @@ artifacts/
 cache/
 .openzeppelin
 scripts/utils/*.json
+safe-contracts/node_modules/
