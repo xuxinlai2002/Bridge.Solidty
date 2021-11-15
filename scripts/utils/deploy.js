@@ -10,12 +10,9 @@ async function deployBridgeContract(account,args) {
         { initializer: '__Bridge_init' },
         { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
     );
+    console.log("Bridge proxy address " + Bridge.address);
 
-    await Bridge.deployed();
-
-    //console.log("Bridge proxy address " + bridge.address);
     return Bridge;
-
 
 }
 
