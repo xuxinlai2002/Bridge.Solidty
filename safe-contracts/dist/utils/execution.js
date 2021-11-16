@@ -51,7 +51,7 @@ const safeApproveHash = async (signer, safe, safeTx, skipOnChainApproval) => {
         if (!signer.provider)
             throw Error("Provider required for on-chain approval");
         const chainId = (await signer.provider.getNetwork()).chainId;
-        const typedDataHash = ethers_1.utils.arrayify(exports.calculateSafeTransactionHash(safe, safeTx, chainId));
+        const typedDataHash = ethers_1.utils.arrayify((0, exports.calculateSafeTransactionHash)(safe, safeTx, chainId));
         const signerSafe = safe.connect(signer);
         await signerSafe.approveHash(typedDataHash);
     }
@@ -84,7 +84,7 @@ const signHash = async (signer, hash) => {
 exports.signHash = signHash;
 const safeSignMessage = async (signer, safe, safeTx, chainId) => {
     const cid = chainId || (await signer.provider.getNetwork()).chainId;
-    return exports.signHash(signer, exports.calculateSafeTransactionHash(safe, safeTx, cid));
+    return (0, exports.signHash)(signer, (0, exports.calculateSafeTransactionHash)(safe, safeTx, cid));
 };
 exports.safeSignMessage = safeSignMessage;
 const buildSignatureBytes = (signatures) => {
@@ -106,18 +106,18 @@ const logGas = async (message, tx, skip) => {
 };
 exports.logGas = logGas;
 const executeTx = async (safe, safeTx, signatures, overrides) => {
-    const signatureBytes = exports.buildSignatureBytes(signatures);
+    const signatureBytes = (0, exports.buildSignatureBytes)(signatures);
     return safe.execTransaction(safeTx.to, safeTx.value, safeTx.data, safeTx.operation, safeTx.safeTxGas, safeTx.baseGas, safeTx.gasPrice, safeTx.gasToken, safeTx.refundReceiver, signatureBytes, overrides || {});
 };
 exports.executeTx = executeTx;
 const populateExecuteTx = async (safe, safeTx, signatures, overrides) => {
-    const signatureBytes = exports.buildSignatureBytes(signatures);
+    const signatureBytes = (0, exports.buildSignatureBytes)(signatures);
     return safe.populateTransaction.execTransaction(safeTx.to, safeTx.value, safeTx.data, safeTx.operation, safeTx.safeTxGas, safeTx.baseGas, safeTx.gasPrice, safeTx.gasToken, safeTx.refundReceiver, signatureBytes, overrides || {});
 };
 exports.populateExecuteTx = populateExecuteTx;
 const buildContractCall = (contract, method, params, nonce, delegateCall, overrides) => {
     const data = contract.interface.encodeFunctionData(method, params);
-    return exports.buildSafeTransaction(Object.assign({
+    return (0, exports.buildSafeTransaction)(Object.assign({
         to: contract.address,
         data,
         operation: delegateCall ? 1 : 0,
@@ -126,13 +126,13 @@ const buildContractCall = (contract, method, params, nonce, delegateCall, overri
 };
 exports.buildContractCall = buildContractCall;
 const executeTxWithSigners = async (safe, tx, signers, overrides) => {
-    const sigs = await Promise.all(signers.map((signer) => exports.safeSignTypedData(signer, safe, tx)));
-    return exports.executeTx(safe, tx, sigs, overrides);
+    const sigs = await Promise.all(signers.map((signer) => (0, exports.safeSignTypedData)(signer, safe, tx)));
+    return (0, exports.executeTx)(safe, tx, sigs, overrides);
 };
 exports.executeTxWithSigners = executeTxWithSigners;
 const executeContractCallWithSigners = async (safe, contract, method, params, signers, delegateCall, overrides) => {
-    const tx = exports.buildContractCall(contract, method, params, await safe.nonce(), delegateCall, overrides);
-    return exports.executeTxWithSigners(safe, tx, signers);
+    const tx = (0, exports.buildContractCall)(contract, method, params, await safe.nonce(), delegateCall, overrides);
+    return (0, exports.executeTxWithSigners)(safe, tx, signers);
 };
 exports.executeContractCallWithSigners = executeContractCallWithSigners;
 const buildSafeTransaction = (template) => {

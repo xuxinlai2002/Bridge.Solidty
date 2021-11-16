@@ -10,6 +10,6 @@ const calculateProxyAddress = async (factory, singleton, inititalizer, nonce) =>
 exports.calculateProxyAddress = calculateProxyAddress;
 const calculateProxyAddressWithCallback = async (factory, singleton, inititalizer, nonce, callback) => {
     const saltNonceWithCallback = ethers_1.ethers.utils.solidityKeccak256(["uint256", "address"], [nonce, callback]);
-    return exports.calculateProxyAddress(factory, singleton, inititalizer, saltNonceWithCallback);
+    return (0, exports.calculateProxyAddress)(factory, singleton, inititalizer, saltNonceWithCallback);
 };
 exports.calculateProxyAddressWithCallback = calculateProxyAddressWithCallback;

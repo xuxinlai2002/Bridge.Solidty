@@ -13,6 +13,6 @@ const encodeMultiSend = (txs) => {
 };
 exports.encodeMultiSend = encodeMultiSend;
 const buildMultiSendSafeTx = (multiSend, txs, nonce, overrides) => {
-    return execution_1.buildContractCall(multiSend, "multiSend", [exports.encodeMultiSend(txs)], nonce, true, overrides);
+    return (0, execution_1.buildContractCall)(multiSend, "multiSend", [(0, exports.encodeMultiSend)(txs)], nonce, true, overrides);
 };
 exports.buildMultiSendSafeTx = buildMultiSendSafeTx;
