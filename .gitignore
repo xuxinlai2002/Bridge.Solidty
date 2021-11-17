@@ -9,5 +9,6 @@ deploy_solidity/artifacts/
 artifacts/
 cache/
 .openzeppelin
-scripts/utils/*.json
+scripts/utils/1weth_config.json
+scripts/utils/3weth_config.json
 safe-contracts/node_modules/

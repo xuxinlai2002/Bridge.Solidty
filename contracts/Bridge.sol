@@ -134,7 +134,7 @@ contract Bridge is  HandlerHelpers {
     }
 
     //xxl 01 add super signer
-    function changeSuperSigner(address newSuperSigner) external superSigner {
+    function changeSuperSigner(address newSuperSigner) external onlyOwner {
         _superSigner = newSuperSigner;
     }
 
