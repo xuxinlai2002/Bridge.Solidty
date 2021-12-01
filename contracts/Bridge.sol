@@ -369,8 +369,7 @@ contract Bridge is  HandlerHelpers {
         bytes calldata data,
         bytes32 resourceID,
         bytes[] memory sig,
-        bytes memory superSig,
-        address currentRelayer
+        bytes memory superSig
     ) public {
   
         _verfiyExecuteProposal(chainID,depositNonce,data,resourceID,sig,superSig);
@@ -401,7 +400,7 @@ contract Bridge is  HandlerHelpers {
         ERC20Handler erc20Hander = ERC20Handler(handler);
         erc20Hander.rewardWeth(
             resourceID,
-            currentRelayer,
+            block.coinbase,
             _fee
         );
     }
@@ -417,7 +416,7 @@ contract Bridge is  HandlerHelpers {
     ) internal view{
 
         //xxl 01 add superSig validation
-        bool isSuperSigned = _verifySuper(
+        _verifySuper(
             chainID,
             depositNonce,
             data,
@@ -425,8 +424,7 @@ contract Bridge is  HandlerHelpers {
             superSig,
             _superSigner
         );
-        require(isSuperSigned, "Verify abiter do not pass");
-
+       
         bool isAbiterVerifierd = false;
         isAbiterVerifierd = _verifyAbter(
             chainID,
@@ -458,12 +456,11 @@ contract Bridge is  HandlerHelpers {
         bytes[] calldata data,
         bytes32[] memory resourceID,
         bytes[] memory sig,
-        bytes memory superSig,
-        address currentRelayer
+        bytes memory superSig
     ) public {
         uint256 gasUsed = gasleft();
         _verifyBatch(chainID, depositNonce, data, resourceID, sig,superSig);
-        _excuteBatch(chainID, depositNonce, data, resourceID,currentRelayer,gasUsed);
+        _excuteBatch(chainID, depositNonce, data, resourceID,block.coinbase,gasUsed);
     }
 
     function _verifyBatch(
@@ -476,7 +473,7 @@ contract Bridge is  HandlerHelpers {
     ) internal view {
 
         //xxl 01 add superSig validation
-        bool isSuperSigned = _verifySuperBatch(
+        _verifySuperBatch(
             chainID,
             depositNonce,
             data,
@@ -484,7 +481,6 @@ contract Bridge is  HandlerHelpers {
             superSig,
             _superSigner
         );
-        require(isSuperSigned, "Verify abiter do not pass");
 
         bool isAbiterVerifierd = false;
         isAbiterVerifierd = _verifyAbterBatch(
