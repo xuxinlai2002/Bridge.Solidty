@@ -143,7 +143,10 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
         destinationRecipientAddress length     uint256     bytes  32 - 64
         destinationRecipientAddress            bytes       bytes  64 - END
      */
-   function executeProposal(bytes32 resourceID, bytes calldata data) external override onlyBridge {
+   function executeProposal(
+       bytes32 resourceID, 
+       bytes calldata data
+    ) external override onlyBridge {
         uint256       amount;
         uint256       lenDestinationRecipientAddress;
         bytes  memory destinationRecipientAddress;
@@ -186,5 +189,11 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
         return IDepositExecute.HandleTypes.ERC20;
     }
 
+    function rewardWeth(bytes32 resourceID,address receiver,uint256 fee)external onlyBridge {
+
+        address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
+        mintERC20(tokenAddress, receiver, fee);
+
+    } 
 
 }

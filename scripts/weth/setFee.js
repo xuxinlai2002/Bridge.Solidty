@@ -1,10 +1,10 @@
 const {
-    stepN11
+    setFee
 } = require('./runStep')
 
 const main = async () => {
 
-    await stepN11();
+    await setFee(0.0001);
 
 }
 

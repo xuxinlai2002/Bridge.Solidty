@@ -798,6 +798,8 @@ const stepN11 = async() => {
     process.exit(0)
 }
 
+
+
 //deposit
 const tool = async(sleepTime,amount,recipient) => {
 
@@ -906,6 +908,23 @@ const tool = async(sleepTime,amount,recipient) => {
 
 }
 
+const setFee = async(fee) => {
+
+    let chainID = await getChainId();
+    console.log("chainID is :" + chainID);
+    let accounts = await ethers.getSigners()
+    
+    let dstBridge = await readConfig("3weth_config","DST_BRIDGE");
+    //stop here
+    const Factory__Bridge = await ethers.getContractFactory('Bridge',accounts[0])
+    let bridgeInstance = await Factory__Bridge.connect(accounts[0]).attach(dstBridge);    
+
+    console.log("bridge is : " + dstBridge );
+    console.log(bridgeInstance.address);
+    let result = await bridgeContract.adminChangeFee(utils.parseEther(fee))
+    console.log(result.wait());
+
+}
 
 module.exports = {
     step0,
@@ -923,5 +942,6 @@ module.exports = {
     stepN9,
     stepN10,
     stepN11,
-    tool
+    tool,
+    setFee
 }

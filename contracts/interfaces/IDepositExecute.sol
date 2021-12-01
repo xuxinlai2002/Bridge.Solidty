@@ -41,4 +41,5 @@ interface IDepositExecute {
         @notice get function type of contract 
      */
     function getType() external pure returns(HandleTypes);
+
 }

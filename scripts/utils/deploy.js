@@ -10,8 +10,7 @@ async function deployBridgeContract(account,superAddress, args) {
         { initializer: '__Bridge_init' },
         { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
     );
-    console.log("Bridge proxy address " + Bridge.address);
-
+    
     return Bridge;
 
 }

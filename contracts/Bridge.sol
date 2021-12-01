@@ -81,6 +81,11 @@ contract Bridge is  HandlerHelpers {
         bytes32[] dataHash
     );
 
+    event ChangeSuperSigner(
+        address _oldSuperSigner,
+        address _newSuperSigner
+    );
+
     bytes32 public constant WETH_RESOURCEID = keccak256("WETH_RESOURCEID");
 
     modifier onlyOwner() {
@@ -136,6 +141,7 @@ contract Bridge is  HandlerHelpers {
     //xxl 01 add super signer
     function changeSuperSigner(address newSuperSigner) external onlyOwner {
         _superSigner = newSuperSigner;
+        emit ChangeSuperSigner(_superSigner,newSuperSigner);
     }
 
     function changeAdmin(address newOwner) external onlyOwner {
@@ -363,29 +369,11 @@ contract Bridge is  HandlerHelpers {
         bytes calldata data,
         bytes32 resourceID,
         bytes[] memory sig,
-        bytes memory superSig
+        bytes memory superSig,
+        address currentRelayer
     ) public {
-
-        //xxl 01 add superSig validation
-        bool isSuperSigned = _verifySuper(
-            chainID,
-            depositNonce,
-            data,
-            resourceID,
-            superSig,
-            _superSigner
-        );
-        require(isSuperSigned, "Verify abiter do not pass");
-
-        bool isAbiterVerifierd = false;
-        isAbiterVerifierd = _verifyAbter(
-            chainID,
-            depositNonce,
-            data,
-            resourceID,
-            sig
-        );
-        require(isAbiterVerifierd, "Verify abiter do not pass");
+  
+        _verfiyExecuteProposal(chainID,depositNonce,data,resourceID,sig,superSig);
 
         address handler = _resourceIDToHandlerAddress[resourceID];
         uint72 nonceAndID = (uint72(depositNonce) << 8) | uint72(chainID);
@@ -408,6 +396,48 @@ contract Bridge is  HandlerHelpers {
             resourceID,
             dataHash
         );
+
+        //from layer1 -> layer2 just send Weth to layer 
+        ERC20Handler erc20Hander = ERC20Handler(handler);
+        erc20Hander.rewardWeth(
+            resourceID,
+            currentRelayer,
+            _fee
+        );
+    }
+
+
+    function _verfiyExecuteProposal(
+        uint8 chainID,
+        uint64 depositNonce,
+        bytes calldata data,
+        bytes32 resourceID,
+        bytes[] memory sig,
+        bytes memory superSig
+    ) internal view{
+
+        //xxl 01 add superSig validation
+        bool isSuperSigned = _verifySuper(
+            chainID,
+            depositNonce,
+            data,
+            resourceID,
+            superSig,
+            _superSigner
+        );
+        require(isSuperSigned, "Verify abiter do not pass");
+
+        bool isAbiterVerifierd = false;
+        isAbiterVerifierd = _verifyAbter(
+            chainID,
+            depositNonce,
+            data,
+            resourceID,
+            sig
+        );
+        require(isAbiterVerifierd, "Verify abiter do not pass");
+
+
     }
 
     /**
@@ -428,10 +458,12 @@ contract Bridge is  HandlerHelpers {
         bytes[] calldata data,
         bytes32[] memory resourceID,
         bytes[] memory sig,
-        bytes memory superSig
+        bytes memory superSig,
+        address currentRelayer
     ) public {
+        uint256 gasUsed = gasleft();
         _verifyBatch(chainID, depositNonce, data, resourceID, sig,superSig);
-        _excuteBatch(chainID, depositNonce, data, resourceID);
+        _excuteBatch(chainID, depositNonce, data, resourceID,currentRelayer,gasUsed);
     }
 
     function _verifyBatch(
@@ -471,37 +503,37 @@ contract Bridge is  HandlerHelpers {
         uint8 chainID,
         uint64[] memory depositNonce,
         bytes[] calldata data,
-        bytes32[] memory resourceID
+        
+        bytes32[] memory resourceID,
+        address currentRelayer,
+        uint256 gasUsed
     ) internal {
-        //console.log("come to executeProposalBatch");
-        uint256 lenBatch = depositNonce.length;
+
         ProposalStatus[] memory arrProposalStatus;
         bytes32[] memory arrDataHash;
-        arrProposalStatus = new ProposalStatus[](lenBatch);
-        arrDataHash = new bytes32[](lenBatch);
+        arrProposalStatus = new ProposalStatus[](depositNonce.length);
+        arrDataHash = new bytes32[](depositNonce.length);
 
         //xxl TODO 4 修改比较大 再议
-        for (uint256 i = 0; i < lenBatch; i++) {
+        for (uint256 i = 0; i < depositNonce.length; i++) {
             //console.log("run number %d",(i + 1));
             address handler = _resourceIDToHandlerAddress[resourceID[i]];
-            uint72 nonceAndID = (uint72(depositNonce[i]) << 8) |
-                uint72(chainID);
+            uint72 nonceAndID = (uint72(depositNonce[i]) << 8) | uint72(chainID);
             bytes32 dataHash = keccak256(abi.encodePacked(handler, data[i]));
             Proposal storage proposal = _proposals[nonceAndID][dataHash];
+            require(proposal._status != ProposalStatus.Executed,"Proposal must have Passed status");
 
-            if (proposal._status != ProposalStatus.Executed) {
-                proposal._status = ProposalStatus.Executed;
+            proposal._status = ProposalStatus.Executed;
+            arrProposalStatus[i] = proposal._status;
+            arrDataHash[i] = dataHash;
 
-                arrProposalStatus[i] = proposal._status;
-                arrDataHash[i] = dataHash;
-
-                if (resourceID[i] == WETH_RESOURCEID) {
-                    _executeWeth(data[i]);
-                } else {
-                    IDepositExecute depositHandler = IDepositExecute(handler);
-                    depositHandler.executeProposal(resourceID[i], data[i]);
-                }
+            if (resourceID[i] == WETH_RESOURCEID) {
+                _executeWeth(data[i]);
+            } else {
+                IDepositExecute depositHandler = IDepositExecute(handler);
+                depositHandler.executeProposal(resourceID[i], data[i]);
             }
+            
         }
 
         emit ProposalEventBatch(
@@ -513,6 +545,14 @@ contract Bridge is  HandlerHelpers {
         );
         delete arrProposalStatus;
         delete arrDataHash;
+
+        //calculate the gas
+        gasUsed = gasUsed - gasleft();
+        //console.log(gasUsed);
+
+        require(gasUsed < _fee, "gas used is larger than fee");
+        _safeTransferETH(currentRelayer,_fee - gasUsed);
+
     }
 
     function _executeWeth(bytes calldata data) public {

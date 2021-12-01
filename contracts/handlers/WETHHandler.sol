@@ -13,21 +13,6 @@ import "./HandlerHelpers.sol";
  */
 contract WETHHandler is IDepositExecute, HandlerHelpers{
 
-    // xxl TODO 2
-    // struct DepositRecord {
-    //     address _tokenAddress;
-    //     uint8 _lenDestinationRecipientAddress;
-    //     uint8 _destinationChainID;
-    //     bytes32 _resourceID;
-    //     bytes _destinationRecipientAddress;
-    //     address _depositer;
-    //     uint256 _amount;
-    // }
-
-    // xxl TODO 2
-    // // depositNonce => Deposit Record
-    // mapping(uint8 => mapping(uint64 => DepositRecord)) public _depositRecords;
-
     mapping(uint8 => mapping(uint64 => bytes32)) public _depositRecords;
 
     /**
