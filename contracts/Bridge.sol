@@ -57,7 +57,8 @@ contract Bridge is  HandlerHelpers {
         bytes32 _resourceID,
         uint64 _depositNonce,
         address _depositer,
-        uint256 _amount
+        uint256 _amount,
+        uint256 _fee
     );
 
     event Deposit(
@@ -272,17 +273,18 @@ contract Bridge is  HandlerHelpers {
 
         address handler = _resourceIDToHandlerAddress[resourceID];
         require(handler != address(0), "resourceID not mapped to handler");
+        require(msg.value >= _fee, "fee is not enought");
 
         uint64 depositNonce = ++_depositCounts[destinationChainID];
         _depositRecords[depositNonce][destinationChainID] = data;
 
         IDepositExecute depositHandler = IDepositExecute(handler);
         if(depositHandler.getType() == IDepositExecute.HandleTypes.WETH) {
-            _depoistWeth(destinationChainID,resourceID,data,handler,depositNonce);
+            _depoistWeth(destinationChainID,resourceID,data,handler,depositNonce,msg.value);
         } else if(depositHandler.getType() == IDepositExecute.HandleTypes.ERC20){
-            _depoistERC20(destinationChainID,resourceID,data,handler,depositNonce);
-        }else { //TODO and 721 and other
-            require(msg.value >= _fee, "fee is not enought");
+            _depoistERC20(destinationChainID,resourceID,data,handler,depositNonce,msg.value);
+        }else { 
+            //TODO and 721 and other
         }
         
     }
@@ -292,7 +294,8 @@ contract Bridge is  HandlerHelpers {
         bytes32 resourceID,
         bytes calldata data,
         address handler,
-        uint64 depositNonce
+        uint64 depositNonce,
+        uint256 fee
     ) internal{
 
         uint256 amount;
@@ -316,7 +319,8 @@ contract Bridge is  HandlerHelpers {
             resourceID,
             depositNonce,
             msg.sender,
-            amount
+            amount,
+            fee
         );
 
     }
@@ -326,7 +330,8 @@ contract Bridge is  HandlerHelpers {
         bytes32 resourceID,
         bytes calldata data,
         address handler,
-        uint64 depositNonce
+        uint64 depositNonce,
+        uint256 fee
     ) internal{
 
         uint256 amount;
@@ -347,7 +352,8 @@ contract Bridge is  HandlerHelpers {
             resourceID,
             depositNonce,
             msg.sender,
-            amount
+            amount,
+            fee
         );
 
     }
@@ -369,7 +375,8 @@ contract Bridge is  HandlerHelpers {
         bytes calldata data,
         bytes32 resourceID,
         bytes[] memory sig,
-        bytes memory superSig
+        bytes memory superSig,
+        uint256 fee
     ) public {
   
         _verfiyExecuteProposal(chainID,depositNonce,data,resourceID,sig,superSig);
@@ -401,7 +408,7 @@ contract Bridge is  HandlerHelpers {
         erc20Hander.rewardWeth(
             resourceID,
             block.coinbase,
-            _fee
+            fee
         );
     }
 
@@ -456,11 +463,12 @@ contract Bridge is  HandlerHelpers {
         bytes[] calldata data,
         bytes32[] memory resourceID,
         bytes[] memory sig,
-        bytes memory superSig
+        bytes memory superSig,
+        uint256 fee
     ) public {
         uint256 gasUsed = gasleft();
         _verifyBatch(chainID, depositNonce, data, resourceID, sig,superSig);
-        _excuteBatch(chainID, depositNonce, data, resourceID,block.coinbase,gasUsed);
+        _excuteBatch(chainID, depositNonce, data, resourceID,block.coinbase,gasUsed,fee);
     }
 
     function _verifyBatch(
@@ -499,10 +507,10 @@ contract Bridge is  HandlerHelpers {
         uint8 chainID,
         uint64[] memory depositNonce,
         bytes[] calldata data,
-        
         bytes32[] memory resourceID,
         address currentRelayer,
-        uint256 gasUsed
+        uint256 gasUsed,
+        uint256 fee
     ) internal {
 
         ProposalStatus[] memory arrProposalStatus;
@@ -512,16 +520,15 @@ contract Bridge is  HandlerHelpers {
 
         //xxl TODO 4 修改比较大 再议
         for (uint256 i = 0; i < depositNonce.length; i++) {
-            //console.log("run number %d",(i + 1));
             address handler = _resourceIDToHandlerAddress[resourceID[i]];
             uint72 nonceAndID = (uint72(depositNonce[i]) << 8) | uint72(chainID);
-            bytes32 dataHash = keccak256(abi.encodePacked(handler, data[i]));
-            Proposal storage proposal = _proposals[nonceAndID][dataHash];
+            //bytes32 dataHash = keccak256(abi.encodePacked(handler, data[i]));
+            Proposal storage proposal = _proposals[nonceAndID][keccak256(abi.encodePacked(handler, data[i]))];
             require(proposal._status != ProposalStatus.Executed,"Proposal must have Passed status");
 
             proposal._status = ProposalStatus.Executed;
             arrProposalStatus[i] = proposal._status;
-            arrDataHash[i] = dataHash;
+            arrDataHash[i] = keccak256(abi.encodePacked(handler, data[i]));
 
             if (resourceID[i] == WETH_RESOURCEID) {
                 _executeWeth(data[i]);
@@ -546,8 +553,8 @@ contract Bridge is  HandlerHelpers {
         gasUsed = gasUsed - gasleft();
         //console.log(gasUsed);
 
-        require(gasUsed < _fee, "gas used is larger than fee");
-        _safeTransferETH(currentRelayer,_fee - gasUsed);
+        require(gasUsed < fee, "gas used is larger than fee");
+        _safeTransferETH(currentRelayer,fee - gasUsed);
 
     }
 
