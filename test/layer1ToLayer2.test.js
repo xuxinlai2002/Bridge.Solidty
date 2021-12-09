@@ -19,7 +19,8 @@ const {
   sleep,
   getSign,
   getAbiterList,
-  getAbiterSign
+  getAbiterSign,
+  getSuperAbiterSign
 } = require('../scripts/utils/helper')
 
 
@@ -43,7 +44,7 @@ describe(`layer1 => layer2 `, () => {
   before(`load accounts and chainID`, async () => {
     ;[ deplyer, admin,alice ] = await ethers.getSigners()
     chainID = await getChainId();
-    //console.log("chainID is :" + chainID);
+    console.log("chainID is :" + chainID);
   })
 
   let bridgeContract,wethHandlerContract
@@ -64,128 +65,142 @@ describe(`layer1 => layer2 `, () => {
     }
 
     //DST_BRIDGE
-    bridgeContract =  await deployBridgeContract(deplyer,args);
+    bridgeContract =  await deployBridgeContract(deplyer,alice.address,args);
 
   })
 
   const Bridge = require('../artifacts/contracts/Bridge.sol/Bridge.json');
   const privKey = "0xc03b0a988e2e18794f2f0e881d7ffcd340d583f63c1be078426ae09ddbdec9f5";
-  it(`deposit run in layer1`, async () => {
+  // it(`deposit run in layer1`, async () => {
 
-    //
-    let fee = utils.parseEther("0.1");
-    let transferAmount = utils.parseEther("10");
-    let totalAmount = utils.parseEther("10.1");
+  //   //
+  //   let fee = utils.parseEther("0.1");
+  //   let transferAmount = utils.parseEther("10");
+  //   let totalAmount = utils.parseEther("10.1");
 
-    //1.change fee
-    await bridgeContract.adminChangeFee(fee)
+  //   //1.change fee
+  //   await bridgeContract.adminChangeFee(fee)
 
-    //2.deployer contract
-    args.bridgeAddress = bridgeContract.address;
-    wethHandlerContract = await deployWETHHandler(deplyer,args);
+  //   //2.deployer contract
+  //   args.bridgeAddress = bridgeContract.address;
+  //   wethHandlerContract = await deployWETHHandler(deplyer,args);
 
-    args.bridge = bridgeContract.address;
-    args.handler = wethHandlerContract.address;
-    args.targetContract = "0x977e762f384a5909140e91523929A9E188B6bB65";
-    await registerResource(deplyer,args);
+  //   args.bridge = bridgeContract.address;
+  //   args.handler = wethHandlerContract.address;
+  //   args.targetContract = "0x977e762f384a5909140e91523929A9E188B6bB65";
+  //   await registerResource(deplyer,args);
 
-    args.amount = transferAmount;
+  //   args.amount = transferAmount;
    
-    let data = '0x' +
-    ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) 
+  //   let data = '0x' +
+  //   ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +
+  //   ethers.utils.hexZeroPad(fee.toHexString(), 32).substr(2) 
     
+  //   try{
+  //     let tx = await bridgeContract.deposit(
+  //       args.dest,args.resourceId,data,{
+  //         value:totalAmount
+  //       }
+  //     );
+      
+  //     let result = await tx.wait();
+  //     console.log("layer1 deposit gas used : " + result.gasUsed);
+
+
+  //     afterEthBalace = await utils.formatEther(await ethers.provider.getBalance(args.bridge));
+  //     //console.log("srcHandler eth : " + afterEthBalace);
+  //     //afterEthBalace.expect.toHexString.before
+  //     expect(afterEthBalace).to.equal("10.1")
+      
+  //   } catch (e) {
+  //     console.log("error ");
+  //     console.log(e);
+  //   }
+
+  // })
+
+
+  it(`executeProposal run in layer2`, async () => {
+
     try{
-      let tx = await bridgeContract.deposit(
-        args.dest,args.resourceId,data,{
-          value:totalAmount
-        }
-      );
-      
-      let result = await tx.wait();
-      console.log("layer1 deposit gas used : " + result.gasUsed);
 
+      //SRC_BRIDGE
+      contractAmount = utils.parseEther("1");
+      await deplyer.sendTransaction({
+          to: bridgeContract.address, 
+          value: contractAmount
+      })
 
-      afterEthBalace = await utils.formatEther(await ethers.provider.getBalance(args.bridge));
-      //console.log("srcHandler eth : " + afterEthBalace);
-      //afterEthBalace.expect.toHexString.before
-      expect(afterEthBalace).to.equal("10.1")
+      let amount = utils.parseEther("0.3");
+      args.amount = amount
+
+      let fee = utils.parseEther("0.1");
+
+      args.bridge  = bridgeContract.address;
+      args.bridgeAddress  = bridgeContract.address;
+      args.erc20Name = "Test"
+      args.erc20Symbol = "Test"
+      let ERC20Handler = await deployERC20Handler(deplyer,args);
+
+      args.handler = ERC20Handler.address;
+      args.minter = ERC20Handler.address;
+      let ERC20 = await deployERC20(deplyer,args);
+      args.targetContract = ERC20.address;
+      args.erc20Address = ERC20.address;
+
+      await registerResource(deplyer,args);
+      await setBurn(deplyer,args);
+      await addMinter(deplyer,args);
+
+      await sleep(2000);
+    
+      // let abiterList = getAbiterList();
+      // await bridgeContract.setAbiterList(abiterList,12);
+
+      let abiterList = getAbiterList();
+      let signList = await getAbiterSign(abiterList);
+      await bridgeContract.setAbiterList(abiterList,12,signList);
+
+      const data = '0x' +
+      ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +                               // Deposit Amount        (32 bytes)
+      ethers.utils.hexZeroPad(fee.toHexString(), 32).substr(2) +                                       // Deposit Fee           (32 bytes)
+      ethers.utils.hexZeroPad(ethers.utils.hexlify((args.recipient.length - 2)/2), 32).substr(2) +     // len(recipientAddress) (32 bytes)
+      args.recipient.substr(2);                                                                        // recipientAddress      (?? bytes)
       
-    } catch (e) {
-      console.log("error ");
+      let depositNonce = 0;
+      let sign = await getSign(args.dest,depositNonce,args.resourceId,data); 
+      
+
+    //   function executeProposal(
+    //     uint8 chainID,
+    //     uint64 depositNonce,
+    //     bytes calldata data,
+    //     bytes32 resourceID,
+    //     bytes[] memory sig,
+    //     bytes memory superSig
+    // ) public {
+      let superSign = await getSuperAbiterSign()
+
+      await bridgeContract.executeProposal(
+          args.dest,
+          depositNonce,
+          data,
+          args.resourceId,
+          sign,
+          superSign
+          
+      )
+  
+      //
+      let afterTokenBalance = await utils.formatEther(await ERC20.balanceOf(args.recipient));
+      expect(afterTokenBalance).to.equal("0.3")
+      
+
+    }catch(e){
       console.log(e);
     }
 
   })
-
-
-  // it(`executeProposal run in layer2`, async () => {
-
-  //   try{
-
-  //     //SRC_BRIDGE
-  //     contractAmount = utils.parseEther("1");
-  //     await deplyer.sendTransaction({
-  //         to: bridgeContract.address, 
-  //         value: contractAmount
-  //     })
-
-  //     let amount = utils.parseEther("0.3");
-  //     args.amount = amount
-
-  //     args.bridge  = bridgeContract.address;
-  //     args.bridgeAddress  = bridgeContract.address;
-  //     args.erc20Name = "Test"
-  //     args.erc20Symbol = "Test"
-  //     let ERC20Handler = await deployERC20Handler(deplyer,args);
-
-  //     args.handler = ERC20Handler.address;
-  //     args.minter = ERC20Handler.address;
-  //     let ERC20 = await deployERC20(deplyer,args);
-  //     args.targetContract = ERC20.address;
-  //     args.erc20Address = ERC20.address;
-
-  //     await registerResource(deplyer,args);
-  //     await setBurn(deplyer,args);
-  //     await addMinter(deplyer,args);
-
-  //     await sleep(2000);
-    
-  //     // let abiterList = getAbiterList();
-  //     // await bridgeContract.setAbiterList(abiterList,12);
-
-  //     let abiterList = getAbiterList();
-  //     let signList = await getAbiterSign(abiterList);
-  //     await bridgeContract.setAbiterList(abiterList,12,signList);
-
-  //     const data = '0x' +
-  //     ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +                               // Deposit Amount        (32 bytes)
-  //     ethers.utils.hexZeroPad(ethers.utils.hexlify((args.recipient.length - 2)/2), 32).substr(2) +     // len(recipientAddress) (32 bytes)
-  //     args.recipient.substr(2);                                                                        // recipientAddress      (?? bytes)
-      
-  //     let depositNonce = 0;
-  //     let sign = await getSign(args.dest,depositNonce,args.resourceId,data); 
-      
-  //     await bridgeContract.executeProposal(
-  //         args.dest,
-  //         depositNonce,
-  //         data,
-  //         args.resourceId,
-  //         sign
-  //     )
-      
-  //     //
-  //     let afterTokenBalance = await utils.formatEther(await ERC20.balanceOf(args.recipient));
-  //     expect(afterTokenBalance).to.equal("0.3")
-      
-
-  //   }catch(e){
-  //     console.log(e);
-  //   }
-
-
-
-
-  // })
 
 
 

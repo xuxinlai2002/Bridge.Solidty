@@ -103,10 +103,11 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
         uint64 depositNonce,
         address depositer,
         bytes calldata data
-    ) external onlyBridge returns(uint256,address){
+    ) external onlyBridge returns(uint256,address,uint256){
 
-        uint256 amount;       
-        amount= abi.decode(data, (uint));
+        uint256 amount;      
+        uint256 fee; 
+        (amount,fee) = abi.decode(data, (uint,uint));
         address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
         require(
             _contractWhitelist[tokenAddress],
@@ -114,9 +115,9 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
         );
 
         if (_burnList[tokenAddress]) {
-            burnERC20(tokenAddress, depositer, amount);
+            burnERC20(tokenAddress, depositer, (amount + fee));
         } else {
-            lockERC20(tokenAddress, depositer, address(this), amount);
+            lockERC20(tokenAddress, depositer, address(this), (amount + fee));
         }
 
         _depositRecords[destinationChainID][depositNonce] = keccak256(
@@ -129,7 +130,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
             )
         );
         
-        return (amount,tokenAddress);
+        return (amount,tokenAddress,fee);
     }
 
 
@@ -148,10 +149,11 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
        bytes calldata data
     ) external override onlyBridge {
         uint256       amount;
+        uint256       fee;
         uint256       lenDestinationRecipientAddress;
         bytes  memory destinationRecipientAddress;
 
-        (amount, lenDestinationRecipientAddress) = abi.decode(data, (uint, uint));
+        (amount, fee,lenDestinationRecipientAddress) = abi.decode(data, (uint, uint, uint));
         destinationRecipientAddress = bytes(data[64:64 + lenDestinationRecipientAddress]);
 
         bytes20 recipientAddress;

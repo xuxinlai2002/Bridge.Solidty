@@ -167,7 +167,7 @@ const getSign = async(chainId,depositNonce,resourceId,data) => {
     //let msg = web3.utils.sha3(hexMsg);
     // console.log("hex msg detail : " + hexMsg);
     // console.log("sh3 msg : " + msg);
-    let msg = "0xbf90db37be7af88bf041b410ff13e1c648768723aa6f79e70ac6e32cb4f6ea8b"
+    let msg = "0xda8a7b4b40c1bc6e803783d53d770046470309d5f35a8c9382fc76519fc6bfea"
 
     let sign = [];
     for(var i = 0 ;i < privateKeyList.length ;i ++){
@@ -179,6 +179,22 @@ const getSign = async(chainId,depositNonce,resourceId,data) => {
     return sign;
 
 }
+
+///
+const getSuperAbiterSign = async() => {
+
+
+    //
+    privateKey = "0xcb93f47f4ae6e2ee722517f3a2d3e7f55a5074f430c9860bcfe1d6d172492ed0";
+    let msg = "0xda8a7b4b40c1bc6e803783d53d770046470309d5f35a8c9382fc76519fc6bfea"
+    var web3 = new Web3();
+    let superSign = await web3.eth.accounts.sign(msg,privateKey)
+
+    return superSign.signature;
+
+}
+
+
 
 const getSignBatch = async(chainId,depositNonce,resourceId,data) => {
 
@@ -217,7 +233,8 @@ const getSignBatch = async(chainId,depositNonce,resourceId,data) => {
 
 
 
-const util = require('ethereumjs-util')
+const util = require('ethereumjs-util');
+const { sign } = require('crypto');
 const getAbiterList = () => {
 
     let addressList = [];
@@ -275,5 +292,6 @@ module.exports = {
     getSign,
     getSignBatch,
     getAbiterList,
-    getAbiterSign
+    getAbiterSign,
+    getSuperAbiterSign
 }

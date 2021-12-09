@@ -88,10 +88,11 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
         uint64 depositNonce,
         address depositer,
         bytes calldata data
-    ) external onlyBridge returns(uint256,address){
+    ) external onlyBridge returns(uint256,address,uint256){
         uint256 amount;
+        uint256 fee;
 
-        amount= abi.decode(data, (uint));
+        (amount,fee) = abi.decode(data, (uint,uint));
         address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
         require(
             _contractWhitelist[tokenAddress],
@@ -108,7 +109,7 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
             )
         );
 
-        return (amount,tokenAddress);
+        return (amount,tokenAddress,fee);
     }
 
 

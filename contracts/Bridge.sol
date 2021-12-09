@@ -232,6 +232,9 @@ contract Bridge is  HandlerHelpers {
         @param newFee Value {_fee} will be updated to.
      */
     function adminChangeFee(uint256 newFee) external onlyOwner {
+
+        console.log("adminChangeFee come to ...");
+
         require(_fee != newFee, "Current fee is equal to new fee");
         _fee = newFee;
     }
@@ -263,30 +266,26 @@ contract Bridge is  HandlerHelpers {
         @param destinationChainID ID of chain deposit will be bridged to.
         @param resourceID ResourceID used to find address of handler to be used for deposit.
         @param data Additional data to be passed to specified handler.
-        @param fee when layer2->layer1 fee is weth ;layer1->layer2 fee is eth
-        @notice Emits {Deposit} event.
      */
     function deposit(
         uint8 destinationChainID,
         bytes32 resourceID,
-        bytes calldata data,
-        uint256 fee
+        bytes calldata data
     ) external payable {
 
         address handler = _resourceIDToHandlerAddress[resourceID];
         require(handler != address(0), "resourceID not mapped to handler");
-        require(fee > _fee,"fee is not enough");
-
+     
         uint64 depositNonce = ++_depositCounts[destinationChainID];
         _depositRecords[depositNonce][destinationChainID] = data;
         IDepositExecute depositHandler = IDepositExecute(handler);
 
         //layer1 -> layer2
         if(depositHandler.getType() == IDepositExecute.HandleTypes.WETH) {
-            _depoistWeth(destinationChainID,resourceID,data,handler,depositNonce,fee);
+            _depoistWeth(destinationChainID,resourceID,data,handler,depositNonce);
         //layer2 -> layer1
         } else if(depositHandler.getType() == IDepositExecute.HandleTypes.ERC20){
-            _depoistERC20(destinationChainID,resourceID,data,handler,depositNonce,fee);
+            _depoistERC20(destinationChainID,resourceID,data,handler,depositNonce);
         }else { 
             //TODO and 721 and other
         }
@@ -298,16 +297,16 @@ contract Bridge is  HandlerHelpers {
         bytes32 resourceID,
         bytes calldata data,
         address handler,
-        uint64 depositNonce,
-        uint256 fee
+        uint64 depositNonce
     ) internal{
 
         uint256 amount;
+        uint256 fee;
         address tokenAddress;
 
         //amount = abi.decode(data,(uint)); 
         WETHHandler wethHander = WETHHandler(handler);
-        (amount, tokenAddress) = wethHander.deposit(
+        (amount, tokenAddress,fee) = wethHander.deposit(
             resourceID,
             destinationChainID,
             depositNonce,
@@ -315,7 +314,7 @@ contract Bridge is  HandlerHelpers {
             data
         );
 
-        require(msg.value >= _fee + amount, "fee + amount is not enought");
+        require(msg.value == _fee + amount, "fee + amount is not match");
         emit DepositRecord(
             tokenAddress,
             destinationChainID,
@@ -333,15 +332,15 @@ contract Bridge is  HandlerHelpers {
         bytes32 resourceID,
         bytes calldata data,
         address handler,
-        uint64 depositNonce,
-        uint256 fee
+        uint64 depositNonce
     ) internal{
 
         uint256 amount;
+        uint256 fee;
         address tokenAddress;
 
         ERC20Handler erc20Hander = ERC20Handler(handler);
-        (amount, tokenAddress) = erc20Hander.deposit(
+        (amount, tokenAddress,fee) = erc20Hander.deposit(
             resourceID,
             destinationChainID,
             depositNonce,
@@ -378,8 +377,7 @@ contract Bridge is  HandlerHelpers {
         bytes calldata data,
         bytes32 resourceID,
         bytes[] memory sig,
-        bytes memory superSig,
-        uint256 fee
+        bytes memory superSig
     ) public {
   
         _verfiyExecuteProposal(chainID,depositNonce,data,resourceID,sig,superSig);
@@ -407,12 +405,12 @@ contract Bridge is  HandlerHelpers {
         );
 
         //from layer1 -> layer2 just send Weth to layer 
-        ERC20Handler erc20Hander = ERC20Handler(handler);
-        erc20Hander.rewardWeth(
-            resourceID,
-            block.coinbase,
-            fee
-        );
+        // ERC20Handler erc20Hander = ERC20Handler(handler);
+        // erc20Hander.rewardWeth(
+        //     resourceID,
+        //     block.coinbase,
+        //     fee
+        // );
     }
 
 
@@ -443,7 +441,7 @@ contract Bridge is  HandlerHelpers {
             resourceID,
             sig
         );
-        require(isAbiterVerifierd, "Verify abiter do not pass");
+        require(isAbiterVerifierd, "Verify abiter do not pass ");
 
 
     }

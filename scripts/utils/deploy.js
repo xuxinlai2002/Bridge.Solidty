@@ -3,7 +3,11 @@ var _ = require('underscore');
 
 async function deployBridgeContract(account,superAddress, args) {
 
-    const Factory__Bridge = await ethers.getContractFactory('Bridge',account)    
+    const Factory__Bridge = await ethers.getContractFactory('Bridge',account)  
+    
+    console.log();
+
+
     const Bridge = await upgrades.deployProxy(
         Factory__Bridge, 
         [args.chainId,args.fee,args.expiry,superAddress], 

@@ -54,7 +54,7 @@ contract ERC721Handler is IDepositExecute, HandlerHelpers, ERC721Safe {
         address[] memory burnableContractAddresses
     ) public{
         require(initialResourceIDs.length == initialContractAddresses.length,
-            "initialResourceIDs and initialContractAddresses len mismatch");
+            "initialResourceIDs and initialContractAddresses len mismatch ");
 
         _bridgeAddress = bridgeAddress;
 
@@ -82,6 +82,7 @@ contract ERC721Handler is IDepositExecute, HandlerHelpers, ERC721Safe {
     */
     function getDepositRecord(uint64 depositNonce, uint8 destId) external view returns (DepositRecord memory) {
         return _depositRecords[destId][depositNonce];
+        
     }
 
     /**
@@ -180,6 +181,7 @@ contract ERC721Handler is IDepositExecute, HandlerHelpers, ERC721Safe {
         } else {
             releaseERC721(tokenAddress, address(this), address(recipientAddress), tokenID);
         }
+
     }
 
     /**

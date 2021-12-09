@@ -5,7 +5,7 @@ pragma solidity 0.6.12;
 import "../interfaces/IERCHandler.sol";
 import "../utils/Seriality.sol";
 
-//import "hardhat/console.sol";
+import "hardhat/console.sol";
 
 /**
     @title Function used across handler contracts.
@@ -155,12 +155,16 @@ contract HandlerHelpers is IERCHandler, Seriality {
         bytes32[] memory resourceID,
         bytes memory sig,
         address superSigner
-    )internal pure returns (bool) {
+    )internal view returns (bool) {
 
         address signer;
         bytes32 msgHash;
 
         msgHash = _getMsgHashBatch(chainID, depositNonce, data, resourceID);
+
+        console.log("xxl _verifySuperBatch");
+        console.logBytes32(msgHash);
+
         signer = _recoverSigner(msgHash, sig);
 
         require(superSigner == signer,"verify super signer error");
@@ -185,8 +189,8 @@ contract HandlerHelpers is IERCHandler, Seriality {
         //console.log("verify %d",( i + 1 ));
         msgHash = _getMsgHashBatch(chainID, depositNonce, data, resourceID);
 
-        //console.log("xxl ....");
-        //console.logBytes32(msgHash);
+        console.log("xxl ....");
+        console.logBytes32(msgHash);
 
         for (i = 0; i < sigLen; i++) {
 
@@ -248,12 +252,16 @@ contract HandlerHelpers is IERCHandler, Seriality {
         bytes32 resourceID,
         bytes memory sig,
         address superSigner
-    )internal pure returns (bool) {
+    )internal view returns (bool) {
 
         address signer;
         bytes32 msgHash;
 
         msgHash = _getMsgHash(chainID, depositNonce, data, resourceID);
+
+        console.log("super");
+        console.logBytes32(msgHash);
+
         signer = _recoverSigner(msgHash, sig);
 
         require(superSigner == signer,"verify super signer error");
@@ -275,7 +283,10 @@ contract HandlerHelpers is IERCHandler, Seriality {
 
         require(_isDuplicated(sig) == false, "duplicate signature exception");
         msgHash = _getMsgHash(chainID, depositNonce, data, resourceID);
-        //console.logBytes32(msgHash);
+
+        console.log("xxl _verifyAbter ... ");
+        console.logBytes32(msgHash);
+        
         for (i = 0; i < sigLen; i++) {
 
             signer = _recoverSigner(msgHash, sig[i]);
