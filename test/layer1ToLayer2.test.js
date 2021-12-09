@@ -71,53 +71,53 @@ describe(`layer1 => layer2 `, () => {
 
   const Bridge = require('../artifacts/contracts/Bridge.sol/Bridge.json');
   const privKey = "0xc03b0a988e2e18794f2f0e881d7ffcd340d583f63c1be078426ae09ddbdec9f5";
-  // it(`deposit run in layer1`, async () => {
+  it(`deposit run in layer1`, async () => {
 
-  //   //
-  //   let fee = utils.parseEther("0.1");
-  //   let transferAmount = utils.parseEther("10");
-  //   let totalAmount = utils.parseEther("10.1");
+    //
+    let fee = utils.parseEther("0.1");
+    let transferAmount = utils.parseEther("10");
+    let totalAmount = utils.parseEther("10.1");
 
-  //   //1.change fee
-  //   await bridgeContract.adminChangeFee(fee)
+    //1.change fee
+    await bridgeContract.adminChangeFee(fee)
 
-  //   //2.deployer contract
-  //   args.bridgeAddress = bridgeContract.address;
-  //   wethHandlerContract = await deployWETHHandler(deplyer,args);
+    //2.deployer contract
+    args.bridgeAddress = bridgeContract.address;
+    wethHandlerContract = await deployWETHHandler(deplyer,args);
 
-  //   args.bridge = bridgeContract.address;
-  //   args.handler = wethHandlerContract.address;
-  //   args.targetContract = "0x977e762f384a5909140e91523929A9E188B6bB65";
-  //   await registerResource(deplyer,args);
+    args.bridge = bridgeContract.address;
+    args.handler = wethHandlerContract.address;
+    args.targetContract = "0x977e762f384a5909140e91523929A9E188B6bB65";
+    await registerResource(deplyer,args);
 
-  //   args.amount = transferAmount;
+    args.amount = transferAmount;
    
-  //   let data = '0x' +
-  //   ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +
-  //   ethers.utils.hexZeroPad(fee.toHexString(), 32).substr(2) 
+    let data = '0x' +
+    ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +
+    ethers.utils.hexZeroPad(fee.toHexString(), 32).substr(2) 
     
-  //   try{
-  //     let tx = await bridgeContract.deposit(
-  //       args.dest,args.resourceId,data,{
-  //         value:totalAmount
-  //       }
-  //     );
+    try{
+      let tx = await bridgeContract.deposit(
+        args.dest,args.resourceId,data,{
+          value:totalAmount
+        }
+      );
       
-  //     let result = await tx.wait();
-  //     console.log("layer1 deposit gas used : " + result.gasUsed);
+      let result = await tx.wait();
+      console.log("layer1 deposit gas used : " + result.gasUsed);
 
 
-  //     afterEthBalace = await utils.formatEther(await ethers.provider.getBalance(args.bridge));
-  //     //console.log("srcHandler eth : " + afterEthBalace);
-  //     //afterEthBalace.expect.toHexString.before
-  //     expect(afterEthBalace).to.equal("10.1")
+      afterEthBalace = await utils.formatEther(await ethers.provider.getBalance(args.bridge));
+      //console.log("srcHandler eth : " + afterEthBalace);
+      //afterEthBalace.expect.toHexString.before
+      expect(afterEthBalace).to.equal("10.1")
       
-  //   } catch (e) {
-  //     console.log("error ");
-  //     console.log(e);
-  //   }
+    } catch (e) {
+      console.log("error ");
+      console.log(e);
+    }
 
-  // })
+  })
 
 
   it(`executeProposal run in layer2`, async () => {
@@ -170,6 +170,7 @@ describe(`layer1 => layer2 `, () => {
       let depositNonce = 0;
       let sign = await getSign(args.dest,depositNonce,args.resourceId,data); 
       
+      console.log(data);
 
     //   function executeProposal(
     //     uint8 chainID,
@@ -181,21 +182,22 @@ describe(`layer1 => layer2 `, () => {
     // ) public {
       let superSign = await getSuperAbiterSign()
 
+      console.log("xxl ----");
+      console.log(args);
+
       await bridgeContract.executeProposal(
           args.dest,
           depositNonce,
           data,
           args.resourceId,
           sign,
-          superSign
-          
+          superSign          
       )
   
       //
       let afterTokenBalance = await utils.formatEther(await ERC20.balanceOf(args.recipient));
       expect(afterTokenBalance).to.equal("0.3")
       
-
     }catch(e){
       console.log(e);
     }

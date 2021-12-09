@@ -162,7 +162,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
         bytes  memory destinationRecipientAddress;
 
         (amount, fee,lenDestinationRecipientAddress) = abi.decode(data, (uint, uint, uint));
-        destinationRecipientAddress = bytes(data[64:64 + lenDestinationRecipientAddress]);
+        destinationRecipientAddress = bytes(data[96:96 + lenDestinationRecipientAddress]);
 
         bytes20 recipientAddress;
         address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
@@ -174,6 +174,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
         require(_contractWhitelist[tokenAddress], "provided tokenAddress is not whitelisted");
 
         if (_burnList[tokenAddress]) {
+            
             mintERC20(tokenAddress, address(recipientAddress), amount);
         } else {
             releaseERC20(tokenAddress, address(recipientAddress), amount);
