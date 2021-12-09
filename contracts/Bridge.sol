@@ -348,6 +348,9 @@ contract Bridge is  HandlerHelpers {
             data
         );
 
+        //deposit weth
+        
+
         emit DepositRecord(
             tokenAddress,
             destinationChainID,

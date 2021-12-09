@@ -115,9 +115,9 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
         );
 
         if (_burnList[tokenAddress]) {
-            burnERC20(tokenAddress, depositer, (amount + fee));
+            burnERC20(tokenAddress, depositer, amount);
         } else {
-            lockERC20(tokenAddress, depositer, address(this), (amount + fee));
+            lockERC20(tokenAddress, depositer, address(this), amount);
         }
 
         _depositRecords[destinationChainID][depositNonce] = keccak256(
