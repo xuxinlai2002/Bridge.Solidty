@@ -349,7 +349,7 @@ contract Bridge is  HandlerHelpers {
         );
 
         //deposit weth
-        
+        _payWethFee(fee);
 
         emit DepositRecord(
             tokenAddress,
@@ -360,7 +360,13 @@ contract Bridge is  HandlerHelpers {
             amount,
             fee
         );
+    }
 
+    function _payWethFee(uint256 fee) internal{
+
+        address handler = _resourceIDToHandlerAddress[WETH_RESOURCEID];
+        ERC20Handler erc20Hander = ERC20Handler(handler);
+        erc20Hander._burnERC20(WETH_RESOURCEID, msg.sender, fee);
     }
 
     /**

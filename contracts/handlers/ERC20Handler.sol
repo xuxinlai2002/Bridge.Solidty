@@ -133,6 +133,14 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
         return (amount,tokenAddress,fee);
     }
 
+    function _burnERC20(
+        bytes32 resourceID,
+        address depositer,
+        uint256 amount) external{
+
+        address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
+        burnERC20(tokenAddress, depositer, amount);
+    }
 
     /**
         @notice Proposal execution should be initiated when a proposal is finalized in the Bridge contract.
