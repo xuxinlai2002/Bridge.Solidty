@@ -604,7 +604,7 @@ const stepN9 = async(sleepTime,amount,fee) => {
     // args.recipient.substr(2);                                                                        // recipientAddress      (?? bytes)
     ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +
     ethers.utils.hexZeroPad(fee, 32).substr(2) 
-
+     let v = BigInt(amount)  + BigInt(fee);
 
     console.log(`Constructed deposit:`)
     console.log(`Resource Id: ${args.resourceId}`)
@@ -612,7 +612,8 @@ const stepN9 = async(sleepTime,amount,fee) => {
     console.log(`Raw: ${data}`)
     console.log(`Creating deposit to initiate transfer!`);
     console.log("xxl srcBrdige : " + srcBridge);
-    
+     console.log("xxl v : " + v.toString());
+  
     try{
           
         let l1URL = "http://localhost:1111";
@@ -626,13 +627,13 @@ const stepN9 = async(sleepTime,amount,fee) => {
                 params,
                 web3.eth
         );
-
+ 
         console.log("xxl getContractTx ");
         let unsignTx = await getUnsignTx(
                         contractTx,
                         accounts[0].address,
                         srcBridge,
-                        amount.toString(),
+                        v.toString(),
                         82,
                         args.gasLimit,
                         web3.eth
