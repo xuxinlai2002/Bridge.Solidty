@@ -666,7 +666,7 @@ const stepN9 = async(sleepTime,amount,fee) => {
 }
 
 //deposit
-const stepN10 = async(sleepTime,amount) => {
+const stepN10 = async(sleepTime,amount,fee) => {
 
     let chainID = await getChainId();
     console.log("chainID is :" + chainID);
@@ -718,7 +718,8 @@ const stepN10 = async(sleepTime,amount) => {
         console.log('1');
 
         const data = '0x' + 
-        ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) 
+        ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +
+        ethers.utils.hexZeroPad(fee, 32).substr(2)
     
         console.log(`Constructed deposit:`)
         console.log(`Resource Id: ${args.resourceId}`)
@@ -736,6 +737,11 @@ const stepN10 = async(sleepTime,amount) => {
                 gasLimit: args.gasLimit
             }
         );
+
+
+        let re2 = await tx.wait();
+        console.log(re2);
+        
     } catch (e) {
         console.log("error ");
         console.log(e);

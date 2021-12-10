@@ -105,7 +105,8 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
                 destinationChainID,
                 resourceID,
                 depositer,
-                amount
+                amount,
+                fee
             )
         );
 

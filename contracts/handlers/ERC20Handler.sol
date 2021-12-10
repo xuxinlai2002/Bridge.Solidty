@@ -133,7 +133,8 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
                 destinationChainID,
                 resourceID,
                 depositer,
-                amount
+                amount,
+                fee
             )
         );
         
