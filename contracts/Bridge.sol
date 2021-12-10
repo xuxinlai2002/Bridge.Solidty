@@ -273,6 +273,8 @@ contract Bridge is  HandlerHelpers {
         bytes calldata data
     ) external payable {
 
+        console.log("xxl deposit -----");
+
         address handler = _resourceIDToHandlerAddress[resourceID];
         require(handler != address(0), "resourceID not mapped to handler");
      
@@ -282,6 +284,7 @@ contract Bridge is  HandlerHelpers {
 
         //layer1 -> layer2
         if(depositHandler.getType() == IDepositExecute.HandleTypes.WETH) {
+            console.log("xxl WETH : ");
             _depoistWeth(destinationChainID,resourceID,data,handler,depositNonce);
         //layer2 -> layer1
         } else if(depositHandler.getType() == IDepositExecute.HandleTypes.ERC20){

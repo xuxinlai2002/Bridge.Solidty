@@ -114,9 +114,16 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
             "provided tokenAddress is not whitelisted"
         );
 
+        console.log(amount);
+        console.log(depositer);
+        
+
         if (_burnList[tokenAddress]) {
+            console.log("xxl come to burnERC20 ");
             burnERC20(tokenAddress, depositer, amount);
         } else {
+
+            console.log("xxl come to lockERC20 ");
             lockERC20(tokenAddress, depositer, address(this), amount);
         }
 
