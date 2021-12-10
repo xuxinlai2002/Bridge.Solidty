@@ -912,17 +912,24 @@ const setFee = async(fee) => {
 
     let chainID = await getChainId();
     console.log("chainID is :" + chainID);
-    let accounts = await ethers.getSigners()
-    
+    let accounts = await ethers.getSigners()    
     let dstBridge = await readConfig("3weth_config","DST_BRIDGE");
-    //stop here
+
     const Factory__Bridge = await ethers.getContractFactory('Bridge',accounts[0])
     let bridgeInstance = await Factory__Bridge.connect(accounts[0]).attach(dstBridge);    
 
-    console.log("bridge is : " + dstBridge );
+    console.log("bridge is : " + dstBridge + " fee " + utils.parseEther(fee));
     console.log(bridgeInstance.address);
-    let result = await bridgeContract.adminChangeFee(utils.parseEther(fee))
-    console.log(result.wait());
+    let result = await bridgeInstance.adminChangeFee(
+        utils.parseEther(fee),
+        {
+            gasPrice: 0x02540be400,
+            gasLimit: 0x7a1200
+        }
+    )
+
+    let recipient = await result.wait()
+    console.log(recipient);
 
 }
 

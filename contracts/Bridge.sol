@@ -233,8 +233,6 @@ contract Bridge is  HandlerHelpers {
      */
     function adminChangeFee(uint256 newFee) external onlyOwner {
 
-        console.log("adminChangeFee come to ...");
-
         require(_fee != newFee, "Current fee is equal to new fee");
         _fee = newFee;
     }

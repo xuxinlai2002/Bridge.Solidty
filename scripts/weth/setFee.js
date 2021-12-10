@@ -4,7 +4,7 @@ const {
 
 const main = async () => {
 
-    await setFee(0.0001);
+    await setFee("0.0002");
 
 }
 
