@@ -127,9 +127,10 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
     function executeProposal(bytes32 resourceID, bytes calldata data)
         external
         override
-        onlyBridge
+        onlyBridge returns(uint256)
     {
         //emit LogString("come to wethhander executeProposal");
+        return 0;
     }
 
     /**

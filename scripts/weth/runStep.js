@@ -565,7 +565,7 @@ const stepN2 = async (sleepTime) => {
 //deposit
 const Bridge = require('../../artifacts/contracts/Bridge.sol/Bridge.json');
 const privKey = "0x9aede013637152836b14b423dabef30c9b880ea550dbec132183ace7ca6177ed";
-const stepN9 = async(sleepTime,amount) => {
+const stepN9 = async(sleepTime,amount,fee) => {
 
     let chainID = await getChainId();
     let accounts = await ethers.getSigners()
@@ -583,13 +583,12 @@ const stepN9 = async(sleepTime,amount) => {
 
     // args["bridgeAddress"] = srcProxy
     // console.log("xxl proxy bridge is: " + srcProxy);
-
     // const Proxy = await ethers.getContractFactory('Proxy',accounts[0])
     // let proxyInstance = await Proxy.connect(accounts[0]).attach(srcProxy);
     // let srcBridge = await proxyInstance.implementation();
     // console.log("xxl bridge is: " + srcBridge);
     // srcBridge = srcProxy
-    //
+    // 
 
     console.log("\n*************************check balance before****************************");
     let beforeEthBalace = await utils.formatEther(await accounts[0].getBalance());
@@ -603,7 +602,8 @@ const stepN9 = async(sleepTime,amount) => {
     // ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +                               // Deposit Amount        (32 bytes)
     // ethers.utils.hexZeroPad(ethers.utils.hexlify((args.recipient.length - 2)/2), 32).substr(2) +     // len(recipientAddress) (32 bytes)
     // args.recipient.substr(2);                                                                        // recipientAddress      (?? bytes)
-    ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) 
+    ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +
+    ethers.utils.hexZeroPad(fee, 32).substr(2) 
 
 
     console.log(`Constructed deposit:`)

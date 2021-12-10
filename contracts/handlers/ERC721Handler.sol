@@ -153,7 +153,12 @@ contract ERC721Handler is IDepositExecute, HandlerHelpers, ERC721Safe {
         metadata                        length      uint256    bytes    (64 + len(destinationRecipientAddress)) - (64 + len(destinationRecipientAddress) + 32)
         metadata                                      bytes    bytes    (64 + len(destinationRecipientAddress) + 32) - END
      */
-    function executeProposal(bytes32 resourceID, bytes calldata data) external override onlyBridge {
+    function executeProposal(
+        bytes32 resourceID, 
+        bytes calldata data
+        ) external override onlyBridge returns(uint256){
+
+        uint         fee;    
         uint         tokenID;
         uint         lenDestinationRecipientAddress;
         bytes memory destinationRecipientAddress;
@@ -161,7 +166,7 @@ contract ERC721Handler is IDepositExecute, HandlerHelpers, ERC721Safe {
         uint         lenMetaData;
         bytes memory metaData;
 
-        (tokenID, lenDestinationRecipientAddress) = abi.decode(data, (uint, uint));
+        (tokenID,fee,lenDestinationRecipientAddress) = abi.decode(data, (uint,uint,uint));
         offsetMetaData = 64 + lenDestinationRecipientAddress;
         destinationRecipientAddress = bytes(data[64:offsetMetaData]);
         lenMetaData = abi.decode(data[offsetMetaData:], (uint));
@@ -181,6 +186,8 @@ contract ERC721Handler is IDepositExecute, HandlerHelpers, ERC721Safe {
         } else {
             releaseERC721(tokenAddress, address(this), address(recipientAddress), tokenID);
         }
+
+        return fee;
 
     }
 

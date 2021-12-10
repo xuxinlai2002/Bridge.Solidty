@@ -140,13 +140,22 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
         return (amount,tokenAddress,fee);
     }
 
-    function _burnERC20(
+    function burnERC20(
         bytes32 resourceID,
         address depositer,
-        uint256 amount) external{
+        uint256 amount) external onlyBridge{
 
         address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
         burnERC20(tokenAddress, depositer, amount);
+    }
+
+    function mintERC20(
+        bytes32 resourceID,
+        address depositer,
+        uint256 amount) external onlyBridge{
+
+        address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
+        mintERC20(tokenAddress, depositer, amount);
     }
 
     /**
@@ -162,7 +171,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
    function executeProposal(
        bytes32 resourceID, 
        bytes calldata data
-    ) external override onlyBridge {
+    ) external override onlyBridge returns(uint256){
         uint256       amount;
         uint256       fee;
         uint256       lenDestinationRecipientAddress;
@@ -181,11 +190,12 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
         require(_contractWhitelist[tokenAddress], "provided tokenAddress is not whitelisted");
 
         if (_burnList[tokenAddress]) {
-            
             mintERC20(tokenAddress, address(recipientAddress), amount);
         } else {
             releaseERC20(tokenAddress, address(recipientAddress), amount);
         }
+
+        return fee;
     }
 
     /**

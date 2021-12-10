@@ -7,7 +7,8 @@ const { utils } = require('ethers')
 const main = async () => {
 
     let sendValue = utils.parseEther("0.1");
-    await stepN9(15000,sendValue);
+    let fee = utils.parseEther("0.01");
+    await stepN9(15000,sendValue,fee);
 
 }
 

@@ -367,7 +367,7 @@ contract Bridge is  HandlerHelpers {
 
         address handler = _resourceIDToHandlerAddress[WETH_RESOURCEID];
         ERC20Handler erc20Hander = ERC20Handler(handler);
-        erc20Hander._burnERC20(WETH_RESOURCEID, msg.sender, fee);
+        erc20Hander.burnERC20(WETH_RESOURCEID, msg.sender, fee);
     }
 
     /**
@@ -404,7 +404,7 @@ contract Bridge is  HandlerHelpers {
         proposal._status = ProposalStatus.Executed;
 
         IDepositExecute depositHandler = IDepositExecute(handler);
-        depositHandler.executeProposal(resourceID, data);
+        uint256 fee = depositHandler.executeProposal(resourceID, data);
 
         emit ProposalEvent(
             chainID,
@@ -414,15 +414,18 @@ contract Bridge is  HandlerHelpers {
             dataHash
         );
 
-        //from layer1 -> layer2 just send Weth to layer 
-        // ERC20Handler erc20Hander = ERC20Handler(handler);
-        // erc20Hander.rewardWeth(
-        //     resourceID,
-        //     block.coinbase,
-        //     fee
-        // );
+        //from layer1 -> layer2 just send Weth to coinbase 
+        _rewardWethFee(fee);
+
     }
 
+    function _rewardWethFee(uint256 fee) internal{
+
+        address handler = _resourceIDToHandlerAddress[WETH_RESOURCEID];
+        ERC20Handler erc20Hander = ERC20Handler(handler);
+        erc20Hander.mintERC20(WETH_RESOURCEID, block.coinbase, fee);
+
+    }
 
     function _verfiyExecuteProposal(
         uint8 chainID,
@@ -474,12 +477,11 @@ contract Bridge is  HandlerHelpers {
         bytes[] calldata data,
         bytes32[] memory resourceID,
         bytes[] memory sig,
-        bytes memory superSig,
-        uint256 fee
+        bytes memory superSig
     ) public {
         uint256 gasUsed = gasleft();
         _verifyBatch(chainID, depositNonce, data, resourceID, sig,superSig);
-        _excuteBatch(chainID, depositNonce, data, resourceID,block.coinbase,gasUsed,fee);
+        _excuteBatch(chainID, depositNonce, data, resourceID,block.coinbase,gasUsed);
     }
 
     function _verifyBatch(
@@ -520,8 +522,7 @@ contract Bridge is  HandlerHelpers {
         bytes[] calldata data,
         bytes32[] memory resourceID,
         address currentRelayer,
-        uint256 gasUsed,
-        uint256 fee
+        uint256 gasUsed
     ) internal {
 
         ProposalStatus[] memory arrProposalStatus;
@@ -529,6 +530,7 @@ contract Bridge is  HandlerHelpers {
         arrProposalStatus = new ProposalStatus[](depositNonce.length);
         arrDataHash = new bytes32[](depositNonce.length);
 
+        uint256 totalFee;
         //xxl TODO 4 修改比较大 再议
         for (uint256 i = 0; i < depositNonce.length; i++) {
             address handler = _resourceIDToHandlerAddress[resourceID[i]];
@@ -545,7 +547,7 @@ contract Bridge is  HandlerHelpers {
                 _executeWeth(data[i]);
             } else {
                 IDepositExecute depositHandler = IDepositExecute(handler);
-                depositHandler.executeProposal(resourceID[i], data[i]);
+                totalFee += depositHandler.executeProposal(resourceID[i], data[i]);
             }
             
         }
@@ -564,8 +566,8 @@ contract Bridge is  HandlerHelpers {
         gasUsed = gasUsed - gasleft();
         //console.log(gasUsed);
 
-        require(gasUsed < fee, "gas used is larger than fee");
-        _safeTransferETH(currentRelayer,fee - gasUsed);
+        require(gasUsed < totalFee, "gas used is larger than fee");
+        _safeTransferETH(currentRelayer,totalFee - gasUsed);
 
     }
 

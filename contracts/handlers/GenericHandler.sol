@@ -190,7 +190,10 @@ contract GenericHandler is IGenericHandler {
         @notice If {_contractAddressToExecuteFunctionSignature}[{contractAddress}] is set,
         {metaData} is expected to consist of needed function arguments.
      */
-    function executeProposal(bytes32 resourceID, bytes calldata data) external onlyBridge {
+    function executeProposal(
+        bytes32 resourceID, 
+        bytes calldata data
+        ) external onlyBridge returns(uint256){
         bytes memory metaData;
         assembly {
 
@@ -218,6 +221,8 @@ contract GenericHandler is IGenericHandler {
             (bool success,) = contractAddress.call(callData);
             require(success, "delegatecall to contractAddress failed");
         }
+
+        return 0;
     }
 
     function _setResource(
