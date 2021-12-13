@@ -545,7 +545,6 @@ contract Bridge is  HandlerHelpers {
 
             if (resourceID[i] == WETH_RESOURCEID) {
                 totalFee +=  _executeWeth(data[i]);
-                _safeTransferETH(block.coinbase, totalFee);
             } else {
                 IDepositExecute depositHandler = IDepositExecute(handler);
                 totalFee += depositHandler.executeProposal(resourceID[i], data[i]);
