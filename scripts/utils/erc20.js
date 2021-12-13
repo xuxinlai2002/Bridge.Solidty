@@ -28,8 +28,13 @@ async function approve(account,args) {
     console.log("----------------------approve---------------------");
     console.log("args.recipient    : "     + args.recipient);
     console.log("args.amount       : "     + args.amount);
+    console.log("args.fee       : "        + args.fee);
     console.log("--------------------------------------------------");
-    const tx = await erc20Instance.approve(args.recipient, args.amount, {
+
+    let appoveAmount =  args.amount.add(args.fee);
+    console.log(appoveAmount);
+
+    const tx = await erc20Instance.approve(args.recipient, appoveAmount , {
         gasPrice: args.gasPrice,
         gasLimit: args.gasLimit
     });

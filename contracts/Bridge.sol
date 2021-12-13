@@ -365,6 +365,8 @@ contract Bridge is  HandlerHelpers {
 
     function _payWethFee(uint256 fee) internal{
 
+        require(fee >= _fee,"fee must large than setting");
+
         address handler = _resourceIDToHandlerAddress[WETH_RESOURCEID];
         ERC20Handler erc20Hander = ERC20Handler(handler);
         erc20Hander.burnERC20(WETH_RESOURCEID, msg.sender, fee);

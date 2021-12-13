@@ -688,6 +688,7 @@ const stepN10 = async(sleepTime,amount,fee) => {
         "bridge":dstBridge,
         "dest":1,
         "amount":amount,
+        "fee":fee,
         "recipient":dstHandlerERC20,
 
         "erc20":dstERC20,

@@ -140,10 +140,11 @@ describe(`layer2 => layer1 `, () => {
 
   })
 
-
+  // //layer2 -> layer1
   // it(`executeProposalBatch 1 tx run in layer1`, async () => {
 
   //   try{
+  //     console.log(1);
   //     args.recipient = "0x534369554D1F1B36e5527793d67A7774A45BD8D1";
        
   //     //SRC_BRIDGE
@@ -153,6 +154,7 @@ describe(`layer2 => layer1 `, () => {
   //         value: contractAmount
   //     })
 
+  //     console.log(2);
   //     //2.deployer contract
   //     args.bridgeAddress = bridgeContract.address;
   //     wethHandlerContract = await deployWETHHandler(deplyer,args);
@@ -165,7 +167,7 @@ describe(`layer2 => layer1 `, () => {
   //     args.targetContract = "0x977e762f384a5909140e91523929A9E188B6bB65";
   //     await registerResource(deplyer,args);
 
-
+  //     console.log(3);
   //     await sleep(2000);
     
   //     let abiterList = getAbiterList();
@@ -177,6 +179,7 @@ describe(`layer2 => layer1 `, () => {
   //     ethers.utils.hexZeroPad(ethers.utils.hexlify((args.recipient.length - 2)/2), 32).substr(2) +     // len(recipientAddress) (32 bytes)
   //     args.recipient.substr(2);                                                                        // recipientAddress      (?? bytes)
       
+  //     console.log(4);
   //     let tokenLen = 1;
   //     let dataArray = []
   //     let depositNonce = []
@@ -208,12 +211,9 @@ describe(`layer2 => layer1 `, () => {
   //     let afterEthBalace = await utils.formatEther(await ethers.provider.getBalance(args.recipient));
   //     expect(afterEthBalace).to.equal("0.3")
       
-
   //   }catch(e){
   //     console.log(e);
   //   }
-    
-
   // })
 
   // it(`executeProposalBatch 100 tx run in layer1`, async () => {
