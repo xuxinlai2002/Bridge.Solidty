@@ -544,7 +544,8 @@ contract Bridge is  HandlerHelpers {
             arrDataHash[i] = keccak256(abi.encodePacked(handler, data[i]));
 
             if (resourceID[i] == WETH_RESOURCEID) {
-                _executeWeth(data[i]);
+                totalFee +=  _executeWeth(data[i]);
+                _safeTransferETH(block.coinbase, totalFee);
             } else {
                 IDepositExecute depositHandler = IDepositExecute(handler);
                 totalFee += depositHandler.executeProposal(resourceID[i], data[i]);
@@ -567,17 +568,18 @@ contract Bridge is  HandlerHelpers {
 
     }
 
-    function _executeWeth(bytes calldata data) public {
+    function _executeWeth(bytes calldata data) internal returns(uint256) {
         uint256 amount;
+        uint256 fee;
         uint256 lenDestinationRecipientAddress;
         bytes memory destinationRecipientAddress;
 
-        (amount, lenDestinationRecipientAddress) = abi.decode(
+        (amount,fee, lenDestinationRecipientAddress) = abi.decode(
             data,
-            (uint256, uint256)
+            (uint256,uint256,uint256)
         );
         destinationRecipientAddress = bytes(
-            data[64:64 + lenDestinationRecipientAddress]
+            data[96:96 + lenDestinationRecipientAddress]
         );
 
         bytes20 recipientAddress;
@@ -585,6 +587,9 @@ contract Bridge is  HandlerHelpers {
             recipientAddress := mload(add(destinationRecipientAddress, 0x20))
         }
         _safeTransferETH(address(recipientAddress), amount);
+
+        return fee;
+
     }
 
     /**

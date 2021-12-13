@@ -167,7 +167,7 @@ const getSign = async(chainId,depositNonce,resourceId,data) => {
     //let msg = web3.utils.sha3(hexMsg);
     // console.log("hex msg detail : " + hexMsg);
     // console.log("sh3 msg : " + msg);
-    let msg = "0xda8a7b4b40c1bc6e803783d53d770046470309d5f35a8c9382fc76519fc6bfea"
+    let msg = "0x58f3459b79ba07bbc238bcdc13e0c9d685eae546df3c18021a02596d10b30914"
 
     let sign = [];
     for(var i = 0 ;i < privateKeyList.length ;i ++){
@@ -186,7 +186,7 @@ const getSuperAbiterSign = async() => {
 
     //
     privateKey = "0xcb93f47f4ae6e2ee722517f3a2d3e7f55a5074f430c9860bcfe1d6d172492ed0";
-    let msg = "0xda8a7b4b40c1bc6e803783d53d770046470309d5f35a8c9382fc76519fc6bfea"
+    let msg = "0x58f3459b79ba07bbc238bcdc13e0c9d685eae546df3c18021a02596d10b30914"
     var web3 = new Web3();
     let superSign = await web3.eth.accounts.sign(msg,privateKey)
 
@@ -214,7 +214,7 @@ const getSignBatch = async(chainId,depositNonce,resourceId,data) => {
     //add sign
     var web3 = new Web3();
     //let msg = web3.utils.sha3(hexMsg);
-    let msg = "0x64e382354eeedd866a95850fbb5a8144fbceee47a6c38e0d7c7313c5513dc034"
+    let msg = "0x58f3459b79ba07bbc238bcdc13e0c9d685eae546df3c18021a02596d10b30914"
 
     console.log("js " + msg);
     // console.log("hex msg detail : " + hexMsg);
