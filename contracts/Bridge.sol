@@ -479,9 +479,8 @@ contract Bridge is  HandlerHelpers {
         bytes[] memory sig,
         bytes memory superSig
     ) public {
-        uint256 gasUsed = gasleft();
         _verifyBatch(chainID, depositNonce, data, resourceID, sig,superSig);
-        _excuteBatch(chainID, depositNonce, data, resourceID,block.coinbase,gasUsed);
+        _excuteBatch(chainID, depositNonce, data, resourceID,block.coinbase);
     }
 
     function _verifyBatch(
@@ -521,8 +520,7 @@ contract Bridge is  HandlerHelpers {
         uint64[] memory depositNonce,
         bytes[] calldata data,
         bytes32[] memory resourceID,
-        address currentRelayer,
-        uint256 gasUsed
+        address currentRelayer
     ) internal {
 
         ProposalStatus[] memory arrProposalStatus;
@@ -562,12 +560,8 @@ contract Bridge is  HandlerHelpers {
         delete arrProposalStatus;
         delete arrDataHash;
 
-        //calculate the gas
-        gasUsed = gasUsed - gasleft();
-        //console.log(gasUsed);
-
-        require(gasUsed < totalFee, "gas used is larger than fee");
-        _safeTransferETH(currentRelayer,totalFee - gasUsed);
+        // require(gasUsed < totalFee, "gas used is larger than fee");
+        _safeTransferETH(currentRelayer,totalFee);
 
     }
 
