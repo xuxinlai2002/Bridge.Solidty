@@ -141,8 +141,12 @@ contract Bridge is  HandlerHelpers {
 
     //xxl 01 add super signer
     function changeSuperSigner(address newSuperSigner) external onlyOwner {
-        _superSigner = newSuperSigner;
+
+        require(_superSigner != newSuperSigner, "super signer is not changed");
+
         emit ChangeSuperSigner(_superSigner,newSuperSigner);
+        _superSigner = newSuperSigner;
+        
     }
 
     function changeAdmin(address newOwner) external onlyOwner {
