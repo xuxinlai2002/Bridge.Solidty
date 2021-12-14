@@ -84,7 +84,8 @@ contract Bridge is  HandlerHelpers {
 
     event ChangeSuperSigner(
         address _oldSuperSigner,
-        address _newSuperSigner
+        address _newSuperSigner,
+        bytes _nodePublickey
     );
 
     bytes32 public constant WETH_RESOURCEID = keccak256("WETH_RESOURCEID");
@@ -140,11 +141,11 @@ contract Bridge is  HandlerHelpers {
     }
 
     //xxl 01 add super signer
-    function changeSuperSigner(address newSuperSigner) external onlyOwner {
+    function changeSuperSigner(address newSuperSigner, bytes memory nodePublicKey) external onlyOwner {
 
         require(_superSigner != newSuperSigner, "super signer is not changed");
-
-        emit ChangeSuperSigner(_superSigner,newSuperSigner);
+        require(nodePublicKey.length == 33, "is not publickey format");
+        emit ChangeSuperSigner(_superSigner,newSuperSigner, nodePublicKey);
         _superSigner = newSuperSigner;
         
     }

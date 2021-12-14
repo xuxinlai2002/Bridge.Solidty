@@ -140,7 +140,7 @@ const step1 = async (sleepTime) => {
 
     await writeConfig("0weth_config","1weth_config","SRC_BRIDGE",bridge.address);
     console.log("Bridge.address :" + bridge.address);
-    console.log("");
+     console.log("superSigner ", accounts[3].address);
 
     let srcBridge = await readConfig("1weth_config","SRC_BRIDGE");
     args["bridgeAddress"] = srcBridge
@@ -220,7 +220,7 @@ const step3 = async (sleepTime,isWeth) => {
     let Bridge = await deployBridgeContract(workAccount, accounts[3].address, args);
     await writeConfig("1weth_config","3weth_config","DST_BRIDGE",Bridge.address);
     console.log("Bridge.address :" + Bridge.address);
-    console.log("");
+    console.log("superSigner ", accounts[3].address);
 
     let dstBridge = await readConfig("3weth_config","DST_BRIDGE");
     args["bridgeAddress"] = dstBridge
@@ -941,6 +941,33 @@ const setFee = async(fee) => {
 
 }
 
+const changeSuperSigner = async(newSuperSigner, nodePublickey) => {
+    //node0 priv 5fe87de21fa55d751583bd0d74532c3cc679caf67919261e0c9b2a56f547c38d -> 0xdD9E99B47A0FA72A7E2E41d92986c2d23afc4b1e
+    //node6 priv eb28c63a9715b993a7356ed5f643ab44e687014c62aacf062d5b6ccda0cb69b7 -> 0x390b9f27a82CE28048EC5FAD1Ebf77D9826fc201
+    let chainID = await getChainId();
+    console.log("chainID is :" + chainID);
+    let accounts = await ethers.getSigners()    
+    let dstBridge = await readConfig("3weth_config","DST_BRIDGE");
+
+    const Factory__Bridge = await ethers.getContractFactory('Bridge',accounts[0])
+    let bridgeInstance = await Factory__Bridge.connect(accounts[0]).attach(dstBridge);    
+
+    console.log("bridge is : " + dstBridge + " newSuperSigner " + newSuperSigner);
+
+    let npbk = Buffer.from(nodePublickey,"hex");
+    let result = await bridgeInstance.changeSuperSigner(
+        newSuperSigner, npbk,
+        {
+            gasPrice: 0x02540be400,
+            gasLimit: 0x7a1200
+        }
+    )
+
+    let recipient = await result.wait()
+    console.log(recipient);
+
+}
+
 module.exports = {
     step0,
     step1,
@@ -958,5 +985,6 @@ module.exports = {
     stepN10,
     stepN11,
     tool,
-    setFee
+    setFee,
+    changeSuperSigner
 }
