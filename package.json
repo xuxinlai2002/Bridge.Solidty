@@ -33,7 +33,9 @@
     "runWethBatch": "npx hardhat run scripts/weth/runWethExecBatch.js",
     "setLayer1Fee": "npx hardhat run scripts/weth/setFee.js  --network my1",
     "wethLayer1ToLayer2": "npx hardhat run scripts/weth/n9deposit12.js --network my1",
-    "wethLayer2ToLayer1": "npx hardhat run scripts/weth/n9deposit21.js --network my2"
+    "wethLayer2ToLayer1": "npx hardhat run scripts/weth/n9deposit21.js --network my2",
+    "changeLayer2SuperSigner": "npx hardhat run scripts/weth/changeSuperSigner.js --network my2",
+    "changeLayer1SuperSigner": "npx hardhat run scripts/weth/changeSuperSigner.js --network my1"
 
   },
   "devDependencies": {
