@@ -1,7 +1,7 @@
 const { ethers,upgrades} = require('hardhat');
 var _ = require('underscore');
 
-async function deployBridgeContract(account,superAddress, args) {
+async function deployBridgeContract(account,superAddress, nodePublickey, args) {
 
     const Factory__Bridge = await ethers.getContractFactory('Bridge',account)  
     
@@ -10,7 +10,7 @@ async function deployBridgeContract(account,superAddress, args) {
 
     const Bridge = await upgrades.deployProxy(
         Factory__Bridge, 
-        [args.chainId,args.fee,args.expiry,superAddress], 
+        [args.chainId,args.fee,args.expiry,superAddress,nodePublickey], 
         { initializer: '__Bridge_init' },
         { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
     );
