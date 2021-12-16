@@ -133,9 +133,9 @@ contract Bridge is  HandlerHelpers {
         _isFirstSet = false; 
 
         //xxl 01 add super signer
+        emit ChangeSuperSigner(_superSigner,superSignerAddress, superSignerNodePublickey);
         _superSigner = superSignerAddress;
         _superSignerNodePublickey = superSignerNodePublickey;
-    
     }
 
     //xxl 01 get current super signer
@@ -432,7 +432,6 @@ contract Bridge is  HandlerHelpers {
 
         //from layer1 -> layer2 just send Weth to coinbase 
         _rewardWethFee(fee);
-
     }
 
     function _rewardWethFee(uint256 fee) internal{
