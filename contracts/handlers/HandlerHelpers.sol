@@ -167,7 +167,7 @@ contract HandlerHelpers is IERCHandler, Seriality {
 
         signer = _recoverSigner(msgHash, sig);
 
-        require(superSigner == signer,"verify super signer error");
+        require(superSigner == signer,"verify super batch signer error");
        
     }
 

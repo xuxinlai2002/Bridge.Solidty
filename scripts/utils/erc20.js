@@ -11,6 +11,7 @@ async function addMinter(account,args) {
     console.log("---------------------addMinter--------------------");
     console.log("MINTER_ROLE       : "   + MINTER_ROLE);
     console.log("args.minter       : "   + args.minter);
+    console.log("args.erc20       : "    + args.erc20Address);
     console.log("--------------------------------------------------\n");
     const tx = await erc20Instance.grantRole(MINTER_ROLE, args.minter);
 

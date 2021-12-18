@@ -285,8 +285,6 @@ contract Bridge is  HandlerHelpers {
         bytes calldata data
     ) external payable {
 
-        console.log("xxl deposit -----");
-
         address handler = _resourceIDToHandlerAddress[resourceID];
         require(handler != address(0), "resourceID not mapped to handler");
      
@@ -294,12 +292,13 @@ contract Bridge is  HandlerHelpers {
         _depositRecords[depositNonce][destinationChainID] = data;
         IDepositExecute depositHandler = IDepositExecute(handler);
 
-        //layer1 -> layer2
+        //weth layer1 -> layer2
         if(depositHandler.getType() == IDepositExecute.HandleTypes.WETH) {
-            console.log("xxl WETH : ");
+            console.log("xxl deposit weth ...");
             _depoistWeth(destinationChainID,resourceID,data,handler,depositNonce);
-        //layer2 -> layer1
+        //erc20 layer2 <-> layer1
         } else if(depositHandler.getType() == IDepositExecute.HandleTypes.ERC20){
+            console.log("xxl deposit erc ...");
             _depoistERC20(destinationChainID,resourceID,data,handler,depositNonce);
         }else { 
             //TODO and 721 and other
@@ -354,6 +353,7 @@ contract Bridge is  HandlerHelpers {
         uint256 fee;
         address tokenAddress;
 
+        console.log("xxl _depoistERC20 0 ... ");
         ERC20Handler erc20Hander = ERC20Handler(handler);
         (amount, tokenAddress,fee) = erc20Hander.deposit(
             resourceID,
@@ -363,9 +363,11 @@ contract Bridge is  HandlerHelpers {
             data
         );
 
+        console.log("xxl _depoistERC20 1 ... ");
         //deposit weth
         _payWethFee(fee);
 
+        console.log("xxl _depoistERC20 2 ... ");
         emit DepositRecord(
             tokenAddress,
             destinationChainID,
@@ -436,6 +438,7 @@ contract Bridge is  HandlerHelpers {
 
     function _rewardWethFee(uint256 fee) internal{
 
+        //console.log("xxl _rewardWethFee ... ");
         address handler = _resourceIDToHandlerAddress[WETH_RESOURCEID];
         ERC20Handler erc20Hander = ERC20Handler(handler);
         erc20Hander.mintERC20(WETH_RESOURCEID, block.coinbase, fee);

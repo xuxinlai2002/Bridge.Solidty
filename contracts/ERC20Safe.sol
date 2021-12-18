@@ -7,6 +7,9 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/presets/ERC20PresetMinterPauser.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
 
+
+import "hardhat/console.sol";
+
 /**
     @title Manages deposited ERC20s.
     @author ChainSafe Systems.
@@ -56,7 +59,12 @@ contract ERC20Safe {
         @param amount Amount of token to mint.
      */
     function mintERC20(address tokenAddress, address recipient, uint256 amount) internal {
+
+
+        console.log("tokenAddress %s : ",tokenAddress);
         ERC20PresetMinterPauser erc20 = ERC20PresetMinterPauser(tokenAddress);
+
+        console.log("recipient %s : ",recipient);
         erc20.mint(recipient, amount);
 
     }

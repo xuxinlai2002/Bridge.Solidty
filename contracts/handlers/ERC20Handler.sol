@@ -173,6 +173,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
        bytes32 resourceID, 
        bytes calldata data
     ) external override onlyBridge returns(uint256){
+
         uint256       amount;
         uint256       fee;
         uint256       lenDestinationRecipientAddress;
@@ -189,7 +190,7 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
         }
 
         require(_contractWhitelist[tokenAddress], "provided tokenAddress is not whitelisted");
-
+        
         if (_burnList[tokenAddress]) {
             mintERC20(tokenAddress, address(recipientAddress), amount);
         } else {
