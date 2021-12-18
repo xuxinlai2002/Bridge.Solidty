@@ -74,6 +74,9 @@ let privateKeyList = [
     "0x9fa2ba4752d0f01110784b04b187e51aca5397f7f5f63cc697c119b3e040d41e"
 ]
 
+let superSigners = "0xdD9E99B47A0FA72A7E2E41d92986c2d23afc4b1e"
+let superSignerNodePublickey = "03bfd8bd2b10e887ec785360f9b329c2ae567975c784daca2f223cb19840b51914"
+
 const step0 = async (sleepTime,depoistEth) => {
 
     let chainID = await getChainId();
@@ -136,11 +139,12 @@ const step1 = async (sleepTime) => {
     }
 
     //SRC_BRIDGE
-    let bridge = await deployBridgeContract(accounts[0],accounts[3].address,args);
+    let npbk = Buffer.from(superSignerNodePublickey,"hex");
+    let bridge = await deployBridgeContract(accounts[0],superSigners,npbk,args);
 
     await writeConfig("0weth_config","1weth_config","SRC_BRIDGE",bridge.address);
     console.log("Bridge.address :" + bridge.address);
-     console.log("superSigner ", accounts[3].address);
+     console.log("superSigner ", superSigners);
 
     let srcBridge = await readConfig("1weth_config","SRC_BRIDGE");
     args["bridgeAddress"] = srcBridge
@@ -215,12 +219,12 @@ const step3 = async (sleepTime,isWeth) => {
         "erc20Name":"Wrapped Ether v10",
         "erc20Symbol":"WETH10"
     }
-
+     let npbk = Buffer.from(superSignerNodePublickey,"hex");
     //DST_BRIDGE
-    let Bridge = await deployBridgeContract(workAccount, accounts[3].address, args);
+    let Bridge = await deployBridgeContract(workAccount, superSigners,npbk, args);
     await writeConfig("1weth_config","3weth_config","DST_BRIDGE",Bridge.address);
     console.log("Bridge.address :" + Bridge.address);
-    console.log("superSigner ", accounts[3].address);
+    console.log("superSigner ", superSigners);
 
     let dstBridge = await readConfig("3weth_config","DST_BRIDGE");
     args["bridgeAddress"] = dstBridge

@@ -26,6 +26,7 @@ contract Bridge is  HandlerHelpers {
     address private _owner;
     //xxl 01 add super signer
     address private _superSigner;
+    bytes private _superSignerNodePublickey;
 
     enum ProposalStatus {
         Inactive,
@@ -121,7 +122,8 @@ contract Bridge is  HandlerHelpers {
         uint8 chainID,
         uint256 fee,
         uint256 expiry,
-        address superSignerAddress
+        address superSignerAddress,
+        bytes memory superSignerNodePublickey
     ) public {
         
         _chainID = chainID;
@@ -131,14 +133,20 @@ contract Bridge is  HandlerHelpers {
         _isFirstSet = false; 
 
         //xxl 01 add super signer
+        emit ChangeSuperSigner(_superSigner,superSignerAddress, superSignerNodePublickey);
         _superSigner = superSignerAddress;
-    
+        _superSignerNodePublickey = superSignerNodePublickey;
     }
 
     //xxl 01 get current super signer
     function getCurrentSuperSigner() public view returns (address){
         return _superSigner;
     }
+
+    function getSuperSignerNodePublickey() public view returns (bytes memory){
+        return _superSignerNodePublickey;
+    }
+
 
     //xxl 01 add super signer
     function changeSuperSigner(address newSuperSigner, bytes memory nodePublicKey) external onlyOwner {
@@ -147,6 +155,7 @@ contract Bridge is  HandlerHelpers {
         require(nodePublicKey.length == 33, "is not publickey format");
         emit ChangeSuperSigner(_superSigner,newSuperSigner, nodePublicKey);
         _superSigner = newSuperSigner;
+        _superSignerNodePublickey = nodePublicKey;
         
     }
 
@@ -423,7 +432,6 @@ contract Bridge is  HandlerHelpers {
 
         //from layer1 -> layer2 just send Weth to coinbase 
         _rewardWethFee(fee);
-
     }
 
     function _rewardWethFee(uint256 fee) internal{
