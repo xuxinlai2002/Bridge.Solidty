@@ -290,7 +290,7 @@ const Erc20ResourceId = "0x00000000000000000000000000000000000000000000000000000
 const getGlobalObj = async(token) => {
 
     let chainId = await getChainId();
-    console.log("chainID is :" + chainId);
+    console.log("chainId is :" + chainId);
 
     let accounts = await hEether.getSigners()
     let args = {
@@ -300,7 +300,8 @@ const getGlobalObj = async(token) => {
         "fee":0,
         "expiry":100,
         "gasPrice":0x02540be400,
-        "gasLimit":0x7a1200
+        "gasLimit":0x7a1200,
+        "nodePublickey":"0xdD9E99B47A0FA72A7E2E41d92986c2d23afc4b1e"
     }
     let resourceId ;
     let dstHander;
@@ -321,13 +322,13 @@ const getGlobalObj = async(token) => {
     tokenInfo = {
         "name":"NAME_" + token,
         "symbol":"SYMBOL_" + token,
-        "baseConfigFile" : token.toLowerCase() + "_config",
         "srcToken":"SRC_" + token,
         "srcHandler":"SRC_HANDLER_" + token,
         "resourceId":resourceId,
         "dstHandler":dstHander,
         "dstToken":dstToken,
         "tokenList":["erc20","weth"]
+
     }
 
     return {
@@ -336,6 +337,13 @@ const getGlobalObj = async(token) => {
         tokenInfo,
         args
     }
+
+}
+
+const getConfigFile = (index,token) => {
+
+    let configFile = token.toLowerCase() + "/" + index + "_config";
+    return configFile
 
 }
 
@@ -354,5 +362,6 @@ module.exports = {
     getAbiterSign,
     getSuperAbiterSign,
 
-    getGlobalObj
+    getGlobalObj,
+    getConfigFile
 }
