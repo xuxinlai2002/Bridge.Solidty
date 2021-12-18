@@ -105,7 +105,6 @@ const getUnsignTx = async(tx,from,to,value,chainID,gasLimit,eth) => {
         const data = tx.encodeABI();
         const n = await eth.getTransactionCount(from);
         
-        console.log("xxl getUnsignTx nonce is : " + n );
         //TODO
         const unsignedTx = {
             from:from,
@@ -114,11 +113,13 @@ const getUnsignTx = async(tx,from,to,value,chainID,gasLimit,eth) => {
             data:data,
             gasPrice:gasPrice,
             gasLimit:gasLimit,
-            chainId:chainID
+            chainId:chainID,
+            nonce:n
         };
         return unsignedTx;
   
     }catch(e){
+      console.log(e);
       return null;
     }
 
@@ -293,16 +294,7 @@ const getGlobalObj = async(token) => {
     console.log("chainId is :" + chainId);
 
     let accounts = await hEether.getSigners()
-    let args = {
-        "chainId": chainId,
-        "relayers":[accounts[0].address],
-        "relayerThreshold":1,
-        "fee":0,
-        "expiry":100,
-        "gasPrice":0x02540be400,
-        "gasLimit":0x7a1200,
-        "nodePublickey":"0xdD9E99B47A0FA72A7E2E41d92986c2d23afc4b1e"
-    }
+
     let resourceId ;
     let dstHander;
     let dstToken;
@@ -317,7 +309,17 @@ const getGlobalObj = async(token) => {
     }else{
         console.log("no token");
     }
-
+    let args = {
+        "chainId": chainId,
+        "relayers":[accounts[0].address],
+        "relayerThreshold":1,
+        "fee":0,
+        "expiry":100,
+        "gasPrice":0x02540be400,
+        "gasLimit":0x7a1200,
+        "nodePublickey":"0xdD9E99B47A0FA72A7E2E41d92986c2d23afc4b1e",
+        "resourceId":resourceId
+    }
 
     tokenInfo = {
         "name":"NAME_" + token,

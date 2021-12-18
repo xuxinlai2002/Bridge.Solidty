@@ -283,38 +283,29 @@ const step7 = async (sleepTime,token) => {
 
 //deposit
 const Bridge = require('../../artifacts/contracts/Bridge.sol/Bridge.json');
+const { exit } = require('process')
 const privKey = "0x9aede013637152836b14b423dabef30c9b880ea550dbec132183ace7ca6177ed";
 const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
 
-    let chainID = await getChainId();
-    let accounts = await ethers.getSigners()
-    console.log("chainID is : " + chainID + " from address : " + accounts[0].address);
-    
-    args = {
-        "gasPrice":0x02540be400,
-        "gasLimit":0x7a1200,
-        "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8",
-        "dest":83,
-        "amount":amount
-    }
+    let {accounts,args} = await getGlobalObj(token);    
+    args["dest"] = 83;
+    args["amount"] = amount;
 
-    let srcBridge = await readConfig("1weth_config","SRC_BRIDGE");
+    let config4 = getConfigFile("4",token);
+    let srcBridge = await readConfig(config4,"SRC_BRIDGE");
 
     console.log("\n*************************check balance before****************************");
     let beforeEthBalace = await utils.formatEther(await accounts[0].getBalance());
     console.log("acount[0] eth  : " + beforeEthBalace);
    
     beforeEthBalace = await utils.formatEther(await ethers.provider.getBalance(srcBridge));
-    console.log("srcHandler eth : " + beforeEthBalace);
+    console.log("srcBridge eth : " + beforeEthBalace);
     console.log("**************************************************************************\n");
     
     let data = '0x' +
-    // ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +                               // Deposit Amount        (32 bytes)
-    // ethers.utils.hexZeroPad(ethers.utils.hexlify((args.recipient.length - 2)/2), 32).substr(2) +     // len(recipientAddress) (32 bytes)
-    // args.recipient.substr(2);                                                                        // recipientAddress      (?? bytes)
     ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +
     ethers.utils.hexZeroPad(fee, 32).substr(2) 
-     let v = BigInt(amount)  + BigInt(fee);
+    let total = amount.add(fee);
 
     console.log(`Constructed deposit:`)
     console.log(`Resource Id: ${args.resourceId}`)
@@ -322,13 +313,13 @@ const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
     console.log(`Raw: ${data}`)
     console.log(`Creating deposit to initiate transfer!`);
     console.log("xxl srcBrdige : " + srcBridge);
-     console.log("xxl v : " + v.toString());
+    console.log("xxl total : " + total.toString());
   
     try{
           
         let l1URL = "http://localhost:1111";
         let params = [args.dest,args.resourceId,data];
-        //let web3 = new Web3();
+
         var web3 = new Web3(new Web3.providers.HttpProvider(l1URL));
         let contractTx = await getContractTx(
                 Bridge.abi,
@@ -343,12 +334,14 @@ const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
                         contractTx,
                         accounts[0].address,
                         srcBridge,
-                        v.toString(),
-                        82,
+                        total.toString(),
+                        args.dest,
                         args.gasLimit,
                         web3.eth
                     );    
         console.log("xxl getUnsignTx ");
+        console.log(unsignTx);
+
         var signTx = await web3.eth.accounts.signTransaction(unsignTx, privKey);
         console.log("xxl signTransaction ");
         let tx = await web3.eth.sendSignedTransaction(signTx.rawTransaction)
@@ -379,30 +372,25 @@ const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
 //deposit
 const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
 
-    let chainID = await getChainId();
-    console.log("chainID is :" + chainID);
-    let accounts = await ethers.getSigners()
-    console.log(accounts[0].address);
+
+    let {accounts,args,tokenInfo} = await getGlobalObj(token);    
+    let config4 = getConfigFile("4",token);
 
     //------------------
-    let dstBridge = await readConfig("3weth_config","DST_BRIDGE");
-    let dstERC20 = await readConfig("3weth_config","DST_ERC20");
-    let dstHandlerERC20 = await readConfig("3weth_config","DST_HANDLER_ERC20");
+    let dstBridge = await readConfig(config4,"DST_BRIDGE");
+    let dstToken = await readConfig(config4,tokenInfo.dstToken);
+    let dstHandler = await readConfig(config4,tokenInfo.dstHandler);
 
     //
     args = {
-        "gasPrice":0x02540be400,
-        "gasLimit":0x7a1200,
-        "resourceId":"0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8",
-
-        "bridge":dstBridge,
+        ...args,
         "dest":1,
         "amount":amount,
         "fee":fee,
-        "recipient":dstHandlerERC20,
-
-        "erc20":dstERC20,
-        "erc20Hander":dstHandlerERC20,
+        "recipient":dstHandler,
+        "bridge":dstBridge,
+        "erc20":dstToken,
+        "erc20Hander":dstHandler,
         "bridgeAddress":dstBridge
     }
 
@@ -412,8 +400,7 @@ const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
    
     prov = ethers.getDefaultProvider();
     beforeEthBalace = await utils.formatEther(await prov.getBalance(dstBridge));
-    console.log("srcHandler eth : " + beforeEthBalace);
-
+    console.log("dstBridge eth : " + beforeEthBalace);
     console.log("**************************************************************************\n");
     
     //stop here
@@ -421,14 +408,8 @@ const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
     let bridgeInstance = await Factory__Bridge.connect(accounts[0]).attach(dstBridge);    
 
     console.log("bridge is : " + dstBridge );
-    console.log(bridgeInstance.address);
-
     try{
-
-        console.log('0');
         await approve(accounts[0],args);
-        console.log('1');
-
         const data = '0x' + 
         ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +
         ethers.utils.hexZeroPad(fee, 32).substr(2)
@@ -457,7 +438,6 @@ const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
     } catch (e) {
         console.log("error ");
         console.log(e);
-        //process.exit(0)
     }
 
     //sleep(sleepTime);
@@ -472,12 +452,10 @@ const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
     console.log("srcHandler eth : " + afterEthBalace);
     console.log("**************************************************************************\n");
 
-
     process.exit(0)
 
 
 }
-
 
 const setFee = async(fee) => {
 

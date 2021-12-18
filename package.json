@@ -19,6 +19,9 @@
     "6weth": "npx hardhat run scripts/weth/6wethSetBurnDst.js --network my2",
     "7weth": "npx hardhat run scripts/weth/7wethAddMinterDst.js --network my2",
 
+    "wethLayer1ToLayer2": "npx hardhat run scripts/weth/8wethLayer1ToLayer2.js --network my1",
+    "wethLayer2ToLayer1": "npx hardhat run scripts/weth/9wethLayer2ToLayer1.js --network my2",
+
     "0erc20": "npx hardhat run scripts/erc20/0erc20TokenSrc.js --network my1",
     "1erc20": "npx hardhat run scripts/erc20/1erc20BridgeSrc.js --network my1",
     "2erc20": "npx hardhat run scripts/erc20/2erc20HandlerSrc.js --network my1",
@@ -27,9 +30,9 @@
     "5erc20": "npx hardhat run scripts/erc20/5erc20RegisterDst.js --network my2",
     "6erc20": "npx hardhat run scripts/erc20/6erc20SetBurnDst.js --network my2",
     "7erc20": "npx hardhat run scripts/erc20/7erc20AddMinterDst.js --network my2",
-
-    "wethLayer1ToLayer2": "npx hardhat run scripts/work/n9deposit12.js --network my1",
-    "wethLayer2ToLayer1": "npx hardhat run scripts/work/n9deposit21.js --network my2",
+    
+    "erc20Layer1ToLayer2": "npx hardhat run scripts/erc20/8erc20Layer1ToLayer2.js --network my1",
+    "erc20Layer2ToLayer1": "npx hardhat run scripts/erc20/9erc20Layer2ToLayer1.js --network my2",
 
     "setLayer1Fee": "npx hardhat run scripts/utils/0setFee.js  --network my1",
     "changeLayer1SuperSigner": "npx hardhat run scripts/utils/1changeSuperSigner.js --network my1",

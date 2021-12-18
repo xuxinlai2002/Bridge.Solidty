@@ -8,7 +8,7 @@ const main = async () => {
 
     let sendValue = utils.parseEther("0.01");
     let fee = utils.parseEther("0.001");
-    await layer2ToLayer1(15000,sendValue,fee,"WETH");
+    await layer2ToLayer1(1500,sendValue,fee,"WETH");
 
 
 
