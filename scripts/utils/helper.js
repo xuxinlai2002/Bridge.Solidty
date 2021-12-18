@@ -1,3 +1,4 @@
+const { ethers: hEether } = require('hardhat');
 const fs = require('fs')
 const path = require('path')
 const ethers = require('ethers');
@@ -5,24 +6,29 @@ var Web3 = require('web3')
 
 const writeConfig = async (fromFile,toFile,key, value) => {
 
-    let fromFullFile = path.resolve(__dirname, './' + fromFile + '.json')
+    let fromFullFile = path.resolve(getConfigPath(), './' + fromFile + '.json')
     let contentText = fs.readFileSync(fromFullFile,'utf-8');
     let data = JSON.parse(contentText);
     data[key] = value;
 
-    let toFullFile = path.resolve(__dirname, './' + toFile + '.json')
+    let toFullFile = path.resolve(getConfigPath(), './' + toFile + '.json')
     fs.writeFileSync(toFullFile, JSON.stringify(data, null, 4), { encoding: 'utf8' }, err => {})
 
 }
 
 const readConfig = async (fromFile,key) => {
 
-    let fromFullFile = path.resolve(__dirname, './' + fromFile + '.json')
+    let fromFullFile = path.resolve(getConfigPath(), './' + fromFile + '.json')
     let contentText = fs.readFileSync(fromFullFile,'utf-8');
     let data = JSON.parse(contentText);
-   
     return data[key];
 
+}
+
+const getConfigPath = () => {
+
+    //return "scripts/config"
+    return path.resolve(__dirname, '..') + "/config"
 }
 
 const viewEvnt = async (chainID,hash) => {
@@ -279,6 +285,59 @@ const getAbiterSign = async(addressList) => {
 }
 
 
+const WethResourceId = "0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8";
+const Erc20ResourceId = "0x0000000000000000000000000000000000000000000000000000000000000001";
+const getGlobalObj = async(token) => {
+
+    let chainId = await getChainId();
+    console.log("chainID is :" + chainId);
+
+    let accounts = await hEether.getSigners()
+    let args = {
+        "chainId": chainId,
+        "relayers":[accounts[0].address],
+        "relayerThreshold":1,
+        "fee":0,
+        "expiry":100,
+        "gasPrice":0x02540be400,
+        "gasLimit":0x7a1200
+    }
+    let resourceId ;
+    let dstHander;
+    let dstToken;
+    if(token == "ERC20"){
+        resourceId = Erc20ResourceId;
+        dstHander = "DST_HANDLER_ERC20"
+        dstToken = "DST_ERC20"
+    }else if(token == "WETH"){
+        resourceId = WethResourceId;
+        dstHander = "DST_HANDLER_ERC20"
+        dstToken = "DST_ERC20"
+    }else{
+        console.log("no token");
+    }
+
+
+    tokenInfo = {
+        "name":"NAME_" + token,
+        "symbol":"SYMBOL_" + token,
+        "baseConfigFile" : token.toLowerCase() + "_config",
+        "srcToken":"SRC_" + token,
+        "srcHandler":"SRC_HANDLER_" + token,
+        "resourceId":resourceId,
+        "dstHandler":dstHander,
+        "dstToken":dstToken,
+        "tokenList":["erc20","weth"]
+    }
+
+    return {
+        chainId,
+        accounts,
+        tokenInfo,
+        args
+    }
+
+}
 
 module.exports = {
     writeConfig,
@@ -293,5 +352,7 @@ module.exports = {
     getSignBatch,
     getAbiterList,
     getAbiterSign,
-    getSuperAbiterSign
+    getSuperAbiterSign,
+
+    getGlobalObj
 }

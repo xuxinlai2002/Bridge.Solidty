@@ -1,10 +1,10 @@
 const {
-    step6
+    step3
 } = require('./runStep')
 
 const main = async () => {
 
-    await step6(3000);
+    await step3(1000,"WETH");
 
 }
 

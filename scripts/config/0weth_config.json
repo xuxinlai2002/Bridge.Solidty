@@ -1,0 +1,10 @@
+{
+    "NAME_WETH": "WETH",
+    "SYMBOL_WETH": "WETH",
+    "NAME_ERC20": "Test20",
+    "SYMBOL_ERC20": "Test20",
+    "NAME_ERC721": "Test721",
+    "SYMBOL_ERC721": "Test721",
+    "URI_ERC721": "https://Test721",
+    "SRC_WETH": "0xbf1401CB993054283A4de48230aF51e0729329E1"
+}

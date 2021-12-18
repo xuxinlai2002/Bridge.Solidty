@@ -34,26 +34,12 @@
     "setLayer1Fee": "npx hardhat run scripts/weth/setFee.js  --network my1",
     "wethLayer1ToLayer2": "npx hardhat run scripts/weth/n9deposit12.js --network my1",
     "wethLayer2ToLayer1": "npx hardhat run scripts/weth/n9deposit21.js --network my2",
-    "changeLayer2SuperSigner": "npx hardhat run scripts/weth/changeSuperSigner.js --network my2",
-    "changeLayer1SuperSigner": "npx hardhat run scripts/weth/changeSuperSigner.js --network my1",
 
-    "0weth": "npx hardhat run scripts/work/0wethTokenSrc.js --network my1",
-    "0erc20": "npx hardhat run scripts/work/0erc20TokenSrc.js --network my1",
-    "1weth": "npx hardhat run scripts/work/1wethBridgeSrc.js --network my1",
-    "1erc20": "npx hardhat run scripts/work/1erc20BridgeSrc.js --network my1",
-    "2weth": "npx hardhat run scripts/work/2wethHandlerSrc.js --network my1",
-    "2erc20": "npx hardhat run scripts/work/2erc20HandlerSrc.js --network my1",
-    "3weth": "npx hardhat run scripts/work/3wethRegisterSrc.js --network my1",
-    "3erc20": "npx hardhat run scripts/work/3erc20RegisterSrc.js --network my1",
 
-    "4weth": "npx hardhat run scripts/work/4wethBridgeDst.js --network my2",
-    "4erc20": "npx hardhat run scripts/work/4erc20BridgeDst.js --network my2",
-    "5weth": "npx hardhat run scripts/work/5wethRegisterDst.js --network my2",
-    "5erc20": "npx hardhat run scripts/work/5erc20RegisterDst.js --network my2",
-    "6weth": "npx hardhat run scripts/work/6wethSetBurnDst.js --network my2",
-    "6erc20": "npx hardhat run scripts/work/6erc20SetBurnDst.js --network my2",
-    "7weth": "npx hardhat run scripts/work/7wethAddMinterDst.js --network my2",
-    "7erc20": "npx hardhat run scripts/work/7erc20AddMinterDst.js --network my2"
+    "1": "npx hardhat run scripts/work/1bridgeSrc.js --network my1",
+    "2weth": "npx hardhat run scripts/work/2wethSrc.js --network my1",
+    "2erc20": "npx hardhat run scripts/work/2Erc20.js --network my1"
+    
 
 
   },

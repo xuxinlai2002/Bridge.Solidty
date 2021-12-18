@@ -1,10 +1,10 @@
 const {
-    step3
+    step5
 } = require('./runStep')
 
 const main = async () => {
 
-    await step3(3000,false);
+    await step5(1000,"ERC20");
 
 }
 
