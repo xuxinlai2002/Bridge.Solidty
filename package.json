@@ -36,7 +36,9 @@
 
     "setLayer1Fee": "npx hardhat run scripts/utils/0setFee.js  --network my1",
     "changeLayer1SuperSigner": "npx hardhat run scripts/utils/1changeSuperSigner.js --network my1",
-    "changeLayer2SuperSigner": "npx hardhat run scripts/utils/1changeSuperSigner.js --network my2"
+    "changeLayer2SuperSigner": "npx hardhat run scripts/utils/1changeSuperSigner.js --network my2",
+
+    "mintLayer1ERC20": "npx hardhat run scripts/erc20/tErc20Mint.js --network my1"
     
   },
   "devDependencies": {

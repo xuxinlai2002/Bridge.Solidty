@@ -132,7 +132,6 @@ contract Bridge is  HandlerHelpers {
         _owner = msg.sender;
         _isFirstSet = false; 
         
-        require(nodePublicKey.length == 33, "is not publickey format");
         //xxl 01 add super signer
         emit ChangeSuperSigner(_superSigner,superSignerAddress, superSignerNodePublickey);
         _superSigner = superSignerAddress;

@@ -4,7 +4,8 @@ const {
     deployERC20Handler,
     deployWETHHandler,
     deployWETH,
-    deployERC20
+    deployERC20,
+    attachERC20
 } = require("../utils/deploy")
 
 const {
@@ -97,6 +98,23 @@ const step0 = async (sleepTime,token) => {
     console.log("");
 
     await sleep(sleepTime);
+}
+
+const mintToken = async (sleepTime,token,amount) => {
+
+    let {accounts,tokenInfo} = await getGlobalObj(token);
+    let config0 = getConfigFile("0",token);
+
+    let tokenAddress = await readConfig(config0,tokenInfo.srcToken);
+    let tokenContract
+
+    if(token == "ERC20" || token == "WETH"){
+        tokenContract = await attachERC20(accounts[0],tokenAddress);
+    }
+    
+    await tokenContract.mint(accounts[0].address,amount);
+    await sleep(sleepTime);
+
 }
 
 
@@ -523,6 +541,7 @@ module.exports = {
     layer2ToLayer1,
 
     setFee,
-    changeSuperSigner
+    changeSuperSigner,
+    mintToken
 
 }
