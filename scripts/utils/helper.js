@@ -368,9 +368,10 @@ const getGlobalObj = async(token) => {
         "expiry":100,
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
-        "nodePublickey":"03bfd8bd2b10e887ec785360f9b329c2ae567975c784daca2f223cb19840b51914",
+        "nodePublickey": Buffer.from("03bfd8bd2b10e887ec785360f9b329c2ae567975c784daca2f223cb19840b51914","hex"),
         "resourceId":resourceId
     }
+
 
     tokenInfo = {
         "name":"NAME_" + token,

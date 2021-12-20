@@ -131,7 +131,9 @@ contract Bridge is  HandlerHelpers {
         _expiry = expiry;
         _owner = msg.sender;
         _isFirstSet = false; 
-        
+        if (superSignerNodePublickey.length != 33) {
+            revert();
+        }
         //xxl 01 add super signer
         emit ChangeSuperSigner(_superSigner,superSignerAddress, superSignerNodePublickey);
         _superSigner = superSignerAddress;
