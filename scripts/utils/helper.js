@@ -368,7 +368,7 @@ const getGlobalObj = async(token) => {
         "expiry":100,
         "gasPrice":0x02540be400,
         "gasLimit":0x7a1200,
-        "nodePublickey":"0xdD9E99B47A0FA72A7E2E41d92986c2d23afc4b1e",
+        "nodePublickey":"03bfd8bd2b10e887ec785360f9b329c2ae567975c784daca2f223cb19840b51914",
         "resourceId":resourceId
     }
 
