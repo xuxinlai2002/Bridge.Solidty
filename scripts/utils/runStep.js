@@ -112,9 +112,13 @@ const mintToken = async (sleepTime,token,amount) => {
         tokenContract = await attachERC20(accounts[0],tokenAddress);
     }
     
-    await tokenContract.mint(accounts[0].address,amount);
-    await sleep(sleepTime);
+    let tx = await tokenContract.mint(accounts[0].address,amount);
+      await sleep(sleepTime);
+    console.log(tx.hash)
 
+    let balance = await tokenContract.balanceOf(accounts[0].address);
+
+    console.log("account", accounts[0].address, "balance", Number(balance.toString())/1e18);
 }
 
 
@@ -124,7 +128,7 @@ const step1 = async (sleepTime,token) => {
     let config0 = getConfigFile("0",token);
     let config1 = getConfigFile("1",token);
 
-    args["superAddress"] = accounts[3].address
+    args["superAddress"] = accounts[0].address
     //SRC_BRIDGE
     let bridge = await deployBridgeContract(accounts[0],args);
     await writeConfig(config0,config1,"SRC_BRIDGE",bridge.address);
@@ -200,7 +204,7 @@ const step4 = async (sleepTime,token) => {
     let config2 = getConfigFile("2",token);
     let config4 = getConfigFile("4",token);
 
-    args["superAddress"] = accounts[3].address
+    args["superAddress"] = accounts[0].address
     //DST_BRIDGE
     let Bridge = await deployBridgeContract(workAccount,args);
     await writeConfig(config2,config4,"DST_BRIDGE",Bridge.address);
@@ -259,6 +263,7 @@ const step6 = async (sleepTime,token) => {
 
     let {accounts,args,tokenInfo} = await getGlobalObj(token);
     let workAccount = accounts[0];
+    let gasLimit = args.gasLimit
 
     let config4 = getConfigFile("4",token);
     let dstBridge = await readConfig(config4,"DST_BRIDGE");
@@ -269,7 +274,8 @@ const step6 = async (sleepTime,token) => {
         "relayers":workAccount.address,
         "bridge":dstBridge,
         "handler":dstHandler,
-        "targetContract":dstToken
+        "targetContract":dstToken,
+        "gasLimit": gasLimit
     }
 
     await setBurn(workAccount,args);
@@ -311,6 +317,27 @@ const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
 
     let config4 = getConfigFile("4",token);
     let srcBridge = await readConfig(config4,"SRC_BRIDGE");
+
+
+    //////////////////////////
+
+    let {tokenInfo} = await getGlobalObj(token);
+    let config0 = getConfigFile("0",token);
+
+    let tokenAddress = await readConfig(config0,tokenInfo.srcToken);
+    let tokenContract
+     console.log("tokenAddress", tokenAddress)
+    if(token == "ERC20" || token == "WETH"){
+        tokenContract = await attachERC20(accounts[0],tokenAddress);
+    }
+     args["erc20"] = tokenContract.address;
+    let name = await tokenContract.name();
+
+    let balance = await tokenContract.balanceOf(accounts[0].address);
+
+    console.log("account", accounts[0].address,"tokenName", name, "token balance", Number(balance.toString())/1e18);
+
+    ////////////////////////
 
     console.log("\n*************************check balance before****************************");
     let beforeEthBalace = await utils.formatEther(await accounts[0].getBalance());

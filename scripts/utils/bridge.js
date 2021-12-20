@@ -37,6 +37,7 @@ async function setBurn(account,args) {
     console.log("---------------------setBurn--------------------");
     console.log("args.handler    : " + args.handler);
     console.log("args.token      : " + args.targetContract);
+     console.log("args.gasLimit      : " + args.gasLimit);
     console.log("---------------------------------------------------\n");
 
     const tx = await bridgeInstance.adminSetBurnable(
