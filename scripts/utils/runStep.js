@@ -332,7 +332,14 @@ const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
     console.log(`Creating deposit to initiate transfer!`);
     console.log("xxl srcBrdige : " + srcBridge);
     console.log("xxl total : " + total.toString());
-  
+
+    //add src hander approve
+    let srcHandler = await readConfig(config4,tokenInfo.srcHandler);
+    let erc20 = await readConfig(config4,tokenInfo.srcToken);
+    args["recipient"] = srcHandler
+    args["erc20"] = erc20
+    await approve(accounts[0],args);
+
     try{
           
         let l1URL = "http://localhost:1111";
