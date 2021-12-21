@@ -20,7 +20,7 @@ async function addMinter(account,args) {
 }
 
 
-async function approve(account,args) {
+async function approve(account,args,isAddFee = true) {
 
     const Factory__ERC20 = await ethers.getContractFactory('ERC20',account)
     //console.log(args.erc20);
@@ -32,9 +32,13 @@ async function approve(account,args) {
     console.log("args.fee       : "        + args.fee);
     console.log("--------------------------------------------------");
 
-    let appoveAmount =  args.amount.add(args.fee);
-    console.log(appoveAmount);
-
+    let appoveAmount;
+    if(isAddFee == true){
+        appoveAmount =  args.amount.add(args.fee);
+    }else{
+        appoveAmount = args.amount;
+    }
+   
     const tx = await erc20Instance.approve(args.recipient, appoveAmount , {
         gasPrice: args.gasPrice,
         gasLimit: args.gasLimit

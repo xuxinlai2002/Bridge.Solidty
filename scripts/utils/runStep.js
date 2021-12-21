@@ -461,7 +461,29 @@ const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
 
     console.log("bridge is : " + dstBridge );
     try{
-        await approve(accounts[0],args);
+
+        if(token != "WETH"){
+            console.log("xxl come to erc20 logic ...");
+            //approve erc20
+            await approve(accounts[0],args,false);
+
+            let configWeth4 = getConfigFile("4","WETH");
+            let wethERC20 = await readConfig(configWeth4,"DST_ERC20");
+            let wethHandler = await readConfig(configWeth4,"DST_HANDLER_ERC20");
+            let amount = utils.parseEther("1");
+            //approve weth
+            let wethArgs = {
+                erc20:wethERC20,
+                recipient:wethHandler,
+                amout:amount,
+                fee:0
+            }
+            await approve(accounts[0],wethArgs,false);
+        }else{
+            await approve(accounts[0],args);
+        }
+        
+
         const data = '0x' + 
         ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +
         ethers.utils.hexZeroPad(fee, 32).substr(2)

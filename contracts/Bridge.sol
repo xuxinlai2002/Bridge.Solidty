@@ -298,7 +298,7 @@ contract Bridge is  HandlerHelpers {
         if(depositHandler.getType() == IDepositExecute.HandleTypes.WETH) {
             console.log("xxl deposit weth ...");
             _depoistWeth(destinationChainID,resourceID,data,handler,depositNonce);
-        //erc20 layer2 <-> layer1
+        //erc20 layer1 <-> layer2 
         } else if(depositHandler.getType() == IDepositExecute.HandleTypes.ERC20){
             console.log("xxl deposit erc ...");
             _depoistERC20(destinationChainID,resourceID,data,handler,depositNonce);
