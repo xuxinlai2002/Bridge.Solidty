@@ -128,7 +128,6 @@ const step1 = async (sleepTime,token) => {
     let config0 = getConfigFile("0",token);
     let config1 = getConfigFile("1",token);
 
-    args["superAddress"] = accounts[0].address
     //SRC_BRIDGE
     let bridge = await deployBridgeContract(accounts[0],args);
     await writeConfig(config0,config1,"SRC_BRIDGE",bridge.address);
@@ -204,7 +203,6 @@ const step4 = async (sleepTime,token) => {
     let config2 = getConfigFile("2",token);
     let config4 = getConfigFile("4",token);
 
-    args["superAddress"] = accounts[0].address
     //DST_BRIDGE
     let Bridge = await deployBridgeContract(workAccount,args);
     await writeConfig(config2,config4,"DST_BRIDGE",Bridge.address);
@@ -366,7 +364,7 @@ const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
     args["recipient"] = srcHandler
     args["erc20"] = erc20
     await approve(accounts[0],args);
-
+    await sleep(sleepTime + 20000)
     try{
           
         let l1URL = "http://localhost:1111";
@@ -556,10 +554,10 @@ const setFee = async(fee) => {
 }
 
 
-const changeSuperSigner = async(newSuperSigner, nodePublickey) => {
+const changeSuperSigner = async(newSuperSigner, nodePublickey, token) => {
 
-    let {accounts} = await getGlobalObj("WETH");
-    let config4 = getConfigFile("4","WETH");
+    let {accounts} = await getGlobalObj(token);
+    let config4 = getConfigFile("4",token);
     let dstBridge = await readConfig(config4,"DST_BRIDGE");
 
     const Factory__Bridge = await ethers.getContractFactory('Bridge',accounts[0])
