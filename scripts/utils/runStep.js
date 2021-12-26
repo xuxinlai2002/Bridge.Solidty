@@ -140,6 +140,7 @@ const step1 = async (sleepTime,token,isAttach=false) => {
     }else{
         let srcBridge = await readConfig(configC0,"SRC_BRIDGE");
         bridge = await attachBridgeL1Contract(accounts[0],srcBridge);
+        await writeConfig(config0,config1,"SRC_BRIDGE",bridge.address);
     }
 
     console.log("Bridge.address :" + bridge.address);
@@ -206,6 +207,7 @@ const step3 = async (sleepTime,token) => {
 //
 const step4 = async (sleepTime,token,isAttach=false) => {
 
+    let configC0 = "0_config";
     let {accounts,args,tokenInfo} = await getGlobalObj(token);
     let workAccount = accounts[0];
     args[ "relayers"] = [workAccount.address];
@@ -222,11 +224,12 @@ const step4 = async (sleepTime,token,isAttach=false) => {
     }else{
         let dstBridge = await readConfig(configC0,"DST_BRIDGE");
         bridge = await attachBridgeL2Contract(accounts[0],dstBridge);
+        await writeConfig(config2,config4,"DST_BRIDGE",bridge.address);
     }
     
-    console.log("Bridge.address :" + Bridge.address);
+    console.log("Bridge.address :" + bridge.address);
     console.log("");
-    args["bridgeAddress"] = Bridge.address
+    args["bridgeAddress"] = bridge.address
     
     let handler;
     if(token == "ERC20" || token == "WETH"){
