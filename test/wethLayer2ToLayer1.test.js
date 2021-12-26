@@ -7,7 +7,7 @@ const { expect } = chai
 chai.use(solidity)
 
 const {
-  deployBridgeContract,
+  deployBridgeL2ToL1Contract,
   deployWETHHandler,
   deployERC20Handler,
   deployERC20
@@ -74,7 +74,7 @@ describe(`layer2 => layer1 `, () => {
     }
 
     //DST_BRIDGE
-    bridgeContract =  await deployBridgeContract(deplyer,args);
+    bridgeContract =  await deployBridgeL2ToL1Contract(deplyer,args);
 
   })
 

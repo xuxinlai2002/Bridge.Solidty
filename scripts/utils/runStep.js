@@ -1,6 +1,7 @@
 const { ethers} = require('hardhat')
 const {
-    deployBridgeContract,
+    deployBridgeL1ToL2Contract,
+    deployBridgeL2ToL1Contract,
     deployERC20Handler,
     deployWETHHandler,
     deployWETH,
@@ -24,7 +25,6 @@ const {
 } = require("../utils/bridge")
 
 const {
-    //approve,
     deposit
 } = require("../utils/weth")
 
@@ -130,7 +130,7 @@ const step1 = async (sleepTime,token) => {
 
     args["superAddress"] = accounts[0].address
     //SRC_BRIDGE
-    let bridge = await deployBridgeContract(accounts[0],args);
+    let bridge = await deployBridgeL1ToL2Contract(accounts[0],args);
     await writeConfig(config0,config1,"SRC_BRIDGE",bridge.address);
 
     console.log("Bridge.address :" + bridge.address);
@@ -206,7 +206,7 @@ const step4 = async (sleepTime,token) => {
 
     args["superAddress"] = accounts[0].address
     //DST_BRIDGE
-    let Bridge = await deployBridgeContract(workAccount,args);
+    let Bridge = await deployBridgeL1ToL2Contract(workAccount,args);
     await writeConfig(config2,config4,"DST_BRIDGE",Bridge.address);
     console.log("Bridge.address :" + Bridge.address);
     console.log("");
@@ -317,9 +317,6 @@ const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
 
     let config4 = getConfigFile("4",token);
     let srcBridge = await readConfig(config4,"SRC_BRIDGE");
-
-
-    //////////////////////////
 
     let {tokenInfo} = await getGlobalObj(token);
     let config0 = getConfigFile("0",token);
@@ -462,6 +459,8 @@ const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
     console.log("bridge is : " + dstBridge );
     try{
 
+        console.log(token);
+
         if(token != "WETH"){
             console.log("xxl come to erc20 logic ...");
             //approve erc20
@@ -470,12 +469,12 @@ const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
             let configWeth4 = getConfigFile("4","WETH");
             let wethERC20 = await readConfig(configWeth4,"DST_ERC20");
             let wethHandler = await readConfig(configWeth4,"DST_HANDLER_ERC20");
-            let amount = utils.parseEther("1");
+            
             //approve weth
             let wethArgs = {
                 erc20:wethERC20,
                 recipient:wethHandler,
-                amout:amount,
+                amount:fee,
                 fee:0
             }
             await approve(accounts[0],wethArgs,false);

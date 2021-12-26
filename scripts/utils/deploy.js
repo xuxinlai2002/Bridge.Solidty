@@ -1,9 +1,9 @@
 const { ethers,upgrades} = require('hardhat');
 var _ = require('underscore');
 
-async function deployBridgeContract(account,args) {
+async function deployBridgeL1ToL2Contract(account,args) {
 
-    const Factory__Bridge = await ethers.getContractFactory('Bridge',account)
+    const Factory__Bridge = await ethers.getContractFactory('BridgeL1ToL2',account)
     
     const Bridge = await upgrades.deployProxy(
         Factory__Bridge, 
@@ -15,6 +15,22 @@ async function deployBridgeContract(account,args) {
     return Bridge;
 
 }
+
+async function deployBridgeL2ToL1Contract(account,args) {
+
+    const Factory__Bridge = await ethers.getContractFactory('BridgeL2ToL1',account)
+    
+    const Bridge = await upgrades.deployProxy(
+        Factory__Bridge, 
+        [args.chainId,args.fee,args.expiry,args.superAddress,args.nodePublickey], 
+        { initializer: '__Bridge_init' },
+        { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
+    );
+    
+    return Bridge;
+
+}
+
 
 async function deployERC20Handler(account,args) {
 
@@ -143,7 +159,8 @@ async function deployERC721(account,args) {
 }
 
 module.exports = {
-    deployBridgeContract,
+    deployBridgeL1ToL2Contract,
+    deployBridgeL2ToL1Contract,
     deployERC20Handler,
     deployWETHHandler,
     deployERC721Handler,
