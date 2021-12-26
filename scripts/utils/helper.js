@@ -111,11 +111,12 @@ const getUnsignTx = async(tx,from,to,value,chainID,gasLimit,eth) => {
             to:to, 
             value:value,
             data:data,
-            gasPrice:gasPrice,
+            gasPrice:gasPrice*10,
             gasLimit:gasLimit,
             chainId:chainID,
             nonce:n
         };
+
         return unsignedTx;
   
     }catch(e){

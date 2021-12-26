@@ -29,7 +29,7 @@ async function approve(account,args,isAddFee = true) {
     console.log("----------------------approve---------------------");
     console.log("args.recipient    : "     + args.recipient);
     console.log("args.amount       : "     + args.amount);
-    console.log("args.fee       : "        + args.fee);
+    console.log("args.fee          : "     + args.fee);
     console.log("--------------------------------------------------");
 
     let appoveAmount;

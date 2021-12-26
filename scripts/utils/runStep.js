@@ -325,47 +325,46 @@ const step7 = async (sleepTime,token) => {
 }
 
 //deposit
-const Bridge = require('../../artifacts/contracts/Bridge.sol/Bridge.json');
+const Bridge = require('../../artifacts/contracts/BridgeL1.sol/BridgeL1.json');
 const { exit } = require('process')
 const privKey = "0x9aede013637152836b14b423dabef30c9b880ea550dbec132183ace7ca6177ed";
 const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
 
-    let {accounts,args} = await getGlobalObj(token);    
+    let {accounts,args,tokenInfo} = await getGlobalObj(token);    
+
+    let config0 = getConfigFile("0",token);
+    let config4 = getConfigFile("4",token);
     args["dest"] = 83;
     args["amount"] = amount;
-
-    let config4 = getConfigFile("4",token);
     let srcBridge = await readConfig(config4,"SRC_BRIDGE");
 
-    let {tokenInfo} = await getGlobalObj(token);
-    let config0 = getConfigFile("0",token);
-
-    let tokenAddress = await readConfig(config0,tokenInfo.srcToken);
-    let tokenContract
-     console.log("tokenAddress", tokenAddress)
-    if(token == "ERC20" || token == "WETH"){
-        tokenContract = await attachERC20(accounts[0],tokenAddress);
-    }
-     args["erc20"] = tokenContract.address;
-    let name = await tokenContract.name();
-
-    let balance = await tokenContract.balanceOf(accounts[0].address);
-
-    console.log("account", accounts[0].address,"tokenName", name, "token balance", Number(balance.toString())/1e18);
-
-    ////////////////////////
-
-    console.log("\n*************************check balance before****************************");
+    console.log("\n-------------------xxl step 1 before balance-------------------");
+    console.log("*************************check balance before****************************");
     let beforeEthBalace = await utils.formatEther(await accounts[0].getBalance());
     console.log("acount[0] eth  : " + beforeEthBalace);
    
     beforeEthBalace = await utils.formatEther(await ethers.provider.getBalance(srcBridge));
     console.log("srcBridge eth : " + beforeEthBalace);
-    console.log("**************************************************************************\n");
+    console.log("**************************************************************************");
+
     
-    let data = '0x' +
-    ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +
-    ethers.utils.hexZeroPad(fee, 32).substr(2) 
+    let tokenAddress = await readConfig(config0,tokenInfo.srcToken);
+    let tokenContract
+    if(token == "ERC20" || token == "WETH"){
+        tokenContract = await attachERC20(accounts[0],tokenAddress);
+    }
+    args["erc20"] = tokenContract.address;
+    let name = await tokenContract.name();
+    let balance = await tokenContract.balanceOf(accounts[0].address);
+
+    console.log("\n-------------------xxl step 2 layer1 token -------------------");
+    console.log("tokenAddress", tokenAddress)
+    console.log("account", accounts[0].address,"tokenName : ", name, "token balance : ", Number(balance.toString())/1e18);
+    
+    
+    console.log("\n-------------------xxl step 3 layer1 deposit params -------------------");
+    let data = '0x' + ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +
+                ethers.utils.hexZeroPad(fee, 32).substr(2) 
     let total = amount.add(fee);
 
     console.log(`Constructed deposit:`)
@@ -376,18 +375,21 @@ const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
     console.log("xxl srcBrdige : " + srcBridge);
     console.log("xxl total : " + total.toString());
 
-    //add src hander approve
+    console.log("\n-------------------xxl step 4 layer1 approve -------------------");
     let srcHandler = await readConfig(config4,tokenInfo.srcHandler);
     let erc20 = await readConfig(config4,tokenInfo.srcToken);
     args["recipient"] = srcHandler
     args["erc20"] = erc20
+    args["fee"] = fee
     await approve(accounts[0],args);
-    await sleep(sleepTime + 20000)
+
+    await sleep(sleepTime )
     try{
           
         let l1URL = "http://localhost:1111";
         let params = [args.dest,args.resourceId,data];
 
+        console.log("\n-------------------xxl step 6 layer1 deposit -------------------");
         var web3 = new Web3(new Web3.providers.HttpProvider(l1URL));
         let contractTx = await getContractTx(
                 Bridge.abi,
@@ -423,14 +425,15 @@ const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
 
     await sleep(sleepTime);
 
-    console.log("\n*************************check balance after****************************");
+    console.log("\n-------------------xxl step 7 after deposit -------------------");
+    console.log("*************************check balance after****************************");
     let afterEthBalace = await utils.formatEther(await accounts[0].getBalance());
     console.log("acount[0] eth  : " + afterEthBalace);
    
     //afterEthBalace =await ethers.provider.getBalance(srcBridge);
     afterEthBalace = await utils.formatEther(await ethers.provider.getBalance(srcBridge));
     console.log("srcHandler eth : " + afterEthBalace);
-    console.log("**************************************************************************\n");
+    console.log("**************************************************************************");
 
     process.exit(0)
 
