@@ -1,7 +1,9 @@
 const { ethers} = require('hardhat')
 const {
-    deployBridgeL1ToL2Contract,
-    deployBridgeL2ToL1Contract,
+    deployBridgeL1Contract,
+    deployBridgeL2Contract,
+    attachBridgeL1Contract,
+    attachBridgeL2Contract,
     deployERC20Handler,
     deployWETHHandler,
     deployWETH,
@@ -122,15 +124,23 @@ const mintToken = async (sleepTime,token,amount) => {
 }
 
 
-const step1 = async (sleepTime,token) => {
+const step1 = async (sleepTime,token,isAttach=false) => {
 
     let {accounts,args} = await getGlobalObj(token);
     let config0 = getConfigFile("0",token);
     let config1 = getConfigFile("1",token);
+    let configC0 = "0_config";
 
     //SRC_BRIDGE
-    let bridge = await deployBridgeL1ToL2Contract(accounts[0],args);
-    await writeConfig(config0,config1,"SRC_BRIDGE",bridge.address);
+    let bridge;
+    if(isAttach == false){
+        bridge = await deployBridgeL1Contract(accounts[0],args);
+        await writeConfig(config0,config1,"SRC_BRIDGE",bridge.address);
+        await writeConfig(configC0,configC0,"SRC_BRIDGE",bridge.address);
+    }else{
+        let srcBridge = await readConfig(configC0,"SRC_BRIDGE");
+        bridge = await attachBridgeL1Contract(accounts[0],srcBridge);
+    }
 
     console.log("Bridge.address :" + bridge.address);
     console.log("");
@@ -194,7 +204,7 @@ const step3 = async (sleepTime,token) => {
 }
 
 //
-const step4 = async (sleepTime,token) => {
+const step4 = async (sleepTime,token,isAttach=false) => {
 
     let {accounts,args,tokenInfo} = await getGlobalObj(token);
     let workAccount = accounts[0];
@@ -204,8 +214,16 @@ const step4 = async (sleepTime,token) => {
     let config4 = getConfigFile("4",token);
 
     //DST_BRIDGE
-    let Bridge = await deployBridgeL1ToL2Contract(workAccount,args);
-    await writeConfig(config2,config4,"DST_BRIDGE",Bridge.address);
+    let bridge;
+    if(isAttach == false){
+        bridge = await deployBridgeL2Contract(accounts[0],args);
+        await writeConfig(config2,config4,"DST_BRIDGE",bridge.address);
+        await writeConfig(configC0,configC0,"DST_BRIDGE",bridge.address);
+    }else{
+        let dstBridge = await readConfig(configC0,"DST_BRIDGE");
+        bridge = await attachBridgeL2Contract(accounts[0],dstBridge);
+    }
+    
     console.log("Bridge.address :" + Bridge.address);
     console.log("");
     args["bridgeAddress"] = Bridge.address

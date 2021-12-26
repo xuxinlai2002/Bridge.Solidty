@@ -4,7 +4,7 @@ const {
 
 const main = async () => {
 
-    await step4(1000,"ERC20");
+    await step4(1000,"ERC20",true);
 
 }
 

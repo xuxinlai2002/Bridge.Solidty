@@ -1,9 +1,9 @@
 const { ethers,upgrades} = require('hardhat');
 var _ = require('underscore');
 
-async function deployBridgeL1ToL2Contract(account,args) {
+async function deployBridgeL1Contract(account,args) {
 
-    const Factory__Bridge = await ethers.getContractFactory('BridgeL1ToL2',account)
+    const Factory__Bridge = await ethers.getContractFactory('BridgeL1',account)
     
     const Bridge = await upgrades.deployProxy(
         Factory__Bridge, 
@@ -16,9 +16,26 @@ async function deployBridgeL1ToL2Contract(account,args) {
 
 }
 
-async function deployBridgeL2ToL1Contract(account,args) {
+async function attachBridgeL1Contract(account,tokenAddress) {
 
-    const Factory__Bridge = await ethers.getContractFactory('BridgeL2ToL1',account)
+    const Factory__Bridge = await ethers.getContractFactory('BridgeL1',account)    
+    let Bridge  = await Factory__Bridge.connect(account).attach(tokenAddress); 
+    return Bridge;
+
+}
+
+async function attachBridgeL2Contract(account,tokenAddress) {
+
+    const Factory__Bridge = await ethers.getContractFactory('BridgeL2',account)    
+    let Bridge  = await Factory__Bridge.connect(account).attach(tokenAddress); 
+    return Bridge;
+
+}
+
+
+async function deployBridgeL2Contract(account,args) {
+
+    const Factory__Bridge = await ethers.getContractFactory('BridgeL2',account)
     
     const Bridge = await upgrades.deployProxy(
         Factory__Bridge, 
@@ -55,7 +72,6 @@ async function deployWETHHandler(account,args) {
     // console.log("----------------deployWETHHandler-----------------");
     // console.log("args.bridgeAddress    : " + args.bridgeAddress);
     // console.log("---------------------------------------------------");
-
     const Factory__WETHHandler = await ethers.getContractFactory('WETHHandler',account)
     WETHHandler = await Factory__WETHHandler.connect(account).deploy(
         args.bridgeAddress,
@@ -159,8 +175,10 @@ async function deployERC721(account,args) {
 }
 
 module.exports = {
-    deployBridgeL1ToL2Contract,
-    deployBridgeL2ToL1Contract,
+    deployBridgeL1Contract,
+    deployBridgeL2Contract,
+    attachBridgeL1Contract,
+    attachBridgeL2Contract,
     deployERC20Handler,
     deployWETHHandler,
     deployERC721Handler,

@@ -11,7 +11,7 @@ import "hardhat/console.sol";
     @title Facilitates deposits, creation and votiing of deposit proposals, and deposit executions.
     @author ChainSafe Systems.
  */
-contract BridgeL2ToL1 is Bridge {
+contract BridgeL2 is Bridge {
     
     /**
         @notice Initiates a transfer using a specified handler contract.
