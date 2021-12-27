@@ -122,7 +122,6 @@ contract ERC20Handler is IDepositExecute, HandlerHelpers,ERC20Safe{
             console.log("xxl come to burnERC20 ");
             burnERC20(tokenAddress, depositer, amount);
         } else {
-
             console.log("xxl come to lockERC20 ");
             lockERC20(tokenAddress, depositer, address(this), amount);
         }

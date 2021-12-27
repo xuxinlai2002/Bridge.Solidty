@@ -383,6 +383,17 @@ const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
     args["fee"] = fee
     await approve(accounts[0],args);
 
+
+    console.log("\n-------------------xxl step 5 set fee -------------------");
+    if(fee > 0){
+        let bridgeL1Contract = await attachBridgeL1Contract(accounts[0],srcBridge);
+        await bridgeL1Contract.adminChangeFee(fee,
+            {
+                gasPrice: args.gasPrice,
+                gasLimit: args.gasLimit
+            });
+    }
+
     await sleep(sleepTime )
     try{
           
@@ -447,7 +458,6 @@ const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
     let {accounts,args,tokenInfo} = await getGlobalObj(token);    
     let config4 = getConfigFile("4",token);
 
-    //------------------
     let dstBridge = await readConfig(config4,"DST_BRIDGE");
     let dstToken = await readConfig(config4,tokenInfo.dstToken);
     let dstHandler = await readConfig(config4,tokenInfo.dstHandler);
@@ -465,6 +475,7 @@ const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
         "bridgeAddress":dstBridge
     }
 
+    console.log("\n-------------------xxl step 1 before balance-------------------");
     console.log("\n*************************check balance before****************************");
     let beforeEthBalace = await utils.formatEther(await accounts[0].getBalance());
     console.log("acount[2] eth  : " + beforeEthBalace);
@@ -475,7 +486,7 @@ const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
     console.log("**************************************************************************\n");
     
     //stop here
-    const Factory__Bridge = await ethers.getContractFactory('Bridge',accounts[0])
+    const Factory__Bridge = await ethers.getContractFactory('BridgeL2',accounts[0])
     let bridgeInstance = await Factory__Bridge.connect(accounts[0]).attach(dstBridge);    
 
     console.log("bridge is : " + dstBridge );
@@ -483,6 +494,7 @@ const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
 
         console.log(token);
 
+        console.log("\n-------------------xxl step 2 approve-------------------");
         if(token != "WETH"){
             console.log("xxl come to erc20 logic ...");
             //approve erc20
@@ -504,7 +516,7 @@ const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
             await approve(accounts[0],args);
         }
         
-
+        console.log("\n-------------------xxl step 3 deposit-------------------");
         const data = '0x' + 
         ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +
         ethers.utils.hexZeroPad(fee, 32).substr(2)
@@ -526,7 +538,7 @@ const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
             }
         );
 
-
+        console.log("\n-------------------xxl step 4 result-------------------");
         let re2 = await tx.wait();
         console.log(re2);
         

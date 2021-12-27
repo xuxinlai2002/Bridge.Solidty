@@ -6,9 +6,9 @@ const { utils } = require('ethers')
 
 const main = async () => {
 
-    let sendValue = utils.parseEther("0.1");
-    let fee = utils.parseEther("0.0002");
-    await layer1ToLayer2(1500,sendValue,fee,"ERC20");
+    let sendValue = utils.parseEther("10");
+    let fee = utils.parseEther("0.002");
+    await layer1ToLayer2(5000,sendValue,fee,"ERC20");
 
 }
 
