@@ -75,14 +75,6 @@ contract Bridge is  HandlerHelpers {
         bytes32 dataHash
     );
 
-    event ProposalEventBatch(
-        uint8 indexed originChainID,
-        uint64[] indexed depositNonce,
-        ProposalStatus[] indexed status,
-        bytes32[] resourceID,
-        bytes32[] dataHash
-    );
-
     event ChangeSuperSigner(
         address _oldSuperSigner,
         address _newSuperSigner,
@@ -461,16 +453,18 @@ contract Bridge is  HandlerHelpers {
                 IDepositExecute depositHandler = IDepositExecute(handler);
                 totalFee += depositHandler.executeProposal(resourceID[i], data[i]);
             }
+
+            emit ProposalEvent(
+                chainID,
+                depositNonce[i],
+                arrProposalStatus[i],
+                resourceID[i],
+                arrDataHash[i]
+            );
             
         }
 
-        emit ProposalEventBatch(
-            chainID,
-            depositNonce,
-            arrProposalStatus,
-            resourceID,
-            arrDataHash
-        );
+
         delete arrProposalStatus;
         delete arrDataHash;
 
