@@ -102,8 +102,11 @@ const getUnsignTx = async(tx,from,to,value,chainID,gasLimit,eth) => {
     try{
   
         const gasPrice = await eth.getGasPrice();
+        console.log("xxl gasPrice :" + gasPrice);
+ 
         const data = tx.encodeABI();
         const n = await eth.getTransactionCount(from);
+        console.log("xxl nonce :" + n);
         
         //TODO
         const unsignedTx = {
@@ -111,10 +114,9 @@ const getUnsignTx = async(tx,from,to,value,chainID,gasLimit,eth) => {
             to:to, 
             value:value,
             data:data,
-            gasPrice:gasPrice*10,
+            gasPrice:gasPrice,
             gasLimit:gasLimit,
-            chainId:chainID,
-            nonce:n
+            chainId:chainID
         };
 
         return unsignedTx;
@@ -437,7 +439,7 @@ const getGlobalObj = async(token) => {
         "relayerThreshold":1,
         "fee":0,
         "expiry":100,
-        "gasPrice":0x02540be400,
+        "gasPrice":0x12a05f2000,
         "gasLimit":0x7a1200,
         "superAddress": "0xdD9E99B47A0FA72A7E2E41d92986c2d23afc4b1e",
         "nodePublickey": Buffer.from("03bfd8bd2b10e887ec785360f9b329c2ae567975c784daca2f223cb19840b51914","hex"),

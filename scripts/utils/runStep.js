@@ -10,6 +10,7 @@ const {
     deployWETH,
     deployERC20,
     attachERC20,
+    attachERC721,
     deployERC721
 } = require("../utils/deploy")
 
@@ -36,6 +37,10 @@ const {
     approve,
     addMinter
 } = require("../utils/erc20")
+
+const {
+    approve721
+}= require("../utils/erc721")
 
 const { BigNumber, utils } = require('ethers')
 const fs = require('fs')
@@ -343,6 +348,7 @@ const Bridge = require('../../artifacts/contracts/BridgeL1.sol/BridgeL1.json');
 const { exit } = require('process')
 const { isArguments } = require('underscore')
 const privKey = "0x9aede013637152836b14b423dabef30c9b880ea550dbec132183ace7ca6177ed";
+
 const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
 
     let {accounts,args,tokenInfo} = await getGlobalObj(token);    
@@ -374,7 +380,6 @@ const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
     console.log("\n-------------------xxl step 2 layer1 token -------------------");
     console.log("tokenAddress", tokenAddress)
     console.log("account", accounts[0].address,"tokenName : ", name, "token balance : ", Number(balance.toString())/1e18);
-    
     
     console.log("\n-------------------xxl step 3 layer1 deposit params -------------------");
     let data = '0x' + ethers.utils.hexZeroPad(args.amount.toHexString(), 32).substr(2) +
@@ -461,9 +466,136 @@ const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
     console.log("**************************************************************************");
 
     process.exit(0)
+    
+}
+
+const erc721Layer1ToLayer2 = async(sleepTime,nftId,fee,token) => {
+
+    let {accounts,args,tokenInfo} = await getGlobalObj(token);    
+
+    let config0 = getConfigFile("0",token);
+    let config4 = getConfigFile("4",token);
+    args["dest"] = 83;
+    args["nftId"] = nftId;
+    let srcBridge = await readConfig(config4,"SRC_BRIDGE");
+
+    console.log("\n-------------------xxl step 1 before balance-------------------");
+    console.log("*************************check balance before****************************");
+    let beforeEthBalace = await utils.formatEther(await accounts[0].getBalance());
+    console.log("acount[0] eth  : " + beforeEthBalace);
+   
+    beforeEthBalace = await utils.formatEther(await ethers.provider.getBalance(srcBridge));
+    console.log("srcBridge eth : " + beforeEthBalace);
+    console.log("**************************************************************************");
+    
+    let tokenAddress = await readConfig(config0,tokenInfo.srcToken);
+    let tokenContract
+    if(token == "ERC721"){
+        tokenContract = await attachERC721(accounts[0],tokenAddress);
+    }
+    await tokenContract.mint(accounts[0].address,args["nftId"],"0x3456", {
+        gasPrice: args.gasPrice,
+        gasLimit: args.gasLimit
+    });
+    await sleep(sleepTime);
+
+    args["erc721"] = tokenContract.address;
+    let name = await tokenContract.name();
+    let balance = await tokenContract.balanceOf(accounts[0].address);
+
+    console.log("\n-------------------xxl step 2 layer1 token -------------------");
+    console.log("tokenAddress", tokenAddress)
+    console.log("account", accounts[0].address,"tokenName : ", name, "token balance : ", Number(balance.toString())/1e18);
+    
+    console.log("\n-------------------xxl step 3 layer1 deposit params -------------------");
+    let data = '0x' + ethers.utils.hexZeroPad(args.nftId, 32).substr(2) +
+                ethers.utils.hexZeroPad(fee, 32).substr(2) 
+
+    console.log(`Constructed deposit:`)
+    console.log(`Resource Id: ${args.resourceId}`)
+    console.log(`nftId: ${args.nftId}`)
+    console.log(`Raw: ${data}`)
+    console.log(`Creating deposit to initiate transfer!`);
+    console.log("xxl srcBrdige : " + srcBridge);
+    console.log("xxl fee : " + fee.toString());
+
+    console.log("\n-------------------xxl step 4 layer1 approve -------------------");
+    let srcHandler = await readConfig(config4,tokenInfo.srcHandler);
+    let erc721 = await readConfig(config4,tokenInfo.srcToken);
+    args["recipient"] = srcHandler
+    args["erc721"] = erc721
+    args["fee"] = fee
+    await approve721(accounts[0],args);
+
+
+    console.log("\n-------------------xxl step 5 set fee -------------------");
+    if(fee > 0){
+        let bridgeL1Contract = await attachBridgeL1Contract(accounts[0],srcBridge);
+        await bridgeL1Contract.adminChangeFee(fee,
+            {
+                gasPrice: args.gasPrice,
+                gasLimit: args.gasLimit
+            });
+    }
+
+    await sleep(sleepTime )
+    try{
+          
+        let l1URL = "http://localhost:1111";
+        let params = [args.dest,args.resourceId,data];
+
+        console.log("\n-------------------xxl step 6 layer1 deposit -------------------");
+        var web3 = new Web3(new Web3.providers.HttpProvider(l1URL));
+        let contractTx = await getContractTx(
+                Bridge.abi,
+                srcBridge,
+                "deposit",
+                params,
+                web3.eth
+        );
+ 
+        console.log("xxl getContractTx ");
+        let unsignTx = await getUnsignTx(
+                        contractTx,
+                        accounts[0].address,
+                        srcBridge,
+                        fee.toString(),
+                        args.dest,
+                        args.gasLimit,
+                        web3.eth
+                    );    
+        console.log("xxl getUnsignTx ");
+        console.log(unsignTx);
+        await sleep(sleepTime)
+
+        var signTx = await web3.eth.accounts.signTransaction(unsignTx, privKey);
+        console.log("xxl signTransaction ");
+        let tx = await web3.eth.sendSignedTransaction(signTx.rawTransaction)
+        console.log("xxl sendSignedTransaction ");
+        console.log(tx);
+        
+    } catch (e) {
+        console.log("error ");
+        console.log(e);
+    }
+
+    await sleep(sleepTime);
+
+    console.log("\n-------------------xxl step 7 after deposit -------------------");
+    console.log("*************************check balance after****************************");
+    let afterEthBalace = await utils.formatEther(await accounts[0].getBalance());
+    console.log("acount[0] eth  : " + afterEthBalace);
+   
+    //afterEthBalace =await ethers.provider.getBalance(srcBridge);
+    afterEthBalace = await utils.formatEther(await ethers.provider.getBalance(srcBridge));
+    console.log("srcHandler eth : " + afterEthBalace);
+    console.log("**************************************************************************");
+
+    process.exit(0)
 
 
 }
+
 
 //deposit
 const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
@@ -538,6 +670,140 @@ const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
         console.log(`Constructed deposit:`)
         console.log(`Resource Id: ${args.resourceId}`)
         console.log(`Amount: ${args.amount.toHexString()}`)
+        console.log(`Raw: ${data}`)
+        console.log(`Creating deposit to initiate transfer!`);
+
+        // Perform deposit
+        tx = await bridgeInstance.deposit(
+            args.dest, // destination chain id
+            args.resourceId,
+            data,
+            {
+                gasPrice: args.gasPrice,
+                gasLimit: args.gasLimit
+            }
+        );
+
+        console.log("\n-------------------xxl step 4 result-------------------");
+        let re2 = await tx.wait();
+        console.log(re2);
+        
+    } catch (e) {
+        console.log("error ");
+        console.log(e);
+    }
+
+    //sleep(sleepTime);
+    await sleep(sleepTime);
+
+    console.log("\n*************************check balance after****************************");
+    let afterEthBalace = await utils.formatEther(await accounts[0].getBalance());
+    console.log("acount[2] eth  : " + afterEthBalace);
+   
+    //afterEthBalace =await ethers.provider.getBalance(srcBridge);
+    afterEthBalace = await utils.formatEther(await ethers.provider.getBalance(dstBridge));
+    console.log("srcHandler eth : " + afterEthBalace);
+    console.log("**************************************************************************\n");
+
+    process.exit(0)
+
+
+}
+
+
+//deposit
+const erc721Layer2ToLayer1 = async(sleepTime,nftId,fee,token) => {
+
+
+    let {accounts,args,tokenInfo} = await getGlobalObj(token);    
+    let config4 = getConfigFile("4",token);
+
+    let dstBridge = await readConfig(config4,"DST_BRIDGE");
+    let dstToken = await readConfig(config4,tokenInfo.dstToken);
+    let dstHandler = await readConfig(config4,tokenInfo.dstHandler);
+
+    //
+    args = {
+        ...args,
+        "dest":1,
+        "nftId":nftId,
+        "fee":fee,
+        "recipient":dstHandler,
+        "bridge":dstBridge,
+        "erc721":dstToken,
+        "erc721Hander":dstHandler,
+        "bridgeAddress":dstBridge
+    }
+
+    let tokenContract;
+    if(token == "ERC721"){
+        tokenContract = await attachERC721(accounts[0],dstToken);
+    }
+    await tokenContract.mint(accounts[0].address,args["nftId"],"0x3456", {
+        gasPrice: args.gasPrice,
+        gasLimit: args.gasLimit
+    });
+
+
+    console.log("\n-------------------xxl step 1 before balance-------------------");
+    console.log("\n*************************check balance before****************************");
+    let beforeEthBalace = await utils.formatEther(await accounts[0].getBalance());
+    console.log("acount[2] eth  : " + beforeEthBalace);
+   
+    prov = ethers.getDefaultProvider();
+    beforeEthBalace = await utils.formatEther(await prov.getBalance(dstBridge));
+    console.log("dstBridge eth : " + beforeEthBalace);
+    console.log("**************************************************************************\n");
+    
+    //stop here
+    const Factory__Bridge = await ethers.getContractFactory('BridgeL2',accounts[0])
+    let bridgeInstance = await Factory__Bridge.connect(accounts[0]).attach(dstBridge);    
+
+    console.log("bridge is : " + dstBridge );
+    try{
+
+        console.log(token);
+
+        console.log("\n-------------------xxl step 2 approve-------------------");
+        if(token != "WETH"){
+            console.log("xxl come to erc721 logic ...");
+            //approve erc20
+            await approve721(accounts[0],args);
+
+            let configWeth4 = getConfigFile("4","WETH");
+            let wethERC20 = await readConfig(configWeth4,"DST_ERC20");
+            let wethHandler = await readConfig(configWeth4,"DST_HANDLER_ERC20");
+            
+            let wethContract = await attachERC20(accounts[0],wethERC20);
+            await wethContract.mint(accounts[0].address,fee,
+                {
+                    gasPrice: args.gasPrice,
+                    gasLimit: args.gasLimit
+                }
+            );
+            await sleep(sleepTime);
+            
+            //approve weth
+            let wethArgs = {
+                erc20:wethERC20,
+                recipient:wethHandler,
+                amount:fee,
+                fee:0
+            }
+            await approve(accounts[0],wethArgs);
+        }else{
+            await approve(accounts[0],args);
+        }
+    
+        await sleep(sleepTime);
+        console.log("\n-------------------xxl step 3 deposit-------------------");
+        const data = '0x' + 
+        ethers.utils.hexZeroPad(args.nftId, 32).substr(2) +
+        ethers.utils.hexZeroPad(fee, 32).substr(2)
+    
+        console.log(`Constructed deposit:`)
+        console.log(`Resource Id: ${args.resourceId}`)
+        console.log(`nftId: ${args.nftId}`)
         console.log(`Raw: ${data}`)
         console.log(`Creating deposit to initiate transfer!`);
 
@@ -732,6 +998,9 @@ module.exports = {
     changeSuperSigner,
     mintToken,
     addErc20Src,
-    addErc20Dst
+    addErc20Dst,
+
+    erc721Layer1ToLayer2,
+    erc721Layer2ToLayer1
 
 }

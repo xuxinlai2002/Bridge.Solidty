@@ -128,6 +128,13 @@ async function attachERC20(account,tokenAddress){
     return tokenContract;
 }
 
+async function attachERC721(account,tokenAddress){
+    
+    const Factory__ERC721Mintable = await ethers.getContractFactory('ERC721MinterBurnerPauser',account)
+    let tokenContract  = await Factory__ERC721Mintable.connect(account).attach(tokenAddress); 
+    return tokenContract;
+}
+
 
 async function deployWETH(account,args) {
     
@@ -186,5 +193,6 @@ module.exports = {
     deployWETH,
     deployERC721,
 
-    attachERC20
+    attachERC20,
+    attachERC721
 }

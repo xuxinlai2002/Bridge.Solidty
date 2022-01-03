@@ -19,7 +19,28 @@ async function add721Minter(account,args) {
 
 }
 
+async function approve721(account,args) {
+
+    const Factory__ERC721 = await ethers.getContractFactory('ERC721',account)
+    //console.log(args.erc721);
+    let erc721Instance = await Factory__ERC721.connect(account).attach(args.erc721);
+    log(`Approving ${args.recipient} to spend token ${args.erc721} from ${account.address} on contract ${args.erc721}!`);
+    console.log("----------------------approve---------------------");
+    console.log("args.recipient    : "     + args.recipient);
+    console.log("args.nftId       : "      + args.nftId);
+    console.log("args.fee          : "     + args.fee);
+    console.log("--------------------------------------------------");
+
+    const tx = await erc721Instance.approve(args.recipient, args.nftId , {
+        gasPrice: args.gasPrice,
+        gasLimit: args.gasLimit
+    });
+   
+    return tx.hash;
+
+}
 module.exports = {
-    add721Minter
+    add721Minter,
+    approve721
 }
 

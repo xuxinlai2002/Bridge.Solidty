@@ -1,14 +1,14 @@
 const {
-    layer1ToLayer2
+    erc721Layer1ToLayer2
 } = require('../utils/runStep')
 
 const { utils } = require('ethers')
 
 const main = async () => {
 
-    let sendValue = utils.parseEther("10");
+    let nftId = 18;
     let fee = utils.parseEther("0.002");
-    await layer1ToLayer2(5000,sendValue,fee,"ERC721");
+    await erc721Layer1ToLayer2(10000,"0x12",fee,"ERC721");
 
 }
 
