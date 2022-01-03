@@ -26,6 +26,8 @@ contract BridgeL1 is Bridge {
         bytes calldata data
     ) external payable {
 
+        console.log("sol xxl deposit ...");
+
         address handler = _resourceIDToHandlerAddress[resourceID];
         require(handler != address(0), "resourceID not mapped to handler");
      
@@ -35,14 +37,17 @@ contract BridgeL1 is Bridge {
 
         //weth layer1 -> layer2
         if(depositHandler.getType() == IDepositExecute.HandleTypes.WETH) {
-            console.log("xxl deposit weth ...");
+            console.log("sol xxl deposit weth ...");
             _depoistWeth(destinationChainID,resourceID,data,handler,depositNonce);
         //erc20 layer1 -> layer2 
-        } else if(depositHandler.getType() == IDepositExecute.HandleTypes.ERC20){
-            console.log("xxl deposit erc ...");
+        }else if(depositHandler.getType() == IDepositExecute.HandleTypes.ERC20){
+            console.log("sol xxl deposit erc20 ...");
             _depoistERC20(destinationChainID,resourceID,data,handler,depositNonce,true);
+        }else if(depositHandler.getType() == IDepositExecute.HandleTypes.ERC721){
+            console.log("sol xxl deposit erc721 ...");
+            _depoistERC721(destinationChainID,resourceID,data,handler,depositNonce,true);
         }else { 
-            //TODO and 721 and other
+            //TODO other
         } 
     }
 

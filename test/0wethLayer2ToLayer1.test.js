@@ -220,6 +220,8 @@ describe(`layer2 => layer1 `, () => {
     }catch(e){
       console.log(e);
     }
+
+    
   })
 
   // it(`executeProposalBatch 100 tx run in layer1`, async () => {

@@ -41,6 +41,9 @@ contract BridgeL2 is Bridge {
         } else if(depositHandler.getType() == IDepositExecute.HandleTypes.ERC20){
             console.log("xxl deposit erc ...");
             _depoistERC20(destinationChainID,resourceID,data,handler,depositNonce,false);
+        }else if(depositHandler.getType() == IDepositExecute.HandleTypes.ERC721){
+            console.log("sol xxl deposit erc721 ...");
+            _depoistERC721(destinationChainID,resourceID,data,handler,depositNonce,false);
         }else { 
             //TODO and 721 and other
         } 
@@ -78,10 +81,12 @@ contract BridgeL2 is Bridge {
             "Proposal must have Passed status"
         );
         proposal._status = ProposalStatus.Executed;
-
+        
+        console.log("handler address %s",handler);
         IDepositExecute depositHandler = IDepositExecute(handler);
         uint256 fee = depositHandler.executeProposal(resourceID, data);
 
+        console.log("sol 1");
         emit ProposalEvent(
             chainID,
             depositNonce,
@@ -90,6 +95,7 @@ contract BridgeL2 is Bridge {
             dataHash
         );
 
+        console.log("sol 2");
         //from layer1 -> layer2 just send Weth to coinbase 
         _rewardWethFee(fee);
     }

@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
@@ -10,6 +9,7 @@ import "./interfaces/IERCHandler.sol";
 import "./interfaces/IGenericHandler.sol";
 import "./handlers/HandlerHelpers.sol";
 import "./handlers/ERC20Handler.sol";
+import "./handlers/ERC721Handler.sol";
 import "./handlers/WETHHandler.sol";
 
 import "hardhat/console.sol";
@@ -52,7 +52,7 @@ contract Bridge is  HandlerHelpers {
     // destinationChainID + depositNonce => dataHash => Proposal
     mapping(uint72 => mapping(bytes32 => Proposal)) public _proposals;
 
-    event DepositRecord(
+    event DepositRecordERC20OrWETH(
         address _tokenAddress,
         uint8 _destinationChainID,
         bytes32 _resourceID,
@@ -61,6 +61,18 @@ contract Bridge is  HandlerHelpers {
         uint256 _amount,
         uint256 _fee
     );
+
+    event DepositRecordERC721(
+        address _tokenAddress,
+        uint8 _destinationChainID,
+        bytes32 _resourceID,
+        uint64 _depositNonce,
+        address _depositer,
+        uint256 _tokenId,
+        bytes _metaData,
+        uint256 _fee
+    );
+
 
     event Deposit(
         uint8 indexed destinationChainID,
@@ -289,7 +301,7 @@ contract Bridge is  HandlerHelpers {
         );
 
         require(msg.value == _fee + amount, "fee + amount is not match");
-        emit DepositRecord(
+        emit DepositRecordERC20OrWETH(
             tokenAddress,
             destinationChainID,
             resourceID,
@@ -313,7 +325,7 @@ contract Bridge is  HandlerHelpers {
         uint256 fee;
         address tokenAddress;
 
-        console.log("xxl _depoistERC20 0 ... ");
+        console.log("sol _depoistERC20 0 ... ");
         ERC20Handler erc20Hander = ERC20Handler(handler);
         (amount, tokenAddress,fee) = erc20Hander.deposit(
             resourceID,
@@ -328,13 +340,54 @@ contract Bridge is  HandlerHelpers {
             _payWethFee(fee);
         }
         
-        emit DepositRecord(
+        emit DepositRecordERC20OrWETH(
             tokenAddress,
             destinationChainID,
             resourceID,
             depositNonce,
             msg.sender,
             amount,
+            fee
+        );
+    }
+
+    function _depoistERC721(        
+        uint8 destinationChainID,
+        bytes32 resourceID,
+        bytes calldata data,
+        address handler,
+        uint64 depositNonce,
+        bool isL1ToL2
+    ) internal{
+
+        uint256 tokenId;
+        uint256 fee;
+        bytes memory metadata;
+        address tokenAddress;
+
+        console.log("sol _depoistERC20 0 ... ");
+        ERC721Handler erc721Hander = ERC721Handler(handler);
+        (tokenId, metadata,tokenAddress,fee) = erc721Hander.deposit(
+            resourceID,
+            destinationChainID,
+            depositNonce,
+            msg.sender,
+            data
+        );
+
+        //deposit weth
+        if(!isL1ToL2){
+            _payWethFee(fee);
+        }
+        
+        emit DepositRecordERC721(
+            tokenAddress,
+            destinationChainID,
+            resourceID,
+            depositNonce,
+            msg.sender,
+            tokenId,
+            metadata,
             fee
         );
     }
@@ -463,7 +516,6 @@ contract Bridge is  HandlerHelpers {
             );
             
         }
-
 
         delete arrProposalStatus;
         delete arrDataHash;

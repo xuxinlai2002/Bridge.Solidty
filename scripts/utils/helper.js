@@ -241,6 +241,42 @@ const getErc20Sign = async(chainId,depositNonce,resourceId,data) => {
 
 }
 
+const getSuperAbiterErc721Sign = async() => {
+
+    //
+    privateKey = "0xcb93f47f4ae6e2ee722517f3a2d3e7f55a5074f430c9860bcfe1d6d172492ed0";
+    let msg = "0xf8f29ad2a00f68f3402376e7ecae80dd29202a98f4466affebec7069552fbf8c"
+    var web3 = new Web3();
+    let superSign = await web3.eth.accounts.sign(msg,privateKey)
+
+    return superSign.signature;
+
+}
+
+
+
+const getErc721Sign = async(chainId,depositNonce,resourceId,data) => {
+    // console.log(data);
+
+    let hexUnit8ChainID = ethers.utils.hexZeroPad("0x" + parseInt(chainId).toString(16),32).substr(2);
+    let hexUnit64DepositNonce = ethers.utils.hexZeroPad("0x" + parseInt(depositNonce).toString(16),32).substr(2);
+    let hexMsg = "0x" + hexUnit8ChainID + hexUnit64DepositNonce  + resourceId.substr(2) + data.substr(2)
+
+    //add sign
+    var web3 = new Web3();
+    let msg = "0xf8f29ad2a00f68f3402376e7ecae80dd29202a98f4466affebec7069552fbf8c"
+
+    let sign = [];
+    for(var i = 0 ;i < privateKeyList.length ;i ++){
+    //for(var i = 0 ;i < 1 ;i ++){
+        let eachSign = await web3.eth.accounts.sign(msg,privateKeyList[i])
+        sign.push(eachSign.signature);
+    }
+
+    return sign;
+
+}
+
 
 const getSuperAbiterSign21 = async() => {
 
@@ -290,8 +326,6 @@ const getSignBatch = async(chainId,depositNonce,resourceId,data) => {
 
 }
 
-
-
 const util = require('ethereumjs-util');
 const { sign } = require('crypto');
 const getAbiterList = () => {
@@ -337,9 +371,40 @@ const getAbiterSign = async(addressList) => {
 
 }
 
+const getSignL1Batch721 = async(chainId,depositNonce,resourceId,data) => {
 
-const WethResourceId = "0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8";
-const Erc20ResourceId = "0x0000000000000000000000000000000000000000000000000000000000000001";
+    //add sign
+    var web3 = new Web3();
+    let msg = "0x0ebd25ccbe704a84d6ea20ca32088c65e6048699d6e82957764369b27ca2fd32"
+
+    let sign = [];
+    for(var i = 0 ;i < privateKeyList.length ;i ++){
+    //for(var i = 0 ;i < 1 ;i ++){
+        let eachSign = await web3.eth.accounts.sign(msg,privateKeyList[i])
+        sign.push(eachSign.signature);
+    }
+
+    return sign;
+
+}
+
+const getSuperL1AbiterSign721 = async() => {
+
+
+    //
+    privateKey = "0xcb93f47f4ae6e2ee722517f3a2d3e7f55a5074f430c9860bcfe1d6d172492ed0";
+    let msg = "0x0ebd25ccbe704a84d6ea20ca32088c65e6048699d6e82957764369b27ca2fd32"
+    var web3 = new Web3();
+    let superSign = await web3.eth.accounts.sign(msg,privateKey)
+
+    return superSign.signature;
+
+}
+
+
+const WethResourceId =   "0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8";
+const Erc20ResourceId =  "0x0000000000000000000000000000000000000000000000000000000000000001";
+const Erc721ResourceId = "0x1000000000000000000000000000000000000000000000000000000000000001";
 const getGlobalObj = async(token) => {
 
     let chainId = await getChainId();
@@ -350,6 +415,7 @@ const getGlobalObj = async(token) => {
     let resourceId ;
     let dstHander;
     let dstToken;
+    let uri = "https://test/";
     if(token == "ERC20"){
         resourceId = Erc20ResourceId;
         dstHander = "DST_HANDLER_ERC20"
@@ -358,6 +424,10 @@ const getGlobalObj = async(token) => {
         resourceId = WethResourceId;
         dstHander = "DST_HANDLER_ERC20"
         dstToken = "DST_ERC20"
+    }else if(token == "ERC721"){
+        resourceId = Erc721ResourceId;
+        dstHander = "DST_HANDLER_ERC721"
+        dstToken = "DST_ERC721"
     }else{
         console.log("no token");
     }
@@ -371,7 +441,8 @@ const getGlobalObj = async(token) => {
         "gasLimit":0x7a1200,
         "superAddress": "0xdD9E99B47A0FA72A7E2E41d92986c2d23afc4b1e",
         "nodePublickey": Buffer.from("03bfd8bd2b10e887ec785360f9b329c2ae567975c784daca2f223cb19840b51914","hex"),
-        "resourceId":resourceId
+        "resourceId":resourceId,
+        "uri":uri
     }
 
 
@@ -425,5 +496,10 @@ module.exports = {
     getErc20Sign,
 
     getGlobalObj,
-    getConfigFile
+    getConfigFile,
+    getSuperAbiterErc721Sign,
+    getErc721Sign,
+    getSignL1Batch721,
+    getSuperL1AbiterSign721
+
 }

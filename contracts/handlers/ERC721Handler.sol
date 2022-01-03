@@ -10,6 +10,7 @@ import "../ERC721MinterBurnerPauser.sol";
 import "@openzeppelin/contracts/introspection/ERC165Checker.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Metadata.sol";
 
+import "hardhat/console.sol";
 
 /**
     @title Handles ERC721 deposits and deposit executions.
@@ -33,7 +34,9 @@ contract ERC721Handler is IDepositExecute, HandlerHelpers, ERC721Safe {
 
 
     // DepositNonce => Deposit Record
-    mapping (uint8 => mapping (uint64 => DepositRecord)) public _depositRecords;
+    // mapping (uint8 => mapping (uint64 => DepositRecord)) public _depositRecords;
+    mapping(uint8 => mapping(uint64 => bytes32)) public _depositRecords;
+
 
     /**
         @param bridgeAddress Contract address of previously deployed Bridge.
@@ -80,7 +83,7 @@ contract ERC721Handler is IDepositExecute, HandlerHelpers, ERC721Safe {
         - _tokenID ID of ERC721.
         - _metaData Optional ERC721 metadata.
     */
-    function getDepositRecord(uint64 depositNonce, uint8 destId) external view returns (DepositRecord memory) {
+    function getDepositRecord(uint64 depositNonce, uint8 destId) external view returns (bytes32){
         return _depositRecords[destId][depositNonce];
         
     }
@@ -106,16 +109,15 @@ contract ERC721Handler is IDepositExecute, HandlerHelpers, ERC721Safe {
                     uint64      depositNonce,
                     address     depositer,
                     bytes       calldata data
-                    ) external onlyBridge {
-        uint         tokenID;
-        uint         lenDestinationRecipientAddress;
-        bytes memory destinationRecipientAddress;
+                    ) external onlyBridge returns(uint256,bytes memory,address,uint256){
+
+        uint256         tokenID;
+        uint256         fee; 
         bytes memory metaData;
 
-        (tokenID, lenDestinationRecipientAddress) = abi.decode(data, (uint, uint));
-        destinationRecipientAddress = bytes(data[64:64 + lenDestinationRecipientAddress]);
-
-        address tokenAddress = _resourceIDToTokenContractAddress[resourceID];
+        console.log("sol xxl 721 deposit");
+        (tokenID,fee) = abi.decode(data, (uint,uint));
+        address tokenAddress = _resourceIDToTokenContractAddress[resourceID];       
         require(_contractWhitelist[tokenAddress], "provided tokenAddress is not whitelisted");
 
         // Check if the contract supports metadata, fetch it if it does
@@ -124,21 +126,35 @@ contract ERC721Handler is IDepositExecute, HandlerHelpers, ERC721Safe {
             metaData = bytes(erc721.tokenURI(tokenID));
         }
 
+
         if (_burnList[tokenAddress]) {
+            console.log("sol xx1 burnERC721 ...");
             burnERC721(tokenAddress, tokenID);
         } else {
+             
+             console.log("sol xx1 lockERC721 ...");
+             console.log("sol tokenAddress %s",tokenAddress);
+             console.log("sol depositer %s",depositer);
+             console.log("sol address(this) %s",address(this));
+             console.log("sol tokenID %d",tokenID);
+
             lockERC721(tokenAddress, depositer, address(this), tokenID);
         }
 
-        _depositRecords[destinationChainID][depositNonce] = DepositRecord(
-            tokenAddress,
-            uint8(destinationChainID),
-            resourceID,
-            destinationRecipientAddress,
-            depositer,
-            tokenID,
-            metaData
+        _depositRecords[destinationChainID][depositNonce] = keccak256(
+            abi.encode(
+                tokenAddress,
+                destinationChainID,
+                resourceID,
+                depositer,
+                tokenID,
+                metaData,
+                fee
+            )
         );
+        
+        return (tokenID,metaData,tokenAddress,fee);
+
     }
 
     /**
@@ -153,27 +169,37 @@ contract ERC721Handler is IDepositExecute, HandlerHelpers, ERC721Safe {
         metadata                        length      uint256    bytes    (64 + len(destinationRecipientAddress)) - (64 + len(destinationRecipientAddress) + 32)
         metadata                                      bytes    bytes    (64 + len(destinationRecipientAddress) + 32) - END
      */
-    function executeProposal(
-        bytes32 resourceID, 
-        bytes calldata data
-        ) external override onlyBridge returns(uint256){
+    function executeProposal(bytes32 resourceID, bytes calldata data) external override onlyBridge returns(uint256){
 
-        uint         fee;    
         uint         tokenID;
         uint         lenDestinationRecipientAddress;
         bytes memory destinationRecipientAddress;
         uint         offsetMetaData;
         uint         lenMetaData;
         bytes memory metaData;
+        uint256      fee;
 
-        (tokenID,fee,lenDestinationRecipientAddress) = abi.decode(data, (uint,uint,uint));
-        offsetMetaData = 64 + lenDestinationRecipientAddress;
-        destinationRecipientAddress = bytes(data[64:offsetMetaData]);
+        (tokenID, fee,lenDestinationRecipientAddress) = abi.decode(data, (uint, uint,uint));
+
+        console.log(
+                    "sol executeProposal tokenID=%d,fee=%d,lenDestinationRecipientAddress=%d",
+                    tokenID, fee,lenDestinationRecipientAddress
+                    );
+            
+        offsetMetaData = 96 + lenDestinationRecipientAddress;
+        destinationRecipientAddress = bytes(data[96:offsetMetaData]);
         lenMetaData = abi.decode(data[offsetMetaData:], (uint));
+
+        console.log(
+                    "sol executeProposal lenMetaData=%d,offsetMetaData=%d",lenMetaData,offsetMetaData
+                   );
+        console.logBytes(data);
+        console.logBytes(destinationRecipientAddress);
+
         metaData = bytes(data[offsetMetaData + 32:offsetMetaData + 32 + lenMetaData]);
+        console.logBytes(metaData);
 
         bytes20 recipientAddress;
-
         assembly {
             recipientAddress := mload(add(destinationRecipientAddress, 0x20))
         }
@@ -182,14 +208,15 @@ contract ERC721Handler is IDepositExecute, HandlerHelpers, ERC721Safe {
         require(_contractWhitelist[address(tokenAddress)], "provided tokenAddress is not whitelisted");
 
         if (_burnList[tokenAddress]) {
+            console.log("sol mintERC721 %d",tokenID);
             mintERC721(tokenAddress, address(recipientAddress), tokenID, metaData);
         } else {
+            console.log("sol releaseERC721 %d",tokenID);
             releaseERC721(tokenAddress, address(this), address(recipientAddress), tokenID);
         }
-
         return fee;
-
     }
+
 
     /**
         @notice Used to manually release ERC721 tokens from ERC721Safe.

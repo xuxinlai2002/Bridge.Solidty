@@ -130,7 +130,6 @@ contract WETHHandler is IDepositExecute, HandlerHelpers{
         override
         onlyBridge returns(uint256)
     {
-        //emit LogString("come to wethhander executeProposal");
         return 0;
     }
 

@@ -4,11 +4,13 @@ const {
     deployBridgeL2Contract,
     attachBridgeL1Contract,
     attachBridgeL2Contract,
+    deployERC721Handler,
     deployERC20Handler,
     deployWETHHandler,
     deployWETH,
     deployERC20,
-    attachERC20
+    attachERC20,
+    deployERC721
 } = require("../utils/deploy")
 
 const {
@@ -93,6 +95,8 @@ const step0 = async (sleepTime,token) => {
     let tokenContract;
     if(token == "ERC20" || token == "WETH"){
         tokenContract = await deployERC20(accounts[0],args)
+    }else if(token == "ERC721"){
+        tokenContract = await deployERC721(accounts[0],args)
     }
 
     await writeConfig(configC0, config0 ,tokenInfo.srcToken ,tokenContract.address);
@@ -165,6 +169,8 @@ const step2 = async (sleepTime,token) => {
         handler = await deployWETHHandler(accounts[0],args);
     }else if(token == "ERC20"){
         handler = await deployERC20Handler(accounts[0],args);
+    }else if(token == "ERC721"){
+        handler = await deployERC721Handler(accounts[0],args);
     }else{
         console.log("xxl ...");
     }
@@ -191,6 +197,7 @@ const step3 = async (sleepTime,token) => {
     let srcToken = await readConfig(config2,tokenInfo.srcToken);
     
     args = {
+        ...args,
         "bridge":srcBridge,
         "handler":srcHandler,
         "targetContract":srcToken,
@@ -234,6 +241,8 @@ const step4 = async (sleepTime,token,isAttach=false) => {
     let handler;
     if(token == "ERC20" || token == "WETH"){
         handler = await deployERC20Handler(workAccount,args);
+    }else if(token == "ERC721"){
+        handler = await deployERC721Handler(workAccount,args);
     }
     
     await writeConfig(config4,config4,tokenInfo.dstHandler,handler.address);
@@ -246,6 +255,8 @@ const step4 = async (sleepTime,token,isAttach=false) => {
     args["symbol"] = await readConfig(config4,tokenInfo.symbol);
     if(token == "ERC20" || token == "WETH"){
         tokenContract = await deployERC20(workAccount,args);
+    }else if(token == "ERC721"){
+        tokenContract = await deployERC721(workAccount,args);
     }
 
     await writeConfig(config4,config4,tokenInfo.dstToken,tokenContract.address);
@@ -267,6 +278,7 @@ const step5 = async (sleepTime,token) => {
     let dstToken = await readConfig(config4,tokenInfo.dstToken);
     
     args = {
+        ...args,
         "relayers":workAccount.address,
         "bridge":dstBridge,
         "handler":dstHandler,
@@ -290,6 +302,7 @@ const step6 = async (sleepTime,token) => {
     let dstToken = await readConfig(config4,tokenInfo.dstToken);
     //
     args = {
+        ...args,
         "relayers":workAccount.address,
         "bridge":dstBridge,
         "handler":dstHandler,
@@ -314,6 +327,7 @@ const step7 = async (sleepTime,token) => {
     let dstToken = await readConfig(config4,tokenInfo.dstToken);
 
     args = {
+        ...args,
         "minter":dstHandler,
         "erc20Address":dstToken
     }
@@ -327,6 +341,7 @@ const step7 = async (sleepTime,token) => {
 //deposit
 const Bridge = require('../../artifacts/contracts/BridgeL1.sol/BridgeL1.json');
 const { exit } = require('process')
+const { isArguments } = require('underscore')
 const privKey = "0x9aede013637152836b14b423dabef30c9b880ea550dbec132183ace7ca6177ed";
 const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
 
@@ -346,7 +361,6 @@ const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
     beforeEthBalace = await utils.formatEther(await ethers.provider.getBalance(srcBridge));
     console.log("srcBridge eth : " + beforeEthBalace);
     console.log("**************************************************************************");
-
     
     let tokenAddress = await readConfig(config0,tokenInfo.srcToken);
     let tokenContract
@@ -614,6 +628,91 @@ const changeSuperSigner = async(newSuperSigner, nodePublickey, token) => {
 
 }
 
+//
+const addErc20Src = async(sleepTime,token,params) => {
+
+    let {accounts,args,tokenInfo} = await getGlobalObj(token);
+    let config4 = getConfigFile("4",token);
+
+    console.log("---------------------step 1 add new erc20 tokens---------------------------");
+    args["name"] = params["name"];
+    args["symbol"] = params["symbol"];
+
+    let tokenContract;
+    if(token == "ERC20" || token == "WETH"){
+        tokenContract = await deployERC20(accounts[0],args)
+    }
+
+    await writeConfig(config4, config4 ,tokenInfo.srcToken+"_" + args["name"] ,tokenContract.address);
+    console.log(token + ".address :" + tokenContract.address);
+    console.log("");
+
+    await sleep(sleepTime);
+    console.log("---------------------step 2 registerResource ---------------------------");
+    let srcBridge = await readConfig(config4,"SRC_BRIDGE");
+    let srcHandler = await readConfig(config4,tokenInfo.srcHandler);
+    
+    args = {
+        ...args,
+        "bridge":srcBridge,
+        "handler":srcHandler,
+        "targetContract":tokenContract.address,
+        "resourceId":params["resourceId"],
+    }
+
+    await registerResource(accounts[0],args);
+    console.log("");
+
+    console.log("---------------------step 3 mint erc20 ---------------------------");
+    let tx = await tokenContract.mint(accounts[0].address, params["amount"]);
+    await sleep(sleepTime);
+    console.log(tx.hash)
+    let balance = await tokenContract.balanceOf(accounts[0].address);
+
+    console.log("account", accounts[0].address, "balance", Number(balance.toString())/1e18);
+
+    await sleep(sleepTime)
+
+}
+
+const addErc20Dst = async (sleepTime,token,params) => {
+
+    let {accounts,args,tokenInfo} = await getGlobalObj(token);
+    let config4 = getConfigFile("4",token);
+
+    console.log("---------------------step 1 add new erc20 tokens---------------------------");
+    args["name"] = params["name"];
+    args["symbol"] = params["symbol"];
+
+    let tokenContract;
+    if(token == "ERC20" || token == "WETH"){
+        tokenContract = await deployERC20(accounts[0],args)
+    }
+
+    await writeConfig(config4, config4 ,tokenInfo.dstToken+"_" + args["name"] ,tokenContract.address);
+    console.log(token + ".address :" + tokenContract.address);
+    console.log("");
+
+    await sleep(sleepTime);
+    console.log("xxl : tokenInfo.dstBridge : " + tokenInfo.dstToken );
+    console.log("---------------------step 2 registerResource ---------------------------");
+    let dstBridge = await readConfig(config4,"DST_BRIDGE");
+    let dstHandler = await readConfig(config4,tokenInfo.dstToken);
+    
+    args = {
+        ...args,
+        "bridge":dstBridge,
+        "handler":dstHandler,
+        "targetContract":tokenContract.address,
+        "resourceId":params["resourceId"],
+    }
+
+    await registerResource(accounts[0],args);
+    console.log("");
+
+}
+
+
 module.exports = {
 
     step0,
@@ -631,6 +730,8 @@ module.exports = {
 
     setFee,
     changeSuperSigner,
-    mintToken
+    mintToken,
+    addErc20Src,
+    addErc20Dst
 
 }

@@ -498,12 +498,14 @@ contract Bridge is  HandlerHelpers {
                 if (resourceID[i] == WETH_RESOURCEID) {
                     _executeWeth(data[i]);
                 } else {
+                    console.log("111");
                     IDepositExecute depositHandler = IDepositExecute(handler);
                     depositHandler.executeProposal(resourceID[i], data[i]);
                 }
             }
         }
 
+        console.log("2222");
         emit ProposalEventBatch(
             chainID,
             depositNonce,

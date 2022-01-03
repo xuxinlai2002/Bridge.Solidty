@@ -30,7 +30,16 @@
     "5erc20": "npx hardhat run scripts/erc20/5erc20RegisterDst.js --network my2",
     "6erc20": "npx hardhat run scripts/erc20/6erc20SetBurnDst.js --network my2",
     "7erc20": "npx hardhat run scripts/erc20/7erc20AddMinterDst.js --network my2",
-    
+
+    "0erc721": "npx hardhat run scripts/erc721/0erc721TokenSrc.js --network my1",
+    "1erc721": "npx hardhat run scripts/erc721/1erc721BridgeSrc.js --network my1",
+    "2erc721": "npx hardhat run scripts/erc721/2erc721HandlerSrc.js --network my1",
+    "3erc721": "npx hardhat run scripts/erc721/3erc721RegisterSrc.js --network my1",
+    "4erc721": "npx hardhat run scripts/erc721/4erc721BridgeDst.js --network my2",
+    "5erc721": "npx hardhat run scripts/erc721/5erc721RegisterDst.js --network my2",
+    "6erc721": "npx hardhat run scripts/erc721/6erc721SetBurnDst.js --network my2",
+    "7erc721": "npx hardhat run scripts/erc721/7erc721AddMinterDst.js --network my2",
+
     "erc20Layer1ToLayer2": "npx hardhat run scripts/erc20/8erc20Layer1ToLayer2.js --network my1",
     "erc20Layer2ToLayer1": "npx hardhat run scripts/erc20/9erc20Layer2ToLayer1.js --network my2",
 
@@ -38,7 +47,10 @@
     "changeLayer1SuperSigner": "npx hardhat run scripts/utils/1changeSuperSigner.js --network my1",
     "changeLayer2SuperSigner": "npx hardhat run scripts/utils/1changeSuperSigner.js --network my2",
 
-    "mintLayer1ERC20": "npx hardhat run scripts/erc20/tErc20Mint.js --network my1"
+    "mintLayer1ERC20": "npx hardhat run scripts/erc20/tErc20Mint.js --network my1",
+
+    "addErc20Src": "npx hardhat run scripts/erc20/addErc20Src.js --network my1",
+    "addErc20Dst": "npx hardhat run scripts/erc20/addErc20Dst.js --network my2"
     
   },
   "devDependencies": {

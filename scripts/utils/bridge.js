@@ -16,6 +16,7 @@ async function registerResource(account,args) {
     console.log("args.resourceId       : " + args.resourceId);
     console.log("args.token            : " + args.targetContract);
     console.log("---------------------------------------------------");
+
     const tx = await bridgeInstance.adminSetResource(
         args.handler, 
         args.resourceId,

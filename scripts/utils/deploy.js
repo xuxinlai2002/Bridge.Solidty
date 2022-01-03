@@ -156,14 +156,14 @@ async function deployERC721(account,args) {
     
 
     console.log("----------------deployERC721-----------------------");
-    console.log("args.nameToken721     : " + args.nameToken721);
-    console.log("args.symbolToken721   : " + args.symbolToken721);
+    console.log("args.name     : " + args.name);
+    console.log("args.symbol   : " + args.symbol);
     console.log("---------------------------------------------------");
     const Factory__Erc721Mintable = await ethers.getContractFactory('ERC721MinterBurnerPauser',account)
-    Erc721Mintable = await Factory__Erc721Mintable.connect(account).deploy(
-        args.nameToken721,
-        args.symbolToken721,
-        "",
+    let Erc721Mintable = await Factory__Erc721Mintable.connect(account).deploy(
+        args.name,
+        args.symbol,
+        args.uri,
         { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
     );
     
