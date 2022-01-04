@@ -27,6 +27,7 @@ contract Bridge is  HandlerHelpers {
     //xxl 01 add super signer
     address private _superSigner;
     bytes private _superSignerNodePublickey;
+    string _version;
 
     enum ProposalStatus {
         Inactive,
@@ -109,6 +110,11 @@ contract Bridge is  HandlerHelpers {
         _;
     }
 
+
+    function getVersion() external view returns(string memory){
+        return _version;
+    }
+
     /**
         @notice Initializes Bridge, creates and grants {msg.sender} the admin role,
         creates and grants {initialRelayers} the relayer role.
@@ -127,7 +133,8 @@ contract Bridge is  HandlerHelpers {
         uint256 fee,
         uint256 expiry,
         address superSignerAddress,
-        bytes memory superSignerNodePublickey
+        bytes memory superSignerNodePublickey,
+        string memory version
     ) public {
         
         _chainID = chainID;
@@ -135,6 +142,7 @@ contract Bridge is  HandlerHelpers {
         _expiry = expiry;
         _owner = msg.sender;
         _isFirstSet = false; 
+        _version = version;
         if (superSignerNodePublickey.length != 33) {
             revert();
         }

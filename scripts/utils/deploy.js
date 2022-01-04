@@ -7,7 +7,7 @@ async function deployBridgeL1Contract(account,args) {
     
     const Bridge = await upgrades.deployProxy(
         Factory__Bridge, 
-        [args.chainId,args.fee,args.expiry,args.superAddress,args.nodePublickey], 
+        [args.chainId,args.fee,args.expiry,args.superAddress,args.nodePublickey,"v1.0.0"], 
         { initializer: '__Bridge_init' },
         { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
     );
@@ -39,7 +39,7 @@ async function deployBridgeL2Contract(account,args) {
     
     const Bridge = await upgrades.deployProxy(
         Factory__Bridge, 
-        [args.chainId,args.fee,args.expiry,args.superAddress,args.nodePublickey], 
+        [args.chainId,args.fee,args.expiry,args.superAddress,args.nodePublickey,"v1.0.0"], 
         { initializer: '__Bridge_init' },
         { gasPrice: args.gasPrice, gasLimit: args.gasLimit}
     );
