@@ -405,9 +405,19 @@ const getSuperL1AbiterSign721 = async() => {
 
 
 const WethResourceId =   "0xe86ee9f56944ada89e333f06eb40065a86b50a19c5c19dc94fe2d9e15cf947c8";
-const Erc20ResourceId =  "0x0000000000000000000000000000000000000000000000000000000000000001";
+const Erc20ResourceId1 =  "0x0000000000000000000000000000000000000000000000000000000000000001";
+const Erc201Src = "0x86b0FAf346Cb7D622E0A4EA8Cd53789a0EF86f46";
+const Erc201Dst = "0x358370716A6BE0f6EB1178C6bd08676c279a3A9b";
+
+const Erc20ResourceId2 =  "0x0000000000000000000000000000000000000000000000000000000000000002";
+const Erc202Src = "0xCa89a8b37d3f2c60700e7C24720ad5cBF362FDA5";
+const Erc202Dst = "0xFb687CAEC1D4587889b6F11Bcd687E01688771E8";
+
+
 const Erc721ResourceId = "0x1000000000000000000000000000000000000000000000000000000000000001";
-const getGlobalObj = async(token) => {
+
+
+const getGlobalObj = async(token,curNum=1) => {
 
     let chainId = await getChainId();
     console.log("chainId is :" + chainId);
@@ -418,10 +428,21 @@ const getGlobalObj = async(token) => {
     let dstHander;
     let dstToken;
     let uri = "https://test/";
+    let srcTokenAddress;
+    let dstTokenAddress;
     if(token == "ERC20"){
-        resourceId = Erc20ResourceId;
         dstHander = "DST_HANDLER_ERC20"
         dstToken = "DST_ERC20"
+        if(curNum == 1){
+            resourceId = Erc20ResourceId1;
+            srcTokenAddress = Erc201Src;
+            dstTokenAddress = Erc201Dst;
+        }else{
+            resourceId = Erc20ResourceId2;
+            srcTokenAddress = Erc202Src;
+            dstTokenAddress = Erc202Dst;
+        }
+
     }else if(token == "WETH"){
         resourceId = WethResourceId;
         dstHander = "DST_HANDLER_ERC20"
@@ -456,7 +477,9 @@ const getGlobalObj = async(token) => {
         "resourceId":resourceId,
         "dstHandler":dstHander,
         "dstToken":dstToken,
-        "tokenList":["erc20","weth"]
+        "tokenList":["erc20","weth"],
+        "srcTokenAddress":srcTokenAddress,
+        "dstTokenAddress":dstTokenAddress
 
     }
 

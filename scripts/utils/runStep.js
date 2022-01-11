@@ -349,9 +349,9 @@ const { exit } = require('process')
 const { isArguments } = require('underscore')
 const privKey = "0x9aede013637152836b14b423dabef30c9b880ea550dbec132183ace7ca6177ed";
 
-const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
+const layer1ToLayer2 = async(sleepTime,amount,fee,token,curNum) => {
 
-    let {accounts,args,tokenInfo} = await getGlobalObj(token);    
+    let {accounts,args,tokenInfo} = await getGlobalObj(token,curNum);    
 
     let config0 = getConfigFile("0",token);
     let config4 = getConfigFile("4",token);
@@ -368,7 +368,8 @@ const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
     console.log("srcBridge eth : " + beforeEthBalace);
     console.log("**************************************************************************");
     
-    let tokenAddress = await readConfig(config0,tokenInfo.srcToken);
+    //let tokenAddress = await readConfig(config0,tokenInfo.srcToken);
+    let tokenAddress =  tokenInfo.srcTokenAddress;
     let tokenContract
     if(token == "ERC20" || token == "WETH"){
         tokenContract = await attachERC20(accounts[0],tokenAddress);
@@ -396,9 +397,9 @@ const layer1ToLayer2 = async(sleepTime,amount,fee,token) => {
 
     console.log("\n-------------------xxl step 4 layer1 approve -------------------");
     let srcHandler = await readConfig(config4,tokenInfo.srcHandler);
-    let erc20 = await readConfig(config4,tokenInfo.srcToken);
+    //let erc20 = await readConfig(config4,tokenInfo.srcToken);
     args["recipient"] = srcHandler
-    args["erc20"] = erc20
+    args["erc20"] = tokenAddress
     args["fee"] = fee
     await approve(accounts[0],args);
 
@@ -598,10 +599,10 @@ const erc721Layer1ToLayer2 = async(sleepTime,nftId,fee,token) => {
 
 
 //deposit
-const layer2ToLayer1 = async(sleepTime,amount,fee,token) => {
+const layer2ToLayer1 = async(sleepTime,amount,fee,token,curNum) => {
 
 
-    let {accounts,args,tokenInfo} = await getGlobalObj(token);    
+    let {accounts,args,tokenInfo} = await getGlobalObj(token,curNum);    
     let config4 = getConfigFile("4",token);
 
     let dstBridge = await readConfig(config4,"DST_BRIDGE");
@@ -963,7 +964,7 @@ const addErc20Dst = async (sleepTime,token,params) => {
     console.log("xxl : tokenInfo.dstBridge : " + tokenInfo.dstToken );
     console.log("---------------------step 2 registerResource ---------------------------");
     let dstBridge = await readConfig(config4,"DST_BRIDGE");
-    let dstHandler = await readConfig(config4,tokenInfo.dstToken);
+    let dstHandler = await readConfig(config4,tokenInfo.dstHandler);
     
     args = {
         ...args,
@@ -974,7 +975,46 @@ const addErc20Dst = async (sleepTime,token,params) => {
     }
 
     await registerResource(accounts[0],args);
+
+    await sleep(sleepTime);
+    await setBurn(accounts[0],args);
+
+    await sleep(sleepTime);
+    args = {
+        ...args,
+        "minter":dstHandler,
+        "erc20Address":tokenContract.address
+    }
+    await addMinter(accounts[0],args);
+
     console.log("");
+
+}
+
+const getNftFromId = async(nftId,isLayerOne) => {
+
+
+    let {accounts,tokenInfo} = await getGlobalObj("ERC721");
+    let config4 = getConfigFile("4","ERC721");
+    
+    //let key = ""
+    // if(isLayerOne){
+    //     key = tokenInfo.srcToken; 
+    // }else{
+    //     key = tokenInfo.dstToken;
+    // }
+
+    let key = isLayerOne? tokenInfo.srcToken:tokenInfo.dstToken;
+    let tokenAddress = await readConfig(config4,key);
+    let tokenContract = await attachERC721(accounts[0],tokenAddress);
+    try{
+        let owner = await tokenContract.ownerOf(nftId);
+        console.log(owner);
+    }catch(e){
+
+        console.log(e);
+    }
+    
 
 }
 
@@ -1001,6 +1041,8 @@ module.exports = {
     addErc20Dst,
 
     erc721Layer1ToLayer2,
-    erc721Layer2ToLayer1
+    erc721Layer2ToLayer1,
+
+    getNftFromId
 
 }

@@ -53,7 +53,11 @@
     "addErc20Dst": "npx hardhat run scripts/erc20/addErc20Dst.js --network my2",
 
     "erc721Layer1ToLayer2": "npx hardhat run scripts/erc721/8erc721Layer1ToLayer2.js --network my1",
-    "erc721Layer2ToLayer1": "npx hardhat run scripts/erc721/9erc721Layer2ToLayer1.js --network my2"
+    "erc721Layer2ToLayer1": "npx hardhat run scripts/erc721/9erc721Layer2ToLayer1.js --network my2",
+
+
+    "getNftOwnerSrc": "npx hardhat run scripts/erc721/getOwnerFromNftIdSrc.js --network my1",
+    "getNftOwnerDst": "npx hardhat run scripts/erc721/getOwnerFromNftIdDst.js --network my2"
 
   },
   "devDependencies": {
